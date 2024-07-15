@@ -63,6 +63,21 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!--  cellphone  -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/register_cellphone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/cellphone_number"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <!--  password  -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
