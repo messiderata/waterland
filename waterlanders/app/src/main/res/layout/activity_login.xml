@@ -7,14 +7,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:layout_marginTop="-10dp"
     android:background="@drawable/gradient_bg"
     tools:context=".login">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="-50dp"
-        android:layout_height="350dp">
+        android:layout_height="350dp"
+        android:layout_marginBottom="-50dp">
 
         <ImageView
             android:layout_width="200dp"
@@ -73,7 +72,7 @@
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/log"
+            android:id="@+id/login_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_input_bg_oblong"
@@ -90,13 +89,19 @@
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/pass"
+            android:id="@+id/login_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_input_bg_oblong"
             android:hint="@string/hint_pass"
             android:textColorHint="#757575" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/login_button"
@@ -110,6 +115,7 @@
         android:background="@drawable/button_bg"/>
 
     <TextView
+        android:id="@+id/forgot_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
@@ -137,6 +143,7 @@
             tools:ignore="TextSizeCheck,TextSizeCheck" />
 
         <TextView
+            android:id="@+id/create_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

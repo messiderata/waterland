@@ -8,4 +8,25 @@
     <string name="forgot_pass">Forgot password?</string>
     <string name="sign_up">Don\'t have an account?</string>
     <string name="underline_signup"><u>Sign Up</u></string>
+    <string name="sign_up_title">SIGN UP</string>
+    <string name="email_signup">Email</string>
+    <string name="address_signup">Address</string>
+    <string name="password_signup">Password</string>
+    <string name="username_signup">Username</string>
+    <string name="full_name_signup">full_name</string>
+    <string name="login_1">Have an account?</string>
+    <string name="underline_login"><u>Log in</u></string>
+    <string name="log_out">LOG OUT</string>
+    <string name="email_home">Email:</string>
+    <string name="underline_txt_1"><u>X</u></string>
+    <string name="full_name_home">Full Name:</string>
+    <string name="username_home">Username:</string>
+    <string name="password_home">Password:</string>
+    <string name="address_home">Address:</string>
+    <string name="role_home">Role:</string>
+    <string name="home_page_title">HOME PAGE</string>
+    <string name="forgot_password_title">FORGOT PASSWORD</string>
+    <string name="send_code">SEND CODE</string>
+    <string name="back">BACK</string>
+    <string name="sample_text">Text here</string>
 </resources>
