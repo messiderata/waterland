@@ -95,6 +95,8 @@ public class forgot_password extends AppCompatActivity {
                                 if (exists) {
                                     // The inputDetails exist in Firestore
                                     Log.d("Firestore", "Document exists");
+                                    Log.d("Firestore", "input_details: " + input_details);
+                                    Log.d("Firestore", "documentId: " + documentId);
                                     Intent intent = new Intent(forgot_password.this, validate_otp.class);
                                     intent.putExtra("input_details", input_details);
                                     intent.putExtra("document_id", documentId);

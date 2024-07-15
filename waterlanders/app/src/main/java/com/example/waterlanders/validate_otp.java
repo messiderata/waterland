@@ -73,6 +73,7 @@ public class validate_otp extends AppCompatActivity {
         btn_submit.setOnClickListener(view -> {
             String enteredOtp  = Objects.requireNonNull(edit_otp.getText()).toString();
             PhoneAuthCredential credential =  PhoneAuthProvider.getCredential(verificationCode,enteredOtp);
+            Log.d("hellow123123", "btn_submit: ");
             signIn(credential);
         });
 
@@ -95,13 +96,15 @@ public class validate_otp extends AppCompatActivity {
                     .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                         @Override
                         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                            Log.d("hellow123123", "onVerificationCompleted: ");
                             signIn(phoneAuthCredential);
                             setInProgress(false);
                         }
 
                         @Override
                         public void onVerificationFailed(@NonNull FirebaseException e) {
-                            Toast.makeText(validate_otp.this, "OTP verification failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(validate_otp.this, "OTP verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.d("hellow123123", "OTP verification failed: " + e.getMessage());
                             setInProgress(false);
                         }
 
@@ -135,6 +138,7 @@ public class validate_otp extends AppCompatActivity {
     void signIn(PhoneAuthCredential phoneAuthCredential){
         //login and go to next activity
         setInProgress(true);
+        Log.d("hellow123123", "got signIn");
         auth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -142,12 +146,10 @@ public class validate_otp extends AppCompatActivity {
                 if(task.isSuccessful()){
                     FirebaseUser user = auth.getCurrentUser();
                     Log.d("Firestore", "user: " + Objects.requireNonNull(user).getEmail());
-                    if (user != null) {
-                        Intent intent = new Intent(validate_otp.this, update_password.class);
-                        intent.putExtra("currUser", user);
-                        startActivity(intent);
-                        finish();
-                    }
+
+                    Intent intent = new Intent(validate_otp.this, update_password.class);
+                    startActivity(intent);
+                    finish();
                 }else{
                     Toast.makeText(validate_otp.this, "OTP verification failed", Toast.LENGTH_SHORT).show();
                 }
