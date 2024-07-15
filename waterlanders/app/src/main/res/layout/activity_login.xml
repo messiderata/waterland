@@ -66,9 +66,9 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="350dp"
+        android:layout_width="320dp"
         android:layout_height="50dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="10dp"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -77,15 +77,19 @@
             android:layout_height="wrap_content"
             android:background="@drawable/text_input_bg_oblong"
             android:hint="@string/hint_login"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:textColor="@color/black"
             android:textColorHint="#757575" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="350dp"
+        android:layout_width="320dp"
         android:layout_height="50dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="50dp"
-
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -94,6 +98,11 @@
             android:layout_height="wrap_content"
             android:background="@drawable/text_input_bg_oblong"
             android:hint="@string/hint_pass"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:textColor="@color/black"
             android:textColorHint="#757575" />
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -6,8 +6,9 @@ plugins {
 android {
     namespace = "com.example.waterlanders"
     compileSdk = 34
-    buildFeatures{
 
+    buildFeatures{
+        dataBinding =true
     }
     defaultConfig {
         applicationId = "com.example.waterlanders"
@@ -45,4 +46,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation (libs.lottie)
 }

@@ -13,7 +13,7 @@
     <string name="address_signup">Address</string>
     <string name="password_signup">Password</string>
     <string name="username_signup">Username</string>
-    <string name="full_name_signup">full_name</string>
+    <string name="full_name_signup">Full Name</string>
     <string name="login_1">Have an account?</string>
     <string name="underline_login"><u>Log in</u></string>
     <string name="log_out">LOG OUT</string>
