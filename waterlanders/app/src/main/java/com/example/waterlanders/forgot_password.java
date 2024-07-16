@@ -87,9 +87,12 @@ public class forgot_password extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 boolean exists = false;
                                 String documentId = null;
+                                String email = null;
+
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     exists = true;
                                     documentId = document.getId();
+                                    email = document.getString("email");
                                     break;
                                 }
                                 if (exists) {
@@ -97,9 +100,12 @@ public class forgot_password extends AppCompatActivity {
                                     Log.d("Firestore", "Document exists");
                                     Log.d("Firestore", "input_details: " + input_details);
                                     Log.d("Firestore", "documentId: " + documentId);
+                                    Log.d("Firestore", "email: " + email);
+
+
                                     Intent intent = new Intent(forgot_password.this, validate_otp.class);
                                     intent.putExtra("input_details", input_details);
-                                    intent.putExtra("document_id", documentId);
+                                    intent.putExtra("email", email);
                                     startActivity(intent);
                                     finish();
                                 } else {

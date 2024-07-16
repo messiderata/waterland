@@ -39,7 +39,7 @@ public class validate_otp extends AppCompatActivity {
     TextInputEditText edit_otp;
     Button btn_submit, btn_back;
     ProgressBar progressBar;
-    String input_details, verificationCode, currUserID;
+    String input_details, verificationCode, currEmail;
     TextView resendOtpTextView;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     PhoneAuthProvider.ForceResendingToken  resendingToken;
@@ -62,7 +62,7 @@ public class validate_otp extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
 
         input_details = getIntent().getStringExtra("input_details");
-        currUserID = getIntent().getStringExtra("document_id");
+        currEmail = getIntent().getStringExtra("email");
 
         sendOTP(input_details, false);
 
@@ -139,24 +139,23 @@ public class validate_otp extends AppCompatActivity {
         //login and go to next activity
         setInProgress(true);
         Log.d("hellow123123", "got signIn");
-        auth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                setInProgress(false);
-                if(task.isSuccessful()){
-                    FirebaseUser user = auth.getCurrentUser();
-                    Log.d("Firestore", "user: " + Objects.requireNonNull(user).getEmail());
+        auth.signInWithCredential(phoneAuthCredential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        setInProgress(false);
+                        if(task.isSuccessful()){
+                            FirebaseUser user = auth.getCurrentUser();
+                            Log.d("Firestore", "user: " + Objects.requireNonNull(user).getEmail());
 
-                    Intent intent = new Intent(validate_otp.this, update_password.class);
-                    startActivity(intent);
-                    finish();
-                }else{
-                    Toast.makeText(validate_otp.this, "OTP verification failed", Toast.LENGTH_SHORT).show();
-                }
-            }
+                            Intent intent = new Intent(validate_otp.this, update_password.class);
+                            startActivity(intent);
+                            finish();
+                        }else{
+                            Toast.makeText(validate_otp.this, "OTP verification failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
         });
-
-
     }
 
     void startResendTimer(){
