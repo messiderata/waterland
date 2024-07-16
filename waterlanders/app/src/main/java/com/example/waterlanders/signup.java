@@ -3,7 +3,6 @@ package com.example.waterlanders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -22,10 +21,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -67,7 +64,7 @@ public class signup extends AppCompatActivity {
         //authenticate and save to firebase
         register_button.setOnClickListener(view -> {
             progressBar.setVisibility(View.VISIBLE);
-            String email, fullName, username, password, address;
+            String email, fullName, username, cpNum, password, address;
             email = String.valueOf(edit_reg_email.getText());
             fullName = String.valueOf(edit_reg_fullName.getText());
             username = String.valueOf(edit_reg_username.getText());
@@ -137,7 +134,6 @@ public class signup extends AppCompatActivity {
         user.put("email", email);
         user.put("fullName", fullName);
         user.put("username", username);
-        user.put("password", password);  // Note: Storing passwords as plain text is not secure. Use a secure method for storing passwords.
         user.put("address", address);
         user.put("role", "customer");
 
@@ -148,7 +144,7 @@ public class signup extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             // Get the user ID of the newly created user
-                            String userId = task.getResult().getUser().getUid();
+                            String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
 
                             // Set the document ID to be the user ID
                             db.collection("users").document(userId)

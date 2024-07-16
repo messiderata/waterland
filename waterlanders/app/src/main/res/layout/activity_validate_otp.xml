@@ -5,19 +5,20 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".forgot_password"
+    android:orientation="vertical"
     android:gravity="center"
-    android:orientation="vertical">
+    tools:context=".validate_otp">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/forgot_password_title"
         android:gravity="center"
-        android:textSize="40sp"
-        android:textStyle="bold"/>
+        android:text="@string/enter_otp_1"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_margin="20dp"/>
 
-    <!--  email  -->
+<!--    otp -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,32 +26,48 @@
         android:layout_marginRight="20dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/fgt_email_phone"
+            android:id="@+id/otp_otp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email_or_phone_number"
+            android:hint="@string/enter_otp"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/resend_otp_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="end"
+        android:text="@string/resend_otp_in_30_sec"
+        />
+
     <ProgressBar
         android:id="@+id/progress_bar"
-        android:visibility="gone"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
+    <!--  submit button  -->
     <Button
-        android:id="@+id/fgt_send_code"
+        android:id="@+id/submit_btn"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
+        android:text="@string/submit"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/send_code"/>
+        android:layout_marginRight="20dp"
+        />
+
+    <!--  back button  -->
     <Button
-        android:id="@+id/fgt_back"
+        android:id="@+id/back_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
+        android:text="@string/back"
         android:layout_marginLeft="20dp"
-        android:text="@string/back"/>
+        android:layout_marginRight="20dp"
+        />
+
 </LinearLayout>

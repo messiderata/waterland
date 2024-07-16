@@ -24,10 +24,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class home_page extends AppCompatActivity {
 
-    private TextView txt_h_email, txt_h_fullName, txt_h_username, txt_h_pass, txt_h_address, txt_h_role;
-    private FirebaseFirestore db;
-    private FirebaseAuth auth;
-    private FirebaseUser user;
+    TextView txt_h_email, txt_h_fullName, txt_h_username, txt_h_pass, txt_h_address, txt_h_role;
+    FirebaseFirestore db;
+    FirebaseAuth auth;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
