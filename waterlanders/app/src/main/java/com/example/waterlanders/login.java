@@ -8,15 +8,13 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+// Import Handler class
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
@@ -36,7 +34,6 @@ public class login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-
         // init obj
         edit_login_acc = findViewById(R.id.login_account);
         edit_login_pass = findViewById(R.id.login_password);
@@ -46,6 +43,7 @@ public class login extends AppCompatActivity {
         txt_forgot_pass = findViewById(R.id.forgot_password);
         txt_create_acc = findViewById(R.id.create_account);
 
+
         // authenticate account
         btn_login.setOnClickListener(view -> {
             progressBar.setVisibility(View.VISIBLE);
@@ -54,39 +52,38 @@ public class login extends AppCompatActivity {
             password = String.valueOf(edit_login_pass.getText());
 
             // check if email and password are empty
-            if (TextUtils.isEmpty(email)){
+            if (TextUtils.isEmpty(email)) {
                 Toast.makeText(login.this, "Enter Email", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
                 return;
             }
-            if (TextUtils.isEmpty(password)){
+            if (TextUtils.isEmpty(password)) {
                 Toast.makeText(login.this, "Enter Password", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
+                btn_login.setBackgroundTintList(ContextCompat.getColorStateList(login.this, R.color.white)); // Reset color
+
                 return;
             }
 
             mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            progressBar.setVisibility(View.GONE);
-                            if (task.isSuccessful()) {
-                                Toast.makeText(login.this, "LOGIN SUCCESSFULLY.",
-                                        Toast.LENGTH_SHORT).show();
+                    .addOnCompleteListener(task -> {
+                        progressBar.setVisibility(View.GONE);
+                        if (task.isSuccessful()) {
+                            Toast.makeText(login.this, "LOGIN SUCCESSFULLY.",
+                                    Toast.LENGTH_SHORT).show();
 
-                                Intent intent = new Intent(getApplicationContext(), home_page.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                try {
-                                    throw Objects.requireNonNull(task.getException());
-                                } catch (FirebaseAuthInvalidUserException e) {
-                                    Toast.makeText(login.this, "This account does not exist.", Toast.LENGTH_SHORT).show();
-                                } catch (FirebaseAuthInvalidCredentialsException e) {
-                                    Toast.makeText(login.this, "Incorrect password.", Toast.LENGTH_SHORT).show();
-                                } catch (Exception e) {
-                                    Toast.makeText(login.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                            Intent intent = new Intent(getApplicationContext(), home_page.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            try {
+                                throw Objects.requireNonNull(task.getException());
+                            } catch (FirebaseAuthInvalidUserException e) {
+                                Toast.makeText(login.this, "This account does not exist.", Toast.LENGTH_SHORT).show();
+                            } catch (FirebaseAuthInvalidCredentialsException e) {
+                                Toast.makeText(login.this, "Incorrect password.", Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                Toast.makeText(login.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
