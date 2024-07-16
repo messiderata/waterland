@@ -142,6 +142,7 @@
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         app:counterEnabled="false"
+        app:passwordToggleEnabled="true"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -228,7 +229,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/underline_login"
-            android:textColor="@color/white"
+            android:textColor="@drawable/text_state_click"
             android:textSize="8pt"
             android:textStyle="bold"
             tools:ignore="TextSizeCheck" />
