@@ -31,7 +31,7 @@ import java.util.Objects;
 
 public class signup extends AppCompatActivity {
 
-    TextInputEditText edit_reg_email, edit_reg_fullName, edit_reg_username, edit_reg_cpNum, edit_reg_pass, edit_reg_address;
+    TextInputEditText edit_reg_email, edit_reg_fullName, edit_reg_username, edit_reg_pass, edit_reg_address;
     ProgressBar progressBar;
     Button register_button;
     FirebaseAuth mAuth;
@@ -53,7 +53,6 @@ public class signup extends AppCompatActivity {
         edit_reg_email = findViewById(R.id.register_email);
         edit_reg_fullName = findViewById(R.id.register_fullName);
         edit_reg_username = findViewById(R.id.register_username);
-        edit_reg_cpNum = findViewById(R.id.register_cellphone);
         edit_reg_pass = findViewById(R.id.register_password);
         edit_reg_address = findViewById(R.id.register_address);
         progressBar = findViewById(R.id.progress_bar);
@@ -69,7 +68,6 @@ public class signup extends AppCompatActivity {
             email = String.valueOf(edit_reg_email.getText());
             fullName = String.valueOf(edit_reg_fullName.getText());
             username = String.valueOf(edit_reg_username.getText());
-            cpNum = String.valueOf(edit_reg_cpNum.getText());
             password = String.valueOf(edit_reg_pass.getText());
             address = String.valueOf(edit_reg_address.getText());
 
@@ -84,10 +82,6 @@ public class signup extends AppCompatActivity {
             }
             if (TextUtils.isEmpty(username)){
                 Toast.makeText(signup.this, "Enter Username", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (TextUtils.isEmpty(cpNum)){
-                Toast.makeText(signup.this, "Enter Cellphone Number", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (TextUtils.isEmpty(password)){
@@ -119,7 +113,7 @@ public class signup extends AppCompatActivity {
                                             Toast.makeText(signup.this, "Username already exists. Please use a different username.", Toast.LENGTH_SHORT).show();
                                         } else {
                                             // Email and Username are unique, proceed to create user
-                                            createUser(email, password, fullName, username, address, cpNum);
+                                            createUser(email, password, fullName, username, address);
                                         }
                                     });
                         }
@@ -135,11 +129,10 @@ public class signup extends AppCompatActivity {
         });
     }
 
-    private void createUser(String email, String password, String fullName, String username, String address, String CpNum) {
+    private void createUser(String email, String password, String fullName, String username, String address) {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("fullName", fullName);
-        user.put("cellphone", CpNum);
         user.put("username", username);
         user.put("address", address);
         user.put("role", "customer");
