@@ -67,8 +67,10 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="320dp"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:layout_marginTop="10dp"
+        app:counterEnabled="false"
+
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -82,14 +84,20 @@
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:textColor="@color/black"
+            android:singleLine="true"
             android:textColorHint="#757575" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="320dp"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="50dp"
+        app:counterEnabled="false"
+        app:cursorColor="@color/black"
+        app:endIconDrawable="@drawable/show_24"
+        app:endIconMode="custom"
+        app:boxBackgroundMode="outline"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -103,6 +111,7 @@
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:textColor="@color/black"
+            android:singleLine="true"
             android:textColorHint="#757575" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -118,7 +127,7 @@
         android:layout_height="wrap_content"
         android:text="@string/login_"
         app:backgroundTint="@color/button_bg"
-        android:fontFamily="@font/title"
+        android:fontFamily="@font/ubuntu_bold"
         android:textColor="@color/white"
         android:layout_marginBottom="50dp"
         android:background="@drawable/button_bg"/>
