@@ -78,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_input_bg_oblong"
-            android:hint="@string/email_signup"
+            android:hint="@string/emailSignup"
             android:paddingStart="16dp"
             android:paddingTop="14dp"
             android:paddingEnd="16dp"
@@ -100,7 +100,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/register_fullName"
-            android:hint="@string/full_name_signup"
+            android:hint="@string/fullNameSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_input_bg_oblong"
@@ -133,7 +133,7 @@
             android:paddingBottom="14dp"
             android:textColor="@color/black"
             android:singleLine="true"
-            android:hint="@string/username_signup"/>
+            android:hint="@string/usernameSignup"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -159,7 +159,7 @@
             android:textColor="@color/black"
             android:singleLine="true"
             android:inputType="textPassword"
-            android:hint="@string/password_signup"/>
+            android:hint="@string/passwordSignup"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -183,7 +183,7 @@
             android:paddingBottom="14dp"
             android:textColor="@color/black"
             android:singleLine="true"
-            android:hint="@string/address_signup"/>
+            android:hint="@string/addressSignup"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -219,7 +219,7 @@
                 android:layout_centerInParent="true"
                 android:enabled="true"
                 android:fontFamily="@font/ubuntu"
-                android:text="@string/sign_up_title"
+                android:text="@string/signupText"
                 android:textColor="@color/white" />
 
         </RelativeLayout>
@@ -238,7 +238,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
-                    android:text="@string/login_1"
+                    android:text="@string/accQuestionText"
                     android:textColor="@color/white"
                     android:textSize="8pt"
                     tools:ignore="TextSizeCheck,TextSizeCheck,TextContrastCheck" />
@@ -248,7 +248,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="@string/underline_login"
+                    android:text="@string/underlineLogin"
                     android:textColor="@drawable/text_state_click"
                     android:textSize="8pt"
                     android:textStyle="bold"

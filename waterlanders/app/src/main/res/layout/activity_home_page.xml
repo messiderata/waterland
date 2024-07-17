@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/home_page_title"
+        android:text="@string/homePageTitle"
         android:gravity="center"
         android:textSize="50sp"
         android:textStyle="bold"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="5dp"
-            android:text="@string/email_home"
+            android:text="@string/emailHomeText"
             android:textSize="8pt"
             tools:ignore="TextSizeCheck,TextSizeCheck" />
 
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="@string/underline_txt_1"
+            android:text="@string/underlineText"
             android:textColor="@color/bg2"
             android:textSize="8pt"
             android:textStyle="bold"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="5dp"
-            android:text="@string/full_name_home"
+            android:text="@string/fullNameHome"
             android:textSize="8pt"
             tools:ignore="TextSizeCheck,TextSizeCheck" />
 
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="@string/underline_txt_1"
+            android:text="@string/underlineText"
             android:textColor="@color/bg2"
             android:textSize="8pt"
             android:textStyle="bold"
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="5dp"
-            android:text="@string/username_home"
+            android:text="@string/usernameHome"
             android:textSize="8pt"
             tools:ignore="TextSizeCheck,TextSizeCheck" />
 
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="@string/underline_txt_1"
+            android:text="@string/underlineText"
             android:textColor="@color/bg2"
             android:textSize="8pt"
             android:textStyle="bold"
@@ -126,7 +126,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="5dp"
-            android:text="@string/password_home"
+            android:text="@string/passwordHome"
             android:textSize="8pt"
             tools:ignore="TextSizeCheck,TextSizeCheck" />
 
@@ -136,7 +136,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_gravity="center_vertical"
-            android:text="@string/underline_txt_1"
+            android:text="@string/underlineText"
             android:textColor="@color/bg2"
             android:textSize="8pt"
             android:textStyle="bold"
@@ -157,7 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="5dp"
-            android:text="@string/address_home"
+            android:text="@string/addressHome"
             android:textSize="8pt"
             tools:ignore="TextSizeCheck,TextSizeCheck" />
 
@@ -167,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="@string/underline_txt_1"
+            android:text="@string/underlineText"
             android:textColor="@color/bg2"
             android:textSize="8pt"
             android:textStyle="bold"
@@ -188,7 +188,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="5dp"
-            android:text="@string/role_home"
+            android:text="@string/roleHome"
             android:textSize="8pt"
             tools:ignore="TextSizeCheck,TextSizeCheck" />
 
@@ -198,7 +198,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="@string/underline_txt_1"
+            android:text="@string/underlineText"
             android:textColor="@color/bg2"
             android:textSize="8pt"
             android:textStyle="bold"
@@ -208,7 +208,7 @@
 
     <Button
         android:id="@+id/logout_btn"
-        android:text="@string/log_out"
+        android:text="@string/logoutText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"

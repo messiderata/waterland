@@ -8,7 +8,6 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/gradient_bg"
-
     tools:context=".Login">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -183,7 +182,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="5dp"
-            android:text="@string/sign_up"
+            android:text="@string/signupQuestionText"
             android:textColor="@color/white"
             android:textSize="8pt"
             tools:ignore="TextSizeCheck,TextContrastCheck" />
@@ -193,7 +192,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/underline_signup"
+            android:text="@string/underlineSignup"
             android:textColor="@drawable/text_state_click"
             android:textSize="8pt"
             android:textStyle="bold"

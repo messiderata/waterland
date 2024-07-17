@@ -8,14 +8,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -57,20 +54,17 @@ public class HomePage extends AppCompatActivity {
             String userId = user.getUid();
             Log.d("HomePage", "userId: " + userId);
             DocumentReference docRef = db.collection("users").document(userId);
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            // Retrieve and display user details
-                            displayCurrentUser(document);
-                        } else {
-                            Toast.makeText(HomePage.this, "No such document", Toast.LENGTH_SHORT).show();
-                        }
+            docRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Retrieve and display user details
+                        displayCurrentUser(document);
                     } else {
-                        Toast.makeText(HomePage.this, "Failed to fetch document", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomePage.this, "No such document", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(HomePage.this, "Failed to fetch document", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
