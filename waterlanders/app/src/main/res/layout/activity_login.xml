@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:enabled="true"
-                android:fontFamily="@font/ubuntu"
+                android:fontFamily="@font/robotolack"
                 android:text="@string/logInText"
                 android:textColor="@color/white" />
 
