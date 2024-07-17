@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Waterland</string>
     <string name="title_">Aly in</string>
-    <string name="login_">LOGIN</string>
+    <string name="login_">Log in</string>
     <string name="pass_">Password</string>
     <string name="hint_login">Username or Email</string>
     <string name="hint_pass">Password</string>

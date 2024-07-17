@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/gradient_bg"
+
     tools:context=".login">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -94,8 +95,8 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="320dp"
         android:layout_height="70dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
         app:counterEnabled="false"
         app:boxBackgroundMode="outline"
         app:passwordToggleEnabled="true"
@@ -119,29 +120,52 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.cardview.widget.CardView
         android:id="@+id/login_button"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="@string/login_"
-        android:fontFamily="@font/ubuntu_bold"
-        android:textColor="@color/white"
-        android:background="@drawable/button_bg_color"
+        android:layout_height="48dp"
         android:layout_marginBottom="50dp"
-        style="?android:attr/borderlessButtonStyle"
-        android:enabled="true" />
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/button_bg"
+        android:background="@drawable/button_bg_color"
+        android:enabled="true"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            
+            <ProgressBar
+                android:id="@id/progress_bar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                android:indeterminateTint="@color/white"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:id="@+id/log_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:enabled="true"
+                android:fontFamily="@font/ubuntu"
+                android:text="@string/login_"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/forgot_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/forgot_pass"
         android:textAlignment="center"
         android:textColor="@drawable/text_state_click"
@@ -176,5 +200,6 @@
             tools:ignore="TextSizeCheck,TextContrastCheck" />
 
     </LinearLayout>
+
 
 </LinearLayout>
