@@ -99,6 +99,7 @@
         app:counterEnabled="false"
         app:boxBackgroundMode="outline"
         app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/gray"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText

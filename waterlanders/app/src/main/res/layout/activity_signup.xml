@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:layout_marginBottom="-100dp">
+        android:layout_marginBottom="-110dp">
 
         <ImageView
             android:layout_width="200dp"
@@ -144,6 +144,7 @@
         android:layout_marginBottom="20dp"
         app:counterEnabled="false"
         app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/gray"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -227,7 +228,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -241,6 +242,8 @@
                     android:text="@string/accQuestionText"
                     android:textColor="@color/white"
                     android:textSize="8pt"
+                    android:layout_marginBottom="20dp"
+
                     tools:ignore="TextSizeCheck,TextSizeCheck,TextContrastCheck" />
 
                 <TextView
@@ -252,6 +255,7 @@
                     android:textColor="@drawable/text_state_click"
                     android:textSize="8pt"
                     android:textStyle="bold"
+                    android:layout_marginBottom="20dp"
                     tools:ignore="TextSizeCheck,TextContrastCheck" />
 
             </LinearLayout>
