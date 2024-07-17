@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_margin="20dp"
-    tools:context=".home_page">
+    tools:context=".HomePage">
 
     <TextView
         android:layout_width="match_parent"

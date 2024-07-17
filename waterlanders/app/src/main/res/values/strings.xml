@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">Waterland</string>
-    <string name="title_">Aly in</string>
-    <string name="login_">Log in</string>
-    <string name="pass_">Password</string>
-    <string name="hint_login">Username or Email</string>
-    <string name="hint_pass">Password</string>
-    <string name="forgot_pass">Forgot password?</string>
+    <string name="appName">Waterland</string>
+    <string name="titleApp">Aly in</string>
+    <string name="logInText">Log in</string>
+    <string name="passwordText">Password</string>
+    <string name="hintLoginText">Username or Email</string>
+    <string name="hintLoginPass">Password</string>
+    <string name="forgotPasswordText">Forgot password?</string>
     <string name="sign_up">Don\'t have an account?</string>
-    <string name="underline_signup"><u>Sign Up</u></string>
-    <string name="sign_up_title">SIGN UP</string>
+    <string name="underline_signup"><u>Sign up</u></string>
+    <string name="sign_up_title">Sign up</string>
     <string name="email_signup">Email</string>
     <string name="address_signup">Address</string>
     <string name="password_signup">Password</string>

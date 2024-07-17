@@ -33,7 +33,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-public class validate_otp extends AppCompatActivity {
+public class ValidateOTP extends AppCompatActivity {
 
     Long timeoutSeconds = 60L;
     TextInputEditText edit_otp;
@@ -79,7 +79,7 @@ public class validate_otp extends AppCompatActivity {
 
         // back to phone number email prompt
         btn_back.setOnClickListener(view -> {
-            Intent intent = new Intent(validate_otp.this, forgot_password.class);
+            Intent intent = new Intent(ValidateOTP.this, ForgotPassword.class);
             startActivity(intent);
             finish();
         });
@@ -103,7 +103,7 @@ public class validate_otp extends AppCompatActivity {
 
                         @Override
                         public void onVerificationFailed(@NonNull FirebaseException e) {
-                            Toast.makeText(validate_otp.this, "OTP verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ValidateOTP.this, "OTP verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             Log.d("hellow123123", "OTP verification failed: " + e.getMessage());
                             setInProgress(false);
                         }
@@ -113,7 +113,7 @@ public class validate_otp extends AppCompatActivity {
                             super.onCodeSent(s, forceResendingToken);
                             verificationCode = s;
                             resendingToken = forceResendingToken;
-                            Toast.makeText(validate_otp.this, "OTP sent successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ValidateOTP.this, "OTP sent successfully", Toast.LENGTH_SHORT).show();
                             setInProgress(false);
                         }
                     });
@@ -148,11 +148,11 @@ public class validate_otp extends AppCompatActivity {
                             FirebaseUser user = auth.getCurrentUser();
                             Log.d("Firestore", "user: " + Objects.requireNonNull(user).getEmail());
 
-                            Intent intent = new Intent(validate_otp.this, update_password.class);
+                            Intent intent = new Intent(ValidateOTP.this, update_password.class);
                             startActivity(intent);
                             finish();
                         }else{
-                            Toast.makeText(validate_otp.this, "OTP verification failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ValidateOTP.this, "OTP verification failed", Toast.LENGTH_SHORT).show();
                         }
                     }
         });

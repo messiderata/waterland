@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".update_pass_success">
+    tools:context=".UpdatePassSuccess">
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login_"
+        android:text="@string/logInText"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         />

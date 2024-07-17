@@ -10,7 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class update_pass_success extends AppCompatActivity {
+public class UpdatePassSuccess extends AppCompatActivity {
 
     Button btn_submit_btn;
 
@@ -27,7 +27,7 @@ public class update_pass_success extends AppCompatActivity {
 
         btn_submit_btn = findViewById(R.id.submit_btn);
         btn_submit_btn.setOnClickListener(view -> {
-            Intent intent = new Intent(update_pass_success.this, login.class);
+            Intent intent = new Intent(UpdatePassSuccess.this, Login.class);
             startActivity(intent);
             finish();
         });

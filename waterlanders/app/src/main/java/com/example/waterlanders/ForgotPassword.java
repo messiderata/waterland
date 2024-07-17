@@ -27,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class forgot_password extends AppCompatActivity {
+public class ForgotPassword extends AppCompatActivity {
 
     TextInputEditText edit_fgt_email_phone;
     Button btn_send, btn_back;
@@ -61,7 +61,7 @@ public class forgot_password extends AppCompatActivity {
 
             // check if credentials are empty
             if (TextUtils.isEmpty(input_details)){
-                Toast.makeText(forgot_password.this, "Enter Details", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ForgotPassword.this, "Enter Details", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -74,7 +74,7 @@ public class forgot_password extends AppCompatActivity {
                             if (task.isSuccessful() && !task.getResult().isEmpty()) {
                                 resetPassword(input_details);
                             } else {
-                                Toast.makeText(forgot_password.this, "Email does not exist.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ForgotPassword.this, "Email does not exist.", Toast.LENGTH_SHORT).show();
                             }
                         });
             } else if (isValidPhoneNumber(input_details)) {
@@ -103,7 +103,7 @@ public class forgot_password extends AppCompatActivity {
                                     Log.d("Firestore", "email: " + email);
 
 
-                                    Intent intent = new Intent(forgot_password.this, validate_otp.class);
+                                    Intent intent = new Intent(ForgotPassword.this, ValidateOTP.class);
                                     intent.putExtra("input_details", input_details);
                                     intent.putExtra("email", email);
                                     startActivity(intent);
@@ -111,17 +111,17 @@ public class forgot_password extends AppCompatActivity {
                                 } else {
                                     // The inputDetails do not exist in Firestore
                                     Log.d("Firestore", "Document does not exist");
-                                    Toast.makeText(forgot_password.this, "Cellphone Number does not belong to any users.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ForgotPassword.this, "Cellphone Number does not belong to any users.", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 Log.d("Firestore", "Error getting documents: ", task.getException());
-                                Toast.makeText(forgot_password.this, "Unexpected Error: " + task.getException(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ForgotPassword.this, "Unexpected Error: " + task.getException(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
 
             } else {
-                Toast.makeText(forgot_password.this, "Invalid email or phone number", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ForgotPassword.this, "Invalid email or phone number", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -129,7 +129,7 @@ public class forgot_password extends AppCompatActivity {
 
         // redirect to login
         btn_back.setOnClickListener(view -> {
-            Intent intent = new Intent(forgot_password.this, login.class);
+            Intent intent = new Intent(ForgotPassword.this, Login.class);
             startActivity(intent);
             finish();
         });
@@ -149,8 +149,8 @@ public class forgot_password extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(forgot_password.this, "Reset Password link has been sent to your registered Email", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(forgot_password.this, login.class);
+                        Toast.makeText(ForgotPassword.this, "Reset Password link has been sent to your registered Email", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ForgotPassword.this, Login.class);
                         startActivity(intent);
                         finish();
                     }
@@ -158,7 +158,7 @@ public class forgot_password extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(forgot_password.this, "Error :- " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForgotPassword.this, "Error :- " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 });

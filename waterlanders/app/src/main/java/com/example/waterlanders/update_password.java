@@ -72,7 +72,7 @@ public class update_password extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(update_password.this, "Password updated successfully", Toast.LENGTH_SHORT).show();
                             // Redirect to login screen or another activity
-                            Intent intent = new Intent(update_password.this, update_pass_success.class);
+                            Intent intent = new Intent(update_password.this, UpdatePassSuccess.class);
                             startActivity(intent);
                             finish();
                         } else {

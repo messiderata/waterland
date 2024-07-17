@@ -22,7 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class home_page extends AppCompatActivity {
+public class HomePage extends AppCompatActivity {
 
     TextView txt_h_email, txt_h_fullName, txt_h_username, txt_h_pass, txt_h_address, txt_h_role;
     FirebaseFirestore db;
@@ -66,17 +66,17 @@ public class home_page extends AppCompatActivity {
                             // Retrieve and display user details
                             displayCurrentUser(document);
                         } else {
-                            Toast.makeText(home_page.this, "No such document", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HomePage.this, "No such document", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(home_page.this, "Failed to fetch document", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomePage.this, "Failed to fetch document", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         } else {
             // Handle the case where the user is not logged in
-            Toast.makeText(home_page.this, "User not logged in", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(home_page.this, login.class);
+            Toast.makeText(HomePage.this, "User not logged in", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(HomePage.this, Login.class);
             startActivity(intent);
             finish();
         }
@@ -84,8 +84,8 @@ public class home_page extends AppCompatActivity {
         logout_button.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
 
-            Toast.makeText(home_page.this, "Logged Out", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(home_page.this, login.class);
+            Toast.makeText(HomePage.this, "Logged Out", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(HomePage.this, Login.class);
             startActivity(intent);
             finish();
         });

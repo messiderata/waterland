@@ -3,47 +3,43 @@ package com.example.waterlanders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.cardview.widget.CardView;
 
+
+import java.util.Objects;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
-public class signup extends AppCompatActivity {
+public class Signup extends AppCompatActivity {
 
     TextInputEditText edit_reg_email, edit_reg_fullName, edit_reg_username, edit_reg_pass, edit_reg_address;
-    ProgressBar progressBar;
-    Button register_button;
     FirebaseAuth mAuth;
-    TextView txt_login_acc;
+    TextView txt_login_acc, singup_text;
     FirebaseFirestore db;
+    ProgressBar progressBar;
+
+    int timeDelayInMillis = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_signup);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.signup), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -56,15 +52,16 @@ public class signup extends AppCompatActivity {
         edit_reg_pass = findViewById(R.id.register_password);
         edit_reg_address = findViewById(R.id.register_address);
         progressBar = findViewById(R.id.progress_bar);
-        register_button = findViewById(R.id.register_btn);
+        CardView register_button = findViewById(R.id.registerbtn);
+        singup_text = findViewById(R.id.singup_text);
         txt_login_acc = findViewById(R.id.login_account);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
         //authenticate and save to firebase
         register_button.setOnClickListener(view -> {
-            progressBar.setVisibility(View.VISIBLE);
-            String email, fullName, username, cpNum, password, address;
+            ShowToast.unshowProgressBar(progressBar, singup_text, timeDelayInMillis);
+            String email, fullName, username, password, address;
             email = String.valueOf(edit_reg_email.getText());
             fullName = String.valueOf(edit_reg_fullName.getText());
             username = String.valueOf(edit_reg_username.getText());
@@ -73,23 +70,24 @@ public class signup extends AppCompatActivity {
 
             // check if credentials are empty
             if (TextUtils.isEmpty(email)){
-                Toast.makeText(signup.this, "Enter Email", Toast.LENGTH_SHORT).show();
+                ShowToast.showDelayedToast(Signup.this, progressBar, singup_text, "Enter your username or email to log in.",timeDelayInMillis);
                 return;
             }
             if (TextUtils.isEmpty(fullName)){
-                Toast.makeText(signup.this, "Enter Full Name", Toast.LENGTH_SHORT).show();
+                ShowToast.showDelayedToast(Signup.this, progressBar, singup_text, "Enter your full name.",timeDelayInMillis);
                 return;
             }
             if (TextUtils.isEmpty(username)){
-                Toast.makeText(signup.this, "Enter Username", Toast.LENGTH_SHORT).show();
+                ShowToast.showDelayedToast(Signup.this, progressBar, singup_text, "Enter your enter username.",timeDelayInMillis);
                 return;
             }
             if (TextUtils.isEmpty(password)){
-                Toast.makeText(signup.this, "Enter Password", Toast.LENGTH_SHORT).show();
+                ShowToast.showDelayedToast(Signup.this, progressBar, singup_text, "Enter your password.",timeDelayInMillis);
+
                 return;
             }
             if (TextUtils.isEmpty(address)){
-                Toast.makeText(signup.this, "Enter Address", Toast.LENGTH_SHORT).show();
+                ShowToast.showDelayedToast(Signup.this, progressBar, singup_text, "Enter your address.",timeDelayInMillis);
                 return;
             }
 
@@ -100,8 +98,8 @@ public class signup extends AppCompatActivity {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful() && !task.getResult().isEmpty()) {
                             // Email already exists
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(signup.this, "Email already exists. Please use a different email.", Toast.LENGTH_SHORT).show();
+                            ShowToast.showDelayedToast(Signup.this, progressBar, singup_text, "Email already exists. Please use a different email.",timeDelayInMillis);
+
                         } else {
                             db.collection("users")
                                     .whereEqualTo("username", username)
@@ -109,8 +107,8 @@ public class signup extends AppCompatActivity {
                                     .addOnCompleteListener(task2 -> {
                                         if (task2.isSuccessful() && !task2.getResult().isEmpty()) {
                                             // Username already exists
-                                            progressBar.setVisibility(View.GONE);
-                                            Toast.makeText(signup.this, "Username already exists. Please use a different username.", Toast.LENGTH_SHORT).show();
+                                            ShowToast.showDelayedToast(Signup.this, progressBar, singup_text, "Username already exists. Please use a different username.",timeDelayInMillis);
+
                                         } else {
                                             // Email and Username are unique, proceed to create user
                                             createUser(email, password, fullName, username, address);
@@ -123,7 +121,7 @@ public class signup extends AppCompatActivity {
 
         // redirect to login
         txt_login_acc.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), login.class);
+            Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish();
         });
@@ -138,40 +136,26 @@ public class signup extends AppCompatActivity {
         user.put("role", "customer");
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
-                        if (task.isSuccessful()) {
-                            // Get the user ID of the newly created user
-                            String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Get the user ID of the newly created user
+                        String userId = Objects.requireNonNull(task.getResult().getUser()).getUid();
 
-                            // Set the document ID to be the user ID
-                            db.collection("users").document(userId)
-                                    .set(user)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(signup.this, "ACCOUNT CREATED SUCCESSFULLY.",
-                                                    Toast.LENGTH_SHORT).show();
+                        // Set the document ID to be the user ID
+                        db.collection("users").document(userId)
+                                .set(user)
+                                .addOnSuccessListener(aVoid -> {
+                                    ShowToast.showDelayedToast(Signup.this, progressBar, singup_text, "ACCOUNT CREATED SUCCESSFULLY.",timeDelayInMillis);
+                                    Intent intent = new Intent(getApplicationContext(), Login.class);
+                                    startActivity(intent);
+                                    finish();
+                                })
+                                .addOnFailureListener(e -> Toast.makeText(Signup.this, "ERROR CREATING AN ACCOUNT.\n" + e,
+                                        Toast.LENGTH_SHORT).show());
 
-                                            Intent intent = new Intent(getApplicationContext(), login.class);
-                                            startActivity(intent);
-                                            finish();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(signup.this, "ERROR CREATING AN ACCOUNT.\n" + e,
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                    } else {
+                        ShowToast.showDelayedToast(Signup.this, progressBar, singup_text, "ERROR CREATING AN ACCOUNT.",timeDelayInMillis);
 
-                        } else {
-                            Toast.makeText(signup.this, "ERROR CREATING AN ACCOUNT.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
                     }
                 });
     }
