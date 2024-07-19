@@ -2,6 +2,8 @@ package com.example.waterlanders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,7 +71,25 @@ public class Signup extends AppCompatActivity {
 
             // check if credentials are empty
 
-
+            if (TextUtils.isEmpty(email)) {
+                ShowToast.showDelayedToast(Signup.this, progressBar, signupText, "Enter your email.", timeDelayInMillis);
+                return;
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                ShowToast.showDelayedToast(Signup.this, progressBar, signupText, "Invalid email address.", timeDelayInMillis);
+                return;
+            } else if (TextUtils.isEmpty(fullName)) {
+                ShowToast.showDelayedToast(Signup.this, progressBar, signupText, "Enter your full name.", timeDelayInMillis);
+                return;
+            } else if (TextUtils.isEmpty(username)) {
+                ShowToast.showDelayedToast(Signup.this, progressBar, signupText, "Enter your username.", timeDelayInMillis);
+                return;
+            } else if (TextUtils.isEmpty(password)) {
+                ShowToast.showDelayedToast(Signup.this, progressBar, signupText, "Enter your password.", timeDelayInMillis);
+                return;
+            } else if (TextUtils.isEmpty(address)) {
+                ShowToast.showDelayedToast(Signup.this, progressBar, signupText, "Enter your address.", timeDelayInMillis);
+                return;
+            }
 
 
             // Query Firestore to check if email or username exists
