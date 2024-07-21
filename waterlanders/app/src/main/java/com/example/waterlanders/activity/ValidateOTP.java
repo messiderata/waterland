@@ -1,4 +1,4 @@
-package com.example.waterlanders;
+package com.example.waterlanders.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.waterlanders.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;

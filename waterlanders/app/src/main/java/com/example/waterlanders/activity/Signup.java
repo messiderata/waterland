@@ -1,4 +1,4 @@
-package com.example.waterlanders;
+package com.example.waterlanders.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.waterlanders.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,7 +27,7 @@ import java.util.Map;
 
 public class Signup extends AppCompatActivity {
 
-    TextInputEditText editRegEmail, editRegFullName, editRegUsername, editRegPass, editRegAddress;
+    TextInputEditText editRegEmail, editRegFullName, editRegUsername, editRegPass;
     FirebaseAuth mAuth;
     TextView txtLoginAcc, signupText;
     FirebaseFirestore db;
@@ -51,7 +52,6 @@ public class Signup extends AppCompatActivity {
         editRegFullName = findViewById(R.id.register_fullName);
         editRegUsername = findViewById(R.id.register_username);
         editRegPass = findViewById(R.id.register_password);
-        editRegAddress = findViewById(R.id.register_address);
         progressBar = findViewById(R.id.progress_bar);
         CardView register_button = findViewById(R.id.registerbtn);
         signupText = findViewById(R.id.singup_text);
@@ -62,12 +62,11 @@ public class Signup extends AppCompatActivity {
         //authenticate and save to firebase
         register_button.setOnClickListener(view -> {
             ShowToast.unshowProgressBar(progressBar, signupText, timeDelayInMillis);
-            String email, fullName, username, password, address;
+            String email, fullName, username, password;
             email = String.valueOf(editRegEmail.getText());
             fullName = String.valueOf(editRegFullName.getText());
             username = String.valueOf(editRegUsername.getText());
             password = String.valueOf(editRegPass.getText());
-            address = String.valueOf(editRegAddress.getText());
 
             // check if credentials are empty
 
@@ -86,11 +85,7 @@ public class Signup extends AppCompatActivity {
             } else if (TextUtils.isEmpty(password)) {
                 ShowToast.showDelayedToast(Signup.this, progressBar, signupText, "Enter your password.", timeDelayInMillis);
                 return;
-            } else if (TextUtils.isEmpty(address)) {
-                ShowToast.showDelayedToast(Signup.this, progressBar, signupText, "Enter your address.", timeDelayInMillis);
-                return;
             }
-
 
             // Query Firestore to check if email or username exists
             db.collection("users")
@@ -112,7 +107,7 @@ public class Signup extends AppCompatActivity {
 
                                         } else {
                                             // Email and Username are unique, proceed to create user
-                                            createUser(email, password, fullName, username, address);
+                                            createUser(email, password, fullName, username);
                                         }
                                     });
                         }
@@ -128,12 +123,11 @@ public class Signup extends AppCompatActivity {
         });
     }
 
-    private void createUser(String email, String password, String fullName, String username, String address) {
+    private void createUser(String email, String password, String fullName, String username) {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("fullName", fullName);
         user.put("username", username);
-        user.put("address", address);
         user.put("role", "customer");
 
         mAuth.createUserWithEmailAndPassword(email, password)

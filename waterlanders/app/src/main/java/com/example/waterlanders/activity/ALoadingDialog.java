@@ -1,4 +1,4 @@
-package com.example.waterlanders;
+package com.example.waterlanders.activity;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+
+import com.example.waterlanders.R;
 
 public class ALoadingDialog extends Dialog {
 
