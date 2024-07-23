@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import HomePageDirectory.HomePage;
+import UserHomePageDirectory.UserHomePage;
 import MessageToast.ShowToast;
 
 public class Login extends AppCompatActivity {
@@ -56,7 +56,7 @@ public class Login extends AppCompatActivity {
 
         if (firebaseUser != null) {
             //User is logged in already. You can proceed with your next screen
-            Intent intent = new Intent(getApplicationContext(), HomePage.class);
+            Intent intent = new Intent(getApplicationContext(), UserHomePage.class);
             startActivity(intent);
             finish();
         } else {

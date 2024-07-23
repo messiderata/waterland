@@ -1,4 +1,4 @@
-package HomePageDirectory;
+package UserHomePageDirectory;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,21 +12,21 @@ import com.example.waterlanders.R;
 
 import LoginDirectory.Login;
 
-public class HomePage extends AppCompatActivity {
+public class UserHomePage extends AppCompatActivity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_home_page);
+        setContentView(R.layout.activity_user_home_page);
 
         Button logout_button = findViewById(R.id.button);
 
         logout_button.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
-            Toast.makeText(HomePage.this, "Logged Out", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(HomePage.this, Login.class);
+            Toast.makeText(UserHomePage.this, "Logged Out", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(UserHomePage.this, Login.class);
             startActivity(intent);
             finish();
         });
