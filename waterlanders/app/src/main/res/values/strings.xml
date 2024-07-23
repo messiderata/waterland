@@ -42,4 +42,10 @@
     <string name="resend_otp_in">"Resend OTP in "</string>
     <string name="seconds">" seconds"</string>
     <string name="cellphone_number">Cellphone Number</string>
+    <string name="otp_text">OTP verification\n</string>
+    <string name="message_OTP">We will send you an One Time Password on this mobile number</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="_63">+63-</string>
+    <string name="_1234567890">1234567890</string>
+
 </resources>

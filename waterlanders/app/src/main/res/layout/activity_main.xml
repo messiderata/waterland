@@ -16,5 +16,6 @@
         android:adjustViewBounds="true"
         android:importantForAccessibility="no"
         android:scaleType="fitCenter"
+        android:layout_marginBottom="100dp"
         android:src="@drawable/waterland_logo"/>
 </LinearLayout>

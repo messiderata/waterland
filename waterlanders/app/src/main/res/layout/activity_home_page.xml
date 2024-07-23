@@ -1,217 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:layout_margin="20dp"
-    tools:context=".activity.HomePage">
+    android:background="@color/home_bg_color"
+    tools:context="HomePageDirectory.HomePage">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/homePageTitle"
-        android:gravity="center"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="20dp"/>
-
-    <!--    Email    -->
     <LinearLayout
+        android:id="@+id/nav_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_height="80dp"
+        android:background="@drawable/nav_bar_top"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:text="@string/emailHomeText"
-            android:textSize="8pt"
-            tools:ignore="TextSizeCheck,TextSizeCheck" />
-
-        <TextView
-            android:id="@+id/home_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
             android:gravity="center"
-            android:text="@string/underlineText"
-            android:textColor="@color/bg2"
-            android:textSize="8pt"
-            android:textStyle="bold"
-            tools:ignore="TextSizeCheck" />
+            android:textSize="10pt"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/robotoregular"
+            android:text="Dashboard"/>
     </LinearLayout>
 
-    <!--    FullName    -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:id="@+id/linearLayout"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:background="@drawable/nav_bar_bot"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nav_bar"
+        app:layout_constraintVertical_bias="0.979">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:text="@string/fullNameHome"
-            android:textSize="8pt"
-            tools:ignore="TextSizeCheck,TextSizeCheck" />
-
-        <TextView
-            android:id="@+id/home_fullName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:background="@drawable/nav_bar_bot"
             android:gravity="center"
-            android:text="@string/underlineText"
-            android:textColor="@color/bg2"
-            android:textSize="8pt"
-            android:textStyle="bold"
-            tools:ignore="TextSizeCheck" />
+            app:layout_constraintVertical_bias="1" />
     </LinearLayout>
-
-    <!--    Username    -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:text="@string/usernameHome"
-            android:textSize="8pt"
-            tools:ignore="TextSizeCheck,TextSizeCheck" />
-
-        <TextView
-            android:id="@+id/home_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:text="@string/underlineText"
-            android:textColor="@color/bg2"
-            android:textSize="8pt"
-            android:textStyle="bold"
-            tools:ignore="TextSizeCheck" />
-    </LinearLayout>
-
-    <!--    Password    -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:text="@string/passwordHome"
-            android:textSize="8pt"
-            tools:ignore="TextSizeCheck,TextSizeCheck" />
-
-        <TextView
-            android:id="@+id/home_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_gravity="center_vertical"
-            android:text="@string/underlineText"
-            android:textColor="@color/bg2"
-            android:textSize="8pt"
-            android:textStyle="bold"
-            tools:ignore="TextSizeCheck" />
-    </LinearLayout>
-
-    <!--    Address    -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:text="@string/addressHome"
-            android:textSize="8pt"
-            tools:ignore="TextSizeCheck,TextSizeCheck" />
-
-        <TextView
-            android:id="@+id/home_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:text="@string/underlineText"
-            android:textColor="@color/bg2"
-            android:textSize="8pt"
-            android:textStyle="bold"
-            tools:ignore="TextSizeCheck" />
-    </LinearLayout>
-
-    <!--    Role    -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:text="@string/roleHome"
-            android:textSize="8pt"
-            tools:ignore="TextSizeCheck,TextSizeCheck" />
-
-        <TextView
-            android:id="@+id/home_role"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:text="@string/underlineText"
-            android:textColor="@color/bg2"
-            android:textSize="8pt"
-            android:textStyle="bold"
-            tools:ignore="TextSizeCheck" />
-    </LinearLayout>
-
 
     <Button
-        android:id="@+id/logout_btn"
-        android:text="@string/logoutText"
-        android:layout_width="match_parent"
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        />
+        android:text="LogOut"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nav_bar" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

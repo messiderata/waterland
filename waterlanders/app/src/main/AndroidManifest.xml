@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
         <activity
+            android:name=".activity.activity_reset_password"
+            android:exported="false" />
+        <activity
             android:name=".activity.Signup"
             android:exported="false" />
         <activity
@@ -25,7 +28,7 @@
             android:name=".activity.ValidateOTP"
             android:exported="false" />
         <activity
-            android:name=".activity.HomePage"
+            android:name="HomePageDirectory.HomePage"
             android:exported="false" />
         <activity
             android:name=".activity.ForgotPassword"
@@ -40,7 +43,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.Login"
+            android:name="LoginDirectory.Login"
             android:exported="true" />
     </application>
 

@@ -1,166 +1,148 @@
 package com.example.waterlanders.activity;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.waterlanders.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.concurrent.TimeUnit;
 
 public class ForgotPassword extends AppCompatActivity {
 
-    TextInputEditText edit_fgt_email_phone;
-    Button btn_send, btn_back;
-    ProgressBar progressBar;
-    FirebaseFirestore db;
-    FirebaseAuth mAuth;
+    private EditText editTextPhone, editTextOtp, editTextNewPassword;
+    private Button buttonSendOtp, buttonResetPassword;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private String verificationId;
+    private TextView testLangTo;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_forgot_password);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        edit_fgt_email_phone = findViewById(R.id.fgt_email_phone);
-        btn_send = findViewById(R.id.fgt_send_code);
-        btn_back = findViewById(R.id.fgt_back);
-        progressBar = findViewById(R.id.progress_bar);
-        db = FirebaseFirestore.getInstance();
+        editTextPhone = findViewById(R.id.editTextPhone);
+        editTextOtp = findViewById(R.id.editTextOtp);
+        editTextNewPassword = findViewById(R.id.editTextNewPassword);
+        buttonSendOtp = findViewById(R.id.buttonSendOtp);
+        buttonResetPassword = findViewById(R.id.buttonResetPassword);
+        testLangTo = findViewById(R.id.walapa);
+
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        // do something
-        btn_send.setOnClickListener(view -> {
-            progressBar.setVisibility(View.VISIBLE);
-            String input_details = String.valueOf(edit_fgt_email_phone.getText());
-            Log.d("input_details", "input_details: " + input_details);
+        // Initialize Firebase and set emulator settings
+        FirebaseApp.initializeApp(this);
+        mAuth.useEmulator("10.0.2.2", 9099); // Use "10.0.2.2" for Android emulator, "localhost" for physical device
 
-            // check if credentials are empty
-            if (TextUtils.isEmpty(input_details)){
-                Toast.makeText(ForgotPassword.this, "Enter Details", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            // Determine if input_details is email or phone number
-            if (isValidEmail(input_details)){
-                db.collection("users")
-                        .whereEqualTo("email", input_details)
-                        .get()
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                                resetPassword(input_details);
-                            } else {
-                                Toast.makeText(ForgotPassword.this, "Email does not exist.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            } else if (isValidPhoneNumber(input_details)) {
-                db.collection("users")
-                    .whereEqualTo("cellphone", input_details)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                boolean exists = false;
-                                String documentId = null;
-                                String email = null;
-
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    exists = true;
-                                    documentId = document.getId();
-                                    email = document.getString("email");
-                                    break;
-                                }
-                                if (exists) {
-                                    // The inputDetails exist in Firestore
-                                    Log.d("Firestore", "Document exists");
-                                    Log.d("Firestore", "input_details: " + input_details);
-                                    Log.d("Firestore", "documentId: " + documentId);
-                                    Log.d("Firestore", "email: " + email);
-
-
-                                    Intent intent = new Intent(ForgotPassword.this, ValidateOTP.class);
-                                    intent.putExtra("input_details", input_details);
-                                    intent.putExtra("email", email);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    // The inputDetails do not exist in Firestore
-                                    Log.d("Firestore", "Document does not exist");
-                                    Toast.makeText(ForgotPassword.this, "Cellphone Number does not belong to any users.", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Log.d("Firestore", "Error getting documents: ", task.getException());
-                                Toast.makeText(ForgotPassword.this, "Unexpected Error: " + task.getException(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
+        buttonSendOtp.setOnClickListener(v -> {
+            String phone = editTextPhone.getText().toString().trim();
+            if (phone.isEmpty() || phone.length() != 10 || !phone.startsWith("9")) {
+                editTextPhone.setError("Enter a valid phone number");
+                editTextPhone.requestFocus();
             } else {
-                Toast.makeText(ForgotPassword.this, "Invalid email or phone number", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
+                String fullPhoneNumber = "+63" + phone;
+                sendVerificationCode(fullPhoneNumber);
             }
-
         });
 
-        // redirect to login
-        btn_back.setOnClickListener(view -> {
-            Intent intent = new Intent(ForgotPassword.this, Login.class);
-            startActivity(intent);
-            finish();
+        buttonResetPassword.setOnClickListener(v -> {
+            String code = editTextOtp.getText().toString().trim();
+            String newPassword = editTextNewPassword.getText().toString().trim();
+            if (code.isEmpty() || newPassword.isEmpty()) {
+                Toast.makeText(ForgotPassword.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                verifyCodeAndUpdatePassword(code, newPassword);
+            }
         });
     }
 
-    private boolean isValidEmail(String email) {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    private void sendVerificationCode(String phoneNumber) {
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(mAuth)
+                .setPhoneNumber(phoneNumber)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(mCallbacks)
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
-    private boolean isValidPhoneNumber(String phoneNumber) {
-        // You can implement more robust phone number validation as needed
-        return Patterns.PHONE.matcher(phoneNumber).matches();
-    }
+    private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        @Override
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            final String code = phoneAuthCredential.getSmsCode();
+            if (code != null) {
+                editTextOtp.setText(code);
+                verifyCodeAndUpdatePassword(code, editTextNewPassword.getText().toString().trim());
+            }
+        }
 
-    private void resetPassword(String input_details){
-        mAuth.sendPasswordResetEmail(input_details)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(ForgotPassword.this, "Reset Password link has been sent to your registered Email", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(ForgotPassword.this, Login.class);
-                        startActivity(intent);
-                        finish();
+        @Override
+        public void onVerificationFailed(FirebaseException e) {
+            Toast.makeText(ForgotPassword.this, "Verification failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            super.onCodeSent(s, forceResendingToken);
+            verificationId = s;
+            Toast.makeText(ForgotPassword.this, "OTP sent", Toast.LENGTH_LONG).show();
+        }
+    };
+
+    private void verifyCodeAndUpdatePassword(String code, String newPassword) {
+        if (verificationId == null) {
+            Toast.makeText(ForgotPassword.this, "Verification ID not found. Please request OTP again.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+
+        // Verify the OTP
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // OTP verified, now update the password
+                        String phoneNumber = editTextPhone.getText().toString().trim();
+                        updatePasswordInFirestore(phoneNumber, newPassword);
+                    } else {
+                        Toast.makeText(ForgotPassword.this, "OTP verification failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ForgotPassword.this, "Error :- " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.INVISIBLE);
+                });
+    }
+
+    private void updatePasswordInFirestore(String phoneNumber, String newPassword) {
+        testLangTo.setText(phoneNumber);
+        db.collection("users")
+                .whereEqualTo("mobile number", phoneNumber)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // User exists, update the password
+                        DocumentReference userRef = task.getResult().getDocuments().get(0).getReference();
+                        userRef.update("Password", newPassword)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(ForgotPassword.this, "Password updated successfully", Toast.LENGTH_LONG).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(ForgotPassword.this, "Password update failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                });
+                    } else {
+                        Toast.makeText(ForgotPassword.this, "No user found with this phone number", Toast.LENGTH_LONG).show();
                     }
                 });
     }

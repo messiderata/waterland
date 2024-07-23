@@ -9,5 +9,6 @@
     <color name="button_bg">#2C64C6</color>
     <color name="banner">#0ec3e2</color>
     <color name="button_clicked">#1A436F</color>
+    <color name="home_bg_color">#dcdcdc</color>
 
 </resources>
