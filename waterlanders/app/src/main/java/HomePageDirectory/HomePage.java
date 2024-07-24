@@ -25,6 +25,7 @@ public class HomePage extends AppCompatActivity {
 
         logout_button.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
+
             Toast.makeText(HomePage.this, "Logged Out", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(HomePage.this, Login.class);
             startActivity(intent);
