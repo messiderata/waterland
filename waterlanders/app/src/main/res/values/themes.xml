@@ -2,17 +2,17 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Waterlanders" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowBackground">@android:color/transparent</item> <!-- Set to transparent -->
+        <item name="android:statusBarColor">@android:color/transparent</item> <!-- Make status bar transparent -->
+        <item name="android:windowLightStatusBar">true</item> <!-- Use light status bar text/icons (optional) -->
     </style>
 
     <style name="Theme.Waterlanders" parent="Base.Theme.Waterlanders" />
 
-    <style name="Theme.Waterlanders.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowBackground">@drawable/gradient_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item> <!-- Ensure status bar is transparent -->
+        <item name="android:windowLightStatusBar">true</item>
     </style>
-
-    <style name="Theme.Waterlanders.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.Waterlanders.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
