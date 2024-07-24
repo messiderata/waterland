@@ -1,4 +1,4 @@
-package HomePageDirectory;
+package UserHomePageDirectory;
 
 import android.content.Intent;
 import android.os.Bundle;

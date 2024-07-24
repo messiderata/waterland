@@ -18,9 +18,7 @@
             android:exported="false" />
         <activity
             android:name="AdminHomePageDirectory.AdminHomePage"
-            android:exported="false"
-            android:label="@string/title_activity_admin_home_page"
-            android:theme="@style/Theme.Waterlanders.NoActionBar" />
+            android:exported="false" />
         <activity
             android:name=".activity.activity_reset_password"
             android:exported="false" />
