@@ -1,8 +1,10 @@
 package LoginDirectory;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
@@ -14,9 +16,12 @@ import com.example.waterlanders.activity.Signup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import HomePageDirectory.HomePage;
+import AdminHomePageDirectory.AdminHomePage;
+import DeliveryHomePageDirectory.DeliveryHomePage;
+import UserHomePageDirectory.UserHomePage;
 import MessageToast.ShowToast;
 
 public class Login extends AppCompatActivity {
@@ -28,6 +33,7 @@ public class Login extends AppCompatActivity {
     TextView txtForgotPass, txtCreateAcc, loginText;
 
     int timeDelayInMillis = 500;
+    private static final String TAG = "LoginProcess";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +57,47 @@ public class Login extends AppCompatActivity {
     }
 
     public void checkFirebaseUser () {
+        Log.d(TAG, "checkFirebaseUser: Checking Firebase user status");
         FirebaseUser firebaseUser = mAuth.getCurrentUser ();
         CardView btn_login = findViewById(R.id.login_button);
 
         if (firebaseUser != null) {
             //User is logged in already. You can proceed with your next screen
-            Intent intent = new Intent(getApplicationContext(), HomePage.class);
-            startActivity(intent);
-            finish();
+            Log.d(TAG, "checkFirebaseUser: User is logged in: " + firebaseUser.getUid());
+            db.collection("users").document(firebaseUser.getUid()).get()
+                    .addOnCompleteListener(roleTask -> {
+                        if (roleTask.isSuccessful()) {
+                            DocumentSnapshot document = roleTask.getResult();
+                            if (document.exists()) {
+                                String role = document.getString("role");
+                                // Use the user's role as needed
+                                if (role != null) {
+                                    Intent intent;
+                                    switch (role){
+                                        case "ADMIN":
+                                            intent = new Intent(Login.this, AdminHomePage.class);
+                                            break;
+                                        case "DELIVERY":
+                                            intent = new Intent(Login.this, DeliveryHomePage.class);
+                                            break;
+                                        case "customer":
+                                            intent = new Intent(Login.this, UserHomePage.class);
+                                            break;
+                                        default:
+                                            ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Unknown role.", timeDelayInMillis);
+                                            return;
+                                    }
+                                    startActivity(intent);
+                                } else {
+                                    ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Role is null.", timeDelayInMillis);
+                                }
+                            } else {
+                                ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. But user role not found.", timeDelayInMillis);
+                            }
+                        } else {
+                            ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Failed to retrieve role.", timeDelayInMillis);
+                        }
+                    });
         } else {
             //User not logged in. So show email and password edit text for user to enter credentials
             btn_login.setOnClickListener(view -> {

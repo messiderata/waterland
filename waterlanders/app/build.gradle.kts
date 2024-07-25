@@ -9,6 +9,7 @@ android {
 
     buildFeatures{
         dataBinding =true
+        viewBinding = true
     }
     defaultConfig {
         applicationId = "com.example.waterlanders"
@@ -44,6 +45,12 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+    implementation(libs.firebase.storage)
+    implementation(libs.glide)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
