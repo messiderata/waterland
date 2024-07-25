@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -68,6 +69,27 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             // Handle case where item_img is null or empty
             holder.imv_item_img.setImageResource(R.drawable.ic_launcher_background);
         }
+
+        // Set up initial quantity and total price
+        holder.txt_item_quantity.setText(String.valueOf(0));
+        holder.txt_item_quantity_price.setText("₱0");
+
+        // Set up click listeners for buttons
+        holder.btn_increase.setOnClickListener(v -> {
+            int currentQuantity = Integer.parseInt(holder.txt_item_quantity.getText().toString());
+            currentQuantity++;
+            holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
+            updateTotalPrice(holder, items.getItem_price(), currentQuantity);
+        });
+
+        holder.btn_decrease.setOnClickListener(v -> {
+            int currentQuantity = Integer.parseInt(holder.txt_item_quantity.getText().toString());
+            if (currentQuantity > 0) {
+                currentQuantity--;
+                holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
+                updateTotalPrice(holder, items.getItem_price(), currentQuantity);
+            }
+        });
     }
 
     @Override
@@ -76,15 +98,27 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         return itemsList.size();
     }
 
+    private void updateTotalPrice(ItemViewHolder holder, int itemPrice, int quantity) {
+        int totalPrice = itemPrice * quantity;
+        String priceWithCurrency = "₱" + totalPrice;
+        holder.txt_item_quantity_price.setText(priceWithCurrency);
+    }
+
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView txt_item_name, txt_item_price;
+        TextView txt_item_name, txt_item_price, txt_item_quantity, txt_item_quantity_price;
         ImageView imv_item_img;
+        Button btn_increase, btn_decrease;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_item_name = itemView.findViewById(R.id.item_name);
             txt_item_price = itemView.findViewById(R.id.item_price);
             imv_item_img = itemView.findViewById(R.id.item_img);
+
+            txt_item_quantity = itemView.findViewById(R.id.item_quantity);
+            txt_item_quantity_price = itemView.findViewById(R.id.item_quantity_price);
+            btn_increase = itemView.findViewById(R.id.item_btn_increase);
+            btn_decrease = itemView.findViewById(R.id.item_btn_decrease);
         }
     }
 }
