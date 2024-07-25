@@ -39,7 +39,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     public void onBindViewHolder(@NonNull ItemAdapter.ItemViewHolder holder, int position) {
         GetItems items = itemsList.get(position);
         holder.txt_item_name.setText(items.getItem_name());
-        holder.txt_item_price.setText(String.valueOf(items.getItem_price()));
+
+        // Format price with peso sign
+        String priceWithCurrency = "₱" + items.getItem_price();
+        holder.txt_item_price.setText(priceWithCurrency);
 
         Log.d("GLIDE", "txt_item_name: " + items.getItem_name());
         Log.d("GLIDE", "txt_item_price: " + items.getItem_price());
