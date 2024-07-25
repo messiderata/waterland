@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -25,12 +26,13 @@ import java.util.List;
 
 import LoginDirectory.Login;
 
-public class UserHomePage extends AppCompatActivity {
+public class UserHomePage extends AppCompatActivity implements ItemAdapter.OnTotalAmountChangeListener {
 
     private RecyclerView recyclerView;
     private ItemAdapter itemAdapter;
     private List<GetItems> itemsList;
     private FirebaseFirestore db;
+    private TextView textTotalAmount;
 
     private static final String TAG = "UserHomePage";
 
@@ -47,8 +49,12 @@ public class UserHomePage extends AppCompatActivity {
 
         itemsList = new ArrayList<>();
 
-        itemAdapter = new ItemAdapter(itemsList, this);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        itemAdapter = new ItemAdapter(itemsList, this, userId);
+        itemAdapter.setOnTotalAmountChangeListener(this);
         recyclerView.setAdapter(itemAdapter);
+
+        textTotalAmount = findViewById(R.id.text_total_amount);
 
         db = FirebaseFirestore.getInstance();
         getItemsFromFireStore();
@@ -80,10 +86,19 @@ public class UserHomePage extends AppCompatActivity {
                         itemsList.clear();
                         for (DocumentSnapshot snapshot : value.getDocuments()){
                             GetItems items = snapshot.toObject(GetItems.class);
-                            itemsList.add(items);
+                            if (items != null) {
+                                items.setItem_id(snapshot.getId());
+                                Log.d(TAG, "--> items: "+ items);
+                                itemsList.add(items);
+                            }
                         }
                         itemAdapter.notifyDataSetChanged();
                     }
                 });
+    }
+
+    @Override
+    public void onTotalAmountChange(int totalAmount) {
+        textTotalAmount.setText("₱" + totalAmount);
     }
 }

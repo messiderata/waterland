@@ -23,10 +23,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     List<GetItems> itemsList;
     private Context context;
+    private OnTotalAmountChangeListener onTotalAmountChangeListener;
+    private AddedItems addedItems;
 
-    public ItemAdapter(List<GetItems> itemsList, Context context) {
+    public ItemAdapter(List<GetItems> itemsList, Context context, String userId) {
         this.itemsList = itemsList;
         this.context = context;
+        this.addedItems = new AddedItems(userId);
+    }
+
+    public void setOnTotalAmountChangeListener(OnTotalAmountChangeListener listener) {
+        this.onTotalAmountChangeListener = listener;
     }
 
     @NonNull
@@ -64,6 +71,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             }).addOnFailureListener(exception -> {
                 // Handle any errors
                 Log.e("GLIDE", "Error getting download URL", exception);
+                holder.imv_item_img.setImageResource(R.drawable.ic_launcher_background);
             });
         } else {
             // Handle case where item_img is null or empty
@@ -79,7 +87,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             int currentQuantity = Integer.parseInt(holder.txt_item_quantity.getText().toString());
             currentQuantity++;
             holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
-            updateTotalPrice(holder, items.getItem_price(), currentQuantity);
+
+            int itemPrice = items.getItem_price();
+            updateTotalPrice(holder, itemPrice, currentQuantity);
+            addedItems.addItem(items.getItem_id(), itemPrice);
+            notifyTotalAmountChange();
         });
 
         holder.btn_decrease.setOnClickListener(v -> {
@@ -87,7 +99,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             if (currentQuantity > 0) {
                 currentQuantity--;
                 holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
-                updateTotalPrice(holder, items.getItem_price(), currentQuantity);
+
+                int itemPrice = items.getItem_price();
+                updateTotalPrice(holder, itemPrice, currentQuantity);
+                if (currentQuantity == 0) {
+                    addedItems.removeItem(items.getItem_id(), itemPrice);
+                }
+                notifyTotalAmountChange();
             }
         });
     }
@@ -102,6 +120,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         int totalPrice = itemPrice * quantity;
         String priceWithCurrency = "₱" + totalPrice;
         holder.txt_item_quantity_price.setText(priceWithCurrency);
+    }
+
+    private void notifyTotalAmountChange() {
+        if (onTotalAmountChangeListener != null) {
+            onTotalAmountChangeListener.onTotalAmountChange(addedItems.getTotalAmount());
+        }
     }
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -121,4 +145,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             btn_decrease = itemView.findViewById(R.id.item_btn_decrease);
         }
     }
+
+    public interface OnTotalAmountChangeListener {
+        void onTotalAmountChange(int totalAmount);
+    }
+
+    public AddedItems getAddedItems() {
+        return addedItems;
+    }
+
 }

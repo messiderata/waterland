@@ -7,6 +7,7 @@ public class GetItems {
     String item_name;
     int item_price;
     String item_img;
+    String item_id;
 
     public GetItems() {
     }
@@ -40,6 +41,14 @@ public class GetItems {
 
     public void setItem_img(String item_img) {
         this.item_img = item_img;
+    }
+
+    public String getItem_id() {
+        return item_id;
+    }
+
+    public void setItem_id(String item_id) {
+        this.item_id = item_id;
     }
 
 }
