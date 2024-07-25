@@ -33,6 +33,7 @@ public class UserHomePage extends AppCompatActivity implements ItemAdapter.OnTot
     private List<GetItems> itemsList;
     private FirebaseFirestore db;
     private TextView textTotalAmount;
+    private Button logout_button, cancel_btn, purchase_order_btn;
 
     private static final String TAG = "UserHomePage";
 
@@ -55,16 +56,35 @@ public class UserHomePage extends AppCompatActivity implements ItemAdapter.OnTot
         recyclerView.setAdapter(itemAdapter);
 
         textTotalAmount = findViewById(R.id.text_total_amount);
+        cancel_btn = findViewById(R.id.btn_cancel);
+        purchase_order_btn = findViewById(R.id.btn_purchase_order);
+        logout_button = findViewById(R.id.button);
 
         db = FirebaseFirestore.getInstance();
         getItemsFromFireStore();
         Log.d(TAG, "itemsList: "+ itemsList);
 
 
-        Button logout_button = findViewById(R.id.button);
+        cancel_btn.setOnClickListener(view -> {
+            Toast.makeText(UserHomePage.this, "EWAN KO KUNG BAKIT MAY CANCEL BUTTON HAHAHAHAHA", Toast.LENGTH_SHORT).show();
+        });
+
+        purchase_order_btn.setOnClickListener(view -> {
+            AddedItems addedItems = itemAdapter.getAddedItems();
+            Log.d(TAG, "-->>> Added Items: " + addedItems.getItemIds());
+            Log.d(TAG, "--> Total Amount: " + addedItems.getTotalAmount());
+
+            if (!addedItems.getItemIds().isEmpty()){
+                Intent intent = new Intent(UserHomePage.this, OrderConfirmation.class);
+                intent.putExtra("addedItems", addedItems);
+                startActivity(intent);
+            } else {
+                Toast.makeText(UserHomePage.this, "Select an item first.", Toast.LENGTH_SHORT).show();
+            }
+
+        });
 
         logout_button.setOnClickListener(view -> {
-            Log.d(TAG, "onClick: Logout button clicked");
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(UserHomePage.this, "Logged Out", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(UserHomePage.this, Login.class);
@@ -75,7 +95,6 @@ public class UserHomePage extends AppCompatActivity implements ItemAdapter.OnTot
     }    // init obj
 
     private void getItemsFromFireStore(){
-        Log.d(TAG, "getItemsFromFireStore: Fetching items from Firestore");
         db.collection("items")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -98,7 +117,7 @@ public class UserHomePage extends AppCompatActivity implements ItemAdapter.OnTot
     }
 
     @Override
-    public void onTotalAmountChange(int totalAmount) {
+    public void onTotalAmountChange(int totalAmount, AddedItems addedItems) {
         textTotalAmount.setText("₱" + totalAmount);
     }
 }

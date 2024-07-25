@@ -124,7 +124,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     private void notifyTotalAmountChange() {
         if (onTotalAmountChangeListener != null) {
-            onTotalAmountChangeListener.onTotalAmountChange(addedItems.getTotalAmount());
+            onTotalAmountChangeListener.onTotalAmountChange(addedItems.getTotalAmount(), addedItems);
         }
     }
 
@@ -147,7 +147,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     }
 
     public interface OnTotalAmountChangeListener {
-        void onTotalAmountChange(int totalAmount);
+        void onTotalAmountChange(int totalAmount, AddedItems addedItems);
     }
 
     public AddedItems getAddedItems() {

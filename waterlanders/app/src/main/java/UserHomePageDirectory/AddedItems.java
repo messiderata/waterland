@@ -1,9 +1,10 @@
 package UserHomePageDirectory;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AddedItems {
+public class AddedItems implements Serializable {
     private String userId;
     private Set<String> itemIds;
     private int totalAmount;
