@@ -2,6 +2,7 @@ package UserHomePageDirectory;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.waterlanders.R;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
@@ -31,6 +33,7 @@ public class OrderConfirmation extends AppCompatActivity {
     private FirebaseFirestore db;
     private TextView textTotalAmount;
     private Button logout_button, back_btn, proceed_btn;
+    private TextInputEditText edt_user_address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,8 @@ public class OrderConfirmation extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         showCurrentOrders(addedItems);
 
+        edt_user_address = findViewById(R.id.user_address);
+
         back_btn.setOnClickListener(view -> {
             Intent backIntent = new Intent(OrderConfirmation.this, UserHomePage.class);
             startActivity(backIntent);
@@ -67,11 +72,18 @@ public class OrderConfirmation extends AppCompatActivity {
             // regardless of the payment method lets add that later
             // para may progress kahit papano
 
-            Toast.makeText(OrderConfirmation.this, "Order Success", Toast.LENGTH_SHORT).show();
-            Intent proceedIntent = new Intent(OrderConfirmation.this, OrderReceipt.class);
-            proceedIntent.putExtra("addedItems", addedItems);
-            startActivity(proceedIntent);
-            finish();
+            String userAddress = String.valueOf(edt_user_address.getText());
+            if (!TextUtils.isEmpty(userAddress)){
+                Toast.makeText(OrderConfirmation.this, "Order Success", Toast.LENGTH_SHORT).show();
+                Intent proceedIntent = new Intent(OrderConfirmation.this, OrderReceipt.class);
+                proceedIntent.putExtra("addedItems", addedItems);
+                proceedIntent.putExtra("userAddress", userAddress);
+                // pass the value of edt_user_address as well
+                startActivity(proceedIntent);
+                finish();
+            } else {
+                Toast.makeText(OrderConfirmation.this, "Enter your delivery address.", Toast.LENGTH_SHORT).show();
+            }
         });
 
         logout_button.setOnClickListener(view -> {

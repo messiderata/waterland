@@ -25,15 +25,20 @@ public class OrderReceipt extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        EdgeToEdge.enable(this);  // Ensure this utility is correctly implemented
         setContentView(R.layout.activity_order_receipt);
 
         db = FirebaseFirestore.getInstance();
 
+        // Retrieve intent data
         Intent intent = getIntent();
         AddedItems addedItems = (AddedItems) intent.getSerializableExtra("addedItems");
-        saveOrderToFirebase(addedItems);
+        String userAddress = intent.getStringExtra("userAddress");
 
+        // Save order to Firebase
+        saveOrderToFirebase(addedItems, userAddress);
+
+        // Set up button and its click listener
         button_btn = findViewById(R.id.button);
         button_btn.setOnClickListener(view -> {
             Intent backToHome = new Intent(OrderReceipt.this, UserHomePage.class);
@@ -42,27 +47,27 @@ public class OrderReceipt extends AppCompatActivity {
         });
     }
 
-    private void saveOrderToFirebase(AddedItems addedItems) {
-        generateUniqueDocumentId(addedItems);
+    private void saveOrderToFirebase(AddedItems addedItems, String userAddress) {
+        generateUniqueDocumentId(addedItems, userAddress);
     }
 
-    private void generateUniqueDocumentId(AddedItems addedItems) {
+    private void generateUniqueDocumentId(AddedItems addedItems, String userAddress) {
         String documentId = db.collection("pendingOrders").document().getId(); // Generate a new document ID
-        checkDocumentInOnDelivery(documentId, addedItems);
+        checkDocumentInOnDelivery(documentId, addedItems, userAddress);
     }
 
-    private void checkDocumentInOnDelivery(String documentId, AddedItems addedItems) {
+    private void checkDocumentInOnDelivery(String documentId, AddedItems addedItems, String userAddress) {
         db.collection("onDelivery")
                 .document(documentId)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful() && task.getResult() != null) {
                         if (task.getResult().exists()) {
                             // Document ID already exists, generate a new one
-                            generateUniqueDocumentId(addedItems);
+                            generateUniqueDocumentId(addedItems, userAddress);
                         } else {
                             // Document ID is unique, retrieve item details and save the order
-                            retrieveItemDetailsAndSaveOrder(documentId, addedItems);
+                            retrieveItemDetailsAndSaveOrder(documentId, addedItems, userAddress);
                         }
                     } else {
                         Toast.makeText(OrderReceipt.this, "Failed to check onDelivery collection.", Toast.LENGTH_SHORT).show();
@@ -70,7 +75,7 @@ public class OrderReceipt extends AppCompatActivity {
                 });
     }
 
-    private void retrieveItemDetailsAndSaveOrder(String documentId, AddedItems addedItems) {
+    private void retrieveItemDetailsAndSaveOrder(String documentId, AddedItems addedItems, String userAddress) {
         List<Map<String, Object>> orderItems = new ArrayList<>();
         List<String> itemIds = new ArrayList<>(addedItems.getItemIds());
 
@@ -79,7 +84,7 @@ public class OrderReceipt extends AppCompatActivity {
                     .document(itemId)
                     .get()
                     .addOnCompleteListener(task -> {
-                        if (task.isSuccessful() && task.getResult().exists()) {
+                        if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
                             DocumentSnapshot document = task.getResult();
                             Map<String, Object> itemData = new HashMap<>();
                             itemData.put("item_id", document.getId());
@@ -89,7 +94,8 @@ public class OrderReceipt extends AppCompatActivity {
                             orderItems.add(itemData);
 
                             if (orderItems.size() == itemIds.size()) {
-                                saveOrderWithUniqueDocumentId(documentId, addedItems, orderItems);
+                                String orderIcon = document.getString("item_img");
+                                saveOrderWithUniqueDocumentId(documentId, addedItems, orderItems, userAddress, orderIcon);
                             }
                         } else {
                             Toast.makeText(OrderReceipt.this, "Failed to retrieve item details.", Toast.LENGTH_SHORT).show();
@@ -98,12 +104,15 @@ public class OrderReceipt extends AppCompatActivity {
         }
     }
 
-    private void saveOrderWithUniqueDocumentId(String documentId, AddedItems addedItems, List<Map<String, Object>> orderItems) {
+    private void saveOrderWithUniqueDocumentId(String documentId, AddedItems addedItems, List<Map<String, Object>> orderItems, String userAddress, String orderIcon) {
         Map<String, Object> orderData = new HashMap<>();
         orderData.put("user_id", addedItems.getUserId());
         orderData.put("order_items", orderItems);
         orderData.put("total_amount", addedItems.getTotalAmount());
-        orderData.put("date_order", Timestamp.now());
+        orderData.put("date_ordered", Timestamp.now());
+        orderData.put("user_address", userAddress);
+        orderData.put("order_icon", orderIcon);
+        orderData.put("order_id", documentId);
 
         db.collection("pendingOrders")
                 .document(documentId)
@@ -115,6 +124,4 @@ public class OrderReceipt extends AppCompatActivity {
                     Toast.makeText(OrderReceipt.this, "Failed to save order", Toast.LENGTH_SHORT).show();
                 });
     }
-
-
 }
