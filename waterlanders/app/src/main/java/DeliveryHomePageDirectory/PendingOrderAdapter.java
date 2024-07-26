@@ -48,9 +48,12 @@ public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapte
         Log.d(TAG, "->> getOrder_icon: " + order_items.getOrder_icon());
         Log.d(TAG, "->> getOrder_id: " + order_items.getOrder_id());
 
-        holder.txt_order_id.setText(String.valueOf(order_items.getOrder_id()));
-        holder.txt_order_address.setText(String.valueOf(order_items.getUser_address()));
-        holder.txt_order_amount.setText(String.valueOf(order_items.getTotal_amount()));
+        String formatOrderID = "Order ID: " + order_items.getOrder_id();
+        String formatUserAddress = "Address: " + order_items.getUser_address();
+        String formatOrderAmount = "Total Amount: ₱" + order_items.getTotal_amount();
+        holder.txt_order_id.setText(formatOrderID);
+        holder.txt_order_address.setText(formatUserAddress);
+        holder.txt_order_amount.setText(formatOrderAmount);
 
         String gsUrl = order_items.getOrder_icon();
         if (gsUrl != null && !gsUrl.isEmpty()) {
