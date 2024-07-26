@@ -57,23 +57,28 @@ public class OrderConfirmation extends AppCompatActivity {
         showCurrentOrders(addedItems);
 
         back_btn.setOnClickListener(view -> {
-            intent.set(new Intent(OrderConfirmation.this, UserHomePage.class));
-            startActivity(intent.get());
+            Intent backIntent = new Intent(OrderConfirmation.this, UserHomePage.class);
+            startActivity(backIntent);
             finish();
         });
 
         proceed_btn.setOnClickListener(view -> {
+            // for now lets save the data to the database
+            // regardless of the payment method lets add that later
+            // para may progress kahit papano
+
             Toast.makeText(OrderConfirmation.this, "Order Success", Toast.LENGTH_SHORT).show();
-            intent.set(new Intent(OrderConfirmation.this, UserHomePage.class));
-            startActivity(intent.get());
+            Intent proceedIntent = new Intent(OrderConfirmation.this, OrderReceipt.class);
+            proceedIntent.putExtra("addedItems", addedItems);
+            startActivity(proceedIntent);
             finish();
         });
 
         logout_button.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(OrderConfirmation.this, "Logged Out", Toast.LENGTH_SHORT).show();
-            intent.set(new Intent(OrderConfirmation.this, Login.class));
-            startActivity(intent.get());
+            Intent logoutIntent = new Intent(OrderConfirmation.this, Login.class);
+            startActivity(logoutIntent);
             finish();
         });
     }
