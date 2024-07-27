@@ -27,15 +27,19 @@ public class AddedItems implements Serializable {
         return totalAmount;
     }
 
-    public void addItem(String itemId, int itemPrice) {
+    public void addItem(String itemId, int itemPrice, int totalPrice) {
         if (itemIds.add(itemId)) {
+            totalAmount += totalPrice;
+        } else {
             totalAmount += itemPrice;
         }
     }
 
-    public void removeItem(String itemId, int itemPrice) {
+    public void removeItem(String itemId, int itemPrice, int totalPrice) {
         if (itemIds.remove(itemId)) {
-            totalAmount -= itemPrice;
+            totalAmount -= totalPrice;
+        } else {
+            totalAmount += itemPrice;
         }
     }
 }

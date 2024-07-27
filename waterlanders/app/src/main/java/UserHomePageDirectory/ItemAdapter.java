@@ -89,8 +89,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
 
             int itemPrice = items.getItem_price();
-            updateTotalPrice(holder, itemPrice, currentQuantity);
-            addedItems.addItem(items.getItem_id(), itemPrice);
+            int totalItemPrice = updateTotalPrice(holder, itemPrice, currentQuantity);
+            addedItems.addItem(items.getItem_id(), itemPrice, totalItemPrice);
+            Log.e("GLIDE", "Item: "+items.getItem_id()+" totalItemPrice: "+ totalItemPrice);
             notifyTotalAmountChange();
         });
 
@@ -101,9 +102,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
 
                 int itemPrice = items.getItem_price();
-                updateTotalPrice(holder, itemPrice, currentQuantity);
+                int totalItemPrice = updateTotalPrice(holder, itemPrice, currentQuantity);
                 if (currentQuantity == 0) {
-                    addedItems.removeItem(items.getItem_id(), itemPrice);
+                    addedItems.removeItem(items.getItem_id(), itemPrice, totalItemPrice);
                 }
                 notifyTotalAmountChange();
             }
@@ -116,10 +117,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         return itemsList.size();
     }
 
-    private void updateTotalPrice(ItemViewHolder holder, int itemPrice, int quantity) {
+    private int updateTotalPrice(ItemViewHolder holder, int itemPrice, int quantity) {
         int totalPrice = itemPrice * quantity;
         String priceWithCurrency = "₱" + totalPrice;
         holder.txt_item_quantity_price.setText(priceWithCurrency);
+        return totalPrice;
     }
 
     private void notifyTotalAmountChange() {
