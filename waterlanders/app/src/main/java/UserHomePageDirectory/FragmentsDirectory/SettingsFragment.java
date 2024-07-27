@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.example.waterlanders.R;
 
 
-public class settingsFragment extends Fragment {
+public class SettingsFragment extends Fragment {
 
 
     @Override

@@ -1,9 +1,12 @@
 package LoginDirectory;
 
+import static com.google.android.material.internal.ViewUtils.hideKeyboard;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
@@ -22,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import AdminHomePageDirectory.AdminHomePage;
 import DeliveryHomePageDirectory.DeliveryHomePage;
-import MessageToast.ShowToast;
+import HelpFul.ShowToast;
 
 public class Login extends AppCompatActivity {
 
@@ -72,6 +75,7 @@ public class Login extends AppCompatActivity {
             ShowToast.unshowProgressBar(progressBar, loginText, timeDelayInMillis);
             String usernameOrEmail = editLoginAcc.getText().toString().trim();
             String password = editLoginPass.getText().toString().trim();
+            hideKeyboard(this);
 
             // Check if username/email and password are empty
             if (TextUtils.isEmpty(usernameOrEmail)) {
@@ -144,5 +148,12 @@ public class Login extends AppCompatActivity {
                         ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Failed to retrieve role.", timeDelayInMillis);
                     }
                 });
+    }
+
+    public void hideKeyboard(Activity activity) {
+        if (activity.getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
     }
 }

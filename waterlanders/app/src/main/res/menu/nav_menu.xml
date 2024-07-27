@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:ShowIn = "navigation_view">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
 
+    <group
+        android:checkableBehavior="single">
         <item
+            android:icon="@drawable/home_icon_fill"
             android:id="@+id/home_nav"
             android:title="@string/navHome"/>
         <item
+            android:icon="@drawable/baseline_settings_24"
             android:id="@+id/settings_nav"
             android:title="@string/navSettings"/>
-         <item
-             android:id="@+id/about_nav"
-             android:title="@string/about_us"/>
+        <item
+            android:icon="@drawable/baseline_report_24"
+            android:id="@+id/about_nav"
+            android:title="@string/about_us"/>
+    </group>
 
 </menu>

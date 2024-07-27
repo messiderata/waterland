@@ -16,7 +16,7 @@
     <string name="fullNameSignup">Full Name</string>
     <string name="accQuestionText">Have an account?</string>
     <string name="underlineLogin"><u>Log in</u></string>
-    <string name="logoutText">LOG OUT</string>
+    <string name="logoutText">Log Out</string>
     <string name="emailHomeText">Email:</string>
     <string name="underlineText"><u>X</u></string>
     <string name="fullNameHome">Full Name:</string>

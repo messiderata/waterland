@@ -1,7 +1,6 @@
 package LoginDirectory;
 
 import android.content.Context;
-import android.content.Intent;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -9,7 +8,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import MessageToast.ShowToast;
+import HelpFul.ShowToast;
 
 public class GetEmailFromUsername {
     private final Context context;
