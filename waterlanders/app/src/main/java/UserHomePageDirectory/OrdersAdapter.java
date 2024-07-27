@@ -18,9 +18,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewHolder>{
-    List<GetItems> itemsList;
-    private Context context;
+public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewHolder> {
+    private final List<GetItems> itemsList;
+    private final Context context;
 
     public OrdersAdapter(List<GetItems> itemsList, Context context) {
         this.itemsList = itemsList;
@@ -36,14 +36,14 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
 
     @Override
     public void onBindViewHolder(@NonNull OrdersAdapter.OrderViewHolder holder, int position) {
-        GetItems items = itemsList.get(position);
-        holder.txt_item_name.setText(items.getItem_name());
+        GetItems item = itemsList.get(position);
+        holder.txt_item_name.setText(item.getItem_name());
 
         // Format price with peso sign
-        String priceWithCurrency = "₱" + items.getItem_price();
+        String priceWithCurrency = "₱" + item.getItem_price();
         holder.txt_item_price.setText(priceWithCurrency);
 
-        String gsUrl = items.getItem_img();
+        String gsUrl = item.getItem_img();
         if (gsUrl != null && !gsUrl.isEmpty()) {
             // Convert gs:// URL to https:// URL
             StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(gsUrl);

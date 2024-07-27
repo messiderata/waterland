@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-07-23T14:07:00.453020868Z">
+        <DropdownSelection timestamp="2024-07-26T23:18:25.499297952Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/home/messi/.android/avd/Oppo_a9_API_27.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=6124ab87" />
             </handle>
           </Target>
         </DropdownSelection>

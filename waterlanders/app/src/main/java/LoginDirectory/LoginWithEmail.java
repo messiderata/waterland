@@ -1,11 +1,12 @@
 package LoginDirectory;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import UserHomePageDirectory.MainDashboardUser;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,10 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import AdminHomePageDirectory.AdminHomePage;
 import DeliveryHomePageDirectory.DeliveryHomePage;
-import UserHomePageDirectory.UserHomePage;
 import MessageToast.ShowToast;
-
-
 
 public class LoginWithEmail {
     TextInputEditText editLoginAcc, editLoginPass;
@@ -64,7 +62,7 @@ public class LoginWithEmail {
                                                             intent = new Intent(context, DeliveryHomePage.class);
                                                             break;
                                                         case "customer":
-                                                            intent = new Intent(context, UserHomePage.class);
+                                                            intent = new Intent(context, MainDashboardUser.class);
                                                             break;
                                                         default:
                                                             ShowToast.showDelayedToast(context, progressBar, loginText, "LOGIN SUCCESSFUL. Unknown role.", timeDelayInMillis);
