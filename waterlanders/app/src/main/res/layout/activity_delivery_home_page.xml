@@ -8,69 +8,91 @@
     android:background="@color/home_bg_color"
     tools:context="DeliveryHomePageDirectory.DeliveryHomePage">
 
+    <!-- Navigation bar with options -->
     <LinearLayout
         android:id="@+id/nav_bar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:background="@drawable/nav_bar_top"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/your_deliveries"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:textColor="@color/white"
             android:gravity="center"
-            android:textSize="10pt"
-            android:layout_marginTop="20dp"
+            android:textSize="14sp"
             android:fontFamily="@font/robotoregular"
-            android:text="Dashboard"/>
+            android:padding="16dp"
+            android:text="Your Deliveries"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/delivered_orders"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:fontFamily="@font/robotoregular"
+            android:padding="16dp"
+            android:text="Delivered Orders"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/available_orders"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:fontFamily="@font/robotoregular"
+            android:padding="16dp"
+            android:text="Available Orders"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"/>
     </LinearLayout>
 
+    <!-- LinearLayout spanning from nav_bar to button -->
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="320dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:background="@drawable/nav_bar_bot"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nav_bar"
-        app:layout_constraintVertical_bias="0.979">
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!--    for testing purposes, may remove later    -->
-        <TextView
+        <!-- Your content goes here -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_orderList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/black"
-            android:gravity="center"
-            android:textSize="10pt"
-            android:fontFamily="@font/robotoregular"
-            android:text="DELIVERY"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/nav_bar_bot"
-            android:gravity="center"
-            app:layout_constraintVertical_bias="1" />
-
-
-
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_margin="20dp" />
     </LinearLayout>
 
+    <!-- LogOut Button at the bottom center -->
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LogOut"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nav_bar" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
