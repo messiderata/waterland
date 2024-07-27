@@ -62,7 +62,7 @@ public class OrderConfirmation extends AppCompatActivity {
         edt_user_address = findViewById(R.id.user_address);
 
         back_btn.setOnClickListener(view -> {
-            Intent backIntent = new Intent(OrderConfirmation.this, UserHomePage.class);
+            Intent backIntent = new Intent(OrderConfirmation.this, MainDashboardUser.class);
             startActivity(backIntent);
             finish();
         });
