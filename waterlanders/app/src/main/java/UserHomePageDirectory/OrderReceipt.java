@@ -41,7 +41,7 @@ public class OrderReceipt extends AppCompatActivity {
         // Set up button and its click listener
         button_btn = findViewById(R.id.button);
         button_btn.setOnClickListener(view -> {
-            Intent backToHome = new Intent(OrderReceipt.this, UserHomePage.class);
+            Intent backToHome = new Intent(OrderReceipt.this, MainDashboardUser.class);
             startActivity(backToHome);
             finish();
         });

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import android.util.Log;
 
+import LoginDirectory.Login;
 import UserHomePageDirectory.AddedItems;
 import UserHomePageDirectory.GetItems;
 import UserHomePageDirectory.ItemAdapter;
@@ -40,7 +41,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
     private List<GetItems> itemsList;
     private FirebaseFirestore db;
     private TextView textTotalAmount;
-    private Button purchase_order_btn;
+    private Button purchase_order_btn, logout_btn;
 
     private static final String TAG = "UserHomePage";
 
@@ -74,6 +75,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
 
         textTotalAmount = view.findViewById(R.id.text_total_amount);
         purchase_order_btn = view.findViewById(R.id.btn_purchase_order);
+        logout_btn = view.findViewById(R.id.button);
 
         db = FirebaseFirestore.getInstance();
         getItemsFromFireStore();
@@ -91,6 +93,13 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
             } else {
                 Toast.makeText(getContext(), "Select an item first.", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        logout_btn.setOnClickListener(view1 -> {
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(getContext(), "Logout successfully", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getContext(), Login.class);
+            startActivity(intent);
         });
 
         return view;
