@@ -1,18 +1,20 @@
-package DeliveryHomePageDirectory;
+package DeliveryHomePageDirectory.PendingOrders;
 
 import com.google.firebase.Timestamp;
+
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class GetPendingOrder {
+public class GetPendingOrder implements Serializable {
 
     private Timestamp date_ordered;
+    private String order_icon;
+    private String order_id;
     private List<Map<String, Object>> order_items;
     private int total_amount;
     private String user_address;
     private String user_id;
-    private String order_icon;
-    private String order_id;
 
     public GetPendingOrder() {
     }

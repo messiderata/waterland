@@ -19,7 +19,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/order_img"
+                android:id="@+id/item_img"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/ic_launcher_background"
@@ -34,38 +34,28 @@
                 android:layout_marginStart="16dp">
 
                 <TextView
-                    android:id="@+id/order_id"
+                    android:id="@+id/item_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Order ID"
+                    android:text="Item Name"
                     android:textColor="@android:color/black"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
 
                 <TextView
-                    android:id="@+id/ordered_date"
+                    android:id="@+id/item_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Date Ordered"
+                    android:text="Item Price"
                     android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    android:layout_marginBottom="8dp"/>
+                    android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/order_address"
+                    android:id="@+id/item_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Order Address"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    android:layout_marginBottom="8dp"/>
-
-                <TextView
-                    android:id="@+id/order_amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Order Amount"
+                    android:text="Item ID"
                     android:textColor="@android:color/black"
                     android:textSize="15sp" />
             </LinearLayout>
