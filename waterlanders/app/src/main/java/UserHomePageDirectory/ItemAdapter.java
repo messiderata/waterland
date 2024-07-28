@@ -22,9 +22,9 @@ import java.util.List;
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
 
     List<GetItems> itemsList;
-    private Context context;
+    private final Context context;
     private OnTotalAmountChangeListener onTotalAmountChangeListener;
-    private AddedItems addedItems;
+    private final AddedItems addedItems;
 
     public ItemAdapter(List<GetItems> itemsList, Context context, String userId) {
         this.itemsList = itemsList;

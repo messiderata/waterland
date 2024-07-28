@@ -72,26 +72,26 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
         itemAdapter.setOnTotalAmountChangeListener(this);
         recyclerView.setAdapter(itemAdapter);
 
-        textTotalAmount = view.findViewById(R.id.text_total_amount);
-        purchase_order_btn = view.findViewById(R.id.btn_purchase_order);
+//        textTotalAmount = view.findViewById(R.id.text_total_amount);
+//        purchase_order_btn = view.findViewById(R.id.btn_purchase_order);
 
         db = FirebaseFirestore.getInstance();
         getItemsFromFireStore();
         Log.d(TAG, "itemsList: "+ itemsList);
 
-        purchase_order_btn.setOnClickListener(v -> {
-            AddedItems addedItems = itemAdapter.getAddedItems();
-            Log.d(TAG, "-->>> Added Items: " + addedItems.getItemIds());
-            Log.d(TAG, "--> Total Amount: " + addedItems.getTotalAmount());
-
-            if (!addedItems.getItemIds().isEmpty()) {
-                Intent intent = new Intent(getContext(), OrderConfirmation.class);
-                intent.putExtra("addedItems", addedItems);
-                startActivity(intent);
-            } else {
-                Toast.makeText(getContext(), "Select an item first.", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        purchase_order_btn.setOnClickListener(v -> {
+//            AddedItems addedItems = itemAdapter.getAddedItems();
+//            Log.d(TAG, "-->>> Added Items: " + addedItems.getItemIds());
+//            Log.d(TAG, "--> Total Amount: " + addedItems.getTotalAmount());
+//
+//            if (!addedItems.getItemIds().isEmpty()) {
+//                Intent intent = new Intent(getContext(), OrderConfirmation.class);
+//                intent.putExtra("addedItems", addedItems);
+//                startActivity(intent);
+//            } else {
+//                Toast.makeText(getContext(), "Select an item first.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         return view;
     }
@@ -120,6 +120,6 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
 
     @Override
     public void onTotalAmountChange(int totalAmount, AddedItems addedItems) {
-        textTotalAmount.setText("₱" + totalAmount);
+//        textTotalAmount.setText("₱" + totalAmount);
     }
 }
