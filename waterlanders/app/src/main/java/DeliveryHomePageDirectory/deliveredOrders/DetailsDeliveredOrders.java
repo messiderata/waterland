@@ -26,7 +26,9 @@ public class DetailsDeliveredOrders extends AppCompatActivity {
     private TextView userIDTextView;
     private TextView userAddressTextView;
     private TextView deliveryIDTextView;
+    private TextView orderStatusTextView;
     private TextView dateDeliveredTextView;
+    private TextView customerConfirmationTextView;
     private TextView totalAmountTextView;
     private RecyclerView orderItemsRecyclerView;
     private Button okBtn;
@@ -47,7 +49,9 @@ public class DetailsDeliveredOrders extends AppCompatActivity {
         userIDTextView = findViewById(R.id.userID);
         userAddressTextView = findViewById(R.id.userAddress);
         deliveryIDTextView = findViewById(R.id.deliveryID);
+        orderStatusTextView = findViewById(R.id.orderStatus);
         dateDeliveredTextView = findViewById(R.id.dateDelivered);
+        customerConfirmationTextView = findViewById(R.id.userConfirmation);
         totalAmountTextView = findViewById(R.id.totalAmount);
         orderItemsRecyclerView = findViewById(R.id.rv_orderList);
         okBtn = findViewById(R.id.ok_button);
@@ -62,8 +66,10 @@ public class DetailsDeliveredOrders extends AppCompatActivity {
         String orderIcon = intent.getStringExtra("order_icon");
         String orderID = intent.getStringExtra("order_id");
         ArrayList<Map<String, Object>> orderItems = (ArrayList<Map<String, Object>>) intent.getSerializableExtra("order_items");
+        String orderStatus = intent.getStringExtra("order_status");
         int totalAmount = intent.getIntExtra("total_amount", 0);
         String userAddress = intent.getStringExtra("user_address");
+        String userConfirmation = intent.getStringExtra("user_confirmation");
         String userID = intent.getStringExtra("user_id");
 
         // format strings
@@ -72,7 +78,9 @@ public class DetailsDeliveredOrders extends AppCompatActivity {
         String fmt_userID = "User ID: "+ userID;
         String fmt_userAddress = "User Address: "+ userAddress;
         String fmt_deliveryID = "Your Delivery ID: "+ deliveryID;
+        String fmt_orderStatus = "Order Status: "+ orderStatus;
         String fmt_dateDelivered = "Date Delivered: "+ dateDelivered;
+        String fmt_customerConfirmation = "Customer Confirmation: "+ userConfirmation;
         String fmt_totalAmount = "Total Amount: ₱"+ totalAmount;
 
         orderIDTextView.setText(fmt_orderID);
@@ -80,7 +88,9 @@ public class DetailsDeliveredOrders extends AppCompatActivity {
         userIDTextView.setText(fmt_userID);
         userAddressTextView.setText(fmt_userAddress);
         deliveryIDTextView.setText(fmt_deliveryID);
+        orderStatusTextView.setText(fmt_orderStatus);
         dateDeliveredTextView.setText(fmt_dateDelivered);
+        customerConfirmationTextView.setText(fmt_customerConfirmation);
         totalAmountTextView.setText(fmt_totalAmount);
 
         // display the orderItems to the orderItemsRecyclerView

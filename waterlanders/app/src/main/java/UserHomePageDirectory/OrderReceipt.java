@@ -106,13 +106,14 @@ public class OrderReceipt extends AppCompatActivity {
 
     private void saveOrderWithUniqueDocumentId(String documentId, AddedItems addedItems, List<Map<String, Object>> orderItems, String userAddress, String orderIcon) {
         Map<String, Object> orderData = new HashMap<>();
-        orderData.put("user_id", addedItems.getUserId());
-        orderData.put("order_items", orderItems);
-        orderData.put("total_amount", addedItems.getTotalAmount());
         orderData.put("date_ordered", Timestamp.now());
-        orderData.put("user_address", userAddress);
         orderData.put("order_icon", orderIcon);
         orderData.put("order_id", documentId);
+        orderData.put("order_items", orderItems);
+        orderData.put("order_status", "ORDERED");
+        orderData.put("total_amount", addedItems.getTotalAmount());
+        orderData.put("user_address", userAddress);
+        orderData.put("user_id", addedItems.getUserId());
 
         db.collection("pendingOrders")
                 .document(documentId)

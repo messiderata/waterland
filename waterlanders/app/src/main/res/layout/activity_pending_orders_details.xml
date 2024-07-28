@@ -71,10 +71,15 @@
             android:layout_marginBottom="15dp"
             app:counterEnabled="false"
             app:hintEnabled="true"
-            android:hint="Current Order Location">
+            android:hint="papalitan nalang ng radio buttons hehe">
+            <!--     since pending orders palang naman to
+                   yung choices lang is 'PREPARING'
+                   kase pwede naman i-update ni delivery yung status
+                   sa 'Your Delivery' page
+            -->
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/order_current_location"
+                android:id="@+id/order_current_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_input_bg_oblong"

@@ -75,16 +75,21 @@
             android:layout_marginTop="8dp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_layout_order_location"
+            android:id="@+id/text_input_layout_order_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
             app:counterEnabled="false"
             app:hintEnabled="true"
-            android:hint="Current Order Location">
+            android:hint="papalitan nalang ng radio buttons hehe">
+            <!--
+              current initial order status is 'PENDING'
+              bale ang magiging choices dito ni delivery ay
+              1. 'InTransit'
+              2. 'Delivered'
+            -->
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/order_current_location"
+                android:id="@+id/order_current_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_input_bg_oblong"

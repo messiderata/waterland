@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import DeliveryHomePageDirectory.PendingOrders.DetailsPendingOrders;
 
 
 public class AdapterDeliveredOrders extends RecyclerView.Adapter<AdapterDeliveredOrders.DeliveredOrdersViewHolder>{
@@ -53,8 +52,10 @@ public class AdapterDeliveredOrders extends RecyclerView.Adapter<AdapterDelivere
         Log.d(TAG, "->> getOrder_icon: " + delivered_orders.getOrder_icon());
         Log.d(TAG, "->> getOrder_id: " + delivered_orders.getOrder_id());
         Log.d(TAG, "->> getOrder_items: " + delivered_orders.getOrder_items());
+        Log.d(TAG, "->> getOrder_status: " + delivered_orders.getOrder_status());
         Log.d(TAG, "->> getTotal_amount: " + delivered_orders.getTotal_amount());
         Log.d(TAG, "->> getUser_address: " + delivered_orders.getUser_address());
+        Log.d(TAG, "->> getUser_confirmation: " + delivered_orders.getUser_confirmation());
         Log.d(TAG, "->> getUser_id: " + delivered_orders.getUser_id());
 
         Timestamp timestamp = delivered_orders.getDate_ordered();
@@ -104,8 +105,10 @@ public class AdapterDeliveredOrders extends RecyclerView.Adapter<AdapterDelivere
             intent.putExtra("order_icon", gsUrl);
             intent.putExtra("order_id", delivered_orders.getOrder_id());
             intent.putExtra("order_items", (ArrayList<Map<String, Object>>) delivered_orders.getOrder_items());
+            intent.putExtra("order_status", delivered_orders.getOrder_status());
             intent.putExtra("total_amount", delivered_orders.getTotal_amount());
             intent.putExtra("user_address", delivered_orders.getUser_address());
+            intent.putExtra("user_confirmation", delivered_orders.getUser_confirmation());
             intent.putExtra("user_id", delivered_orders.getUser_id());
             context.startActivity(intent);
         });
