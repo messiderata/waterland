@@ -35,12 +35,11 @@ import UserHomePageDirectory.OrderConfirmation;
 
 public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountChangeListener {
 
-    private RecyclerView recyclerView;
     private ItemAdapter itemAdapter;
     private List<GetItems> itemsList;
     private FirebaseFirestore db;
-    private TextView textTotalAmount;
-    private Button purchase_order_btn;
+//    private TextView textTotalAmount;
+//    private Button purchase_order_btn;
 
     private static final String TAG = "UserHomePage";
 
@@ -62,7 +61,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
 
         Log.d(TAG, "onCreateView: HomeFragment started");
 
-        recyclerView = view.findViewById(R.id.rv_userList);
+        RecyclerView recyclerView = view.findViewById(R.id.rv_userList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         itemsList = new ArrayList<>();
@@ -83,7 +82,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
 //            AddedItems addedItems = itemAdapter.getAddedItems();
 //            Log.d(TAG, "-->>> Added Items: " + addedItems.getItemIds());
 //            Log.d(TAG, "--> Total Amount: " + addedItems.getTotalAmount());
-//
+
 //            if (!addedItems.getItemIds().isEmpty()) {
 //                Intent intent = new Intent(getContext(), OrderConfirmation.class);
 //                intent.putExtra("addedItems", addedItems);
@@ -92,7 +91,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
 //                Toast.makeText(getContext(), "Select an item first.", Toast.LENGTH_SHORT).show();
 //            }
 //        });
-
+//
         return view;
     }
 
