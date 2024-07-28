@@ -13,6 +13,15 @@
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
         <activity
+            android:name="DeliveryHomePageDirectory.deliveredOrders.DetailsDeliveredOrders"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.onDelivery.DetailsOnDeliveryOrders"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.PendingOrders.DetailsPendingOrders"
+            android:exported="false" />
+        <activity
             android:name="UserHomePageDirectory.OrderReceipt"
             android:exported="false" />
         <activity

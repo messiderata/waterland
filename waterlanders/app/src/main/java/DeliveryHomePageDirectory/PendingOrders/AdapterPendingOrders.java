@@ -1,6 +1,7 @@
-package DeliveryHomePageDirectory;
+package DeliveryHomePageDirectory.PendingOrders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,45 +14,56 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.waterlanders.R;
+import com.google.firebase.Timestamp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
-public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapter.PendingOrderViewHolder>{
+public class AdapterPendingOrders extends RecyclerView.Adapter<AdapterPendingOrders.PendingOrderViewHolder>{
     List<GetPendingOrder> orderItems;
     Context context;
 
     private static final String TAG = "GetPendingOrder";
 
-    public PendingOrderAdapter(List<GetPendingOrder> orderItems, Context context) {
+    public AdapterPendingOrders(List<GetPendingOrder> orderItems, Context context) {
         this.orderItems = orderItems;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public PendingOrderAdapter.PendingOrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AdapterPendingOrders.PendingOrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_your_deliveries, parent, false);
-        return new PendingOrderAdapter.PendingOrderViewHolder(view);
+        return new AdapterPendingOrders.PendingOrderViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PendingOrderAdapter.PendingOrderViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdapterPendingOrders.PendingOrderViewHolder holder, int position) {
         GetPendingOrder order_items = orderItems.get(position);
         Log.d(TAG, "->> getDate_ordered: " + order_items.getDate_ordered());
+        Log.d(TAG, "->> getOrder_icon: " + order_items.getOrder_icon());
+        Log.d(TAG, "->> getOrder_id: " + order_items.getOrder_id());
         Log.d(TAG, "->> getOrder_items: " + order_items.getOrder_items());
         Log.d(TAG, "->> getTotal_amount: " + order_items.getTotal_amount());
         Log.d(TAG, "->> getUser_address: " + order_items.getUser_address());
         Log.d(TAG, "->> getUser_id: " + order_items.getUser_id());
-        Log.d(TAG, "->> getOrder_icon: " + order_items.getOrder_icon());
-        Log.d(TAG, "->> getOrder_id: " + order_items.getOrder_id());
+
+        Timestamp timestamp = order_items.getDate_ordered();
+        long dateOrderedMillis = timestamp.toDate().getTime();
+        Date dateOrdered = new Date(dateOrderedMillis);
+        Log.d(TAG, "->> dateOrdered: " + dateOrdered);
 
         String formatOrderID = "Order ID: " + order_items.getOrder_id();
+        String formatOrderedDate = "Ordered Date: " + dateOrdered;
         String formatUserAddress = "Address: " + order_items.getUser_address();
         String formatOrderAmount = "Total Amount: ₱" + order_items.getTotal_amount();
         holder.txt_order_id.setText(formatOrderID);
+        holder.txt_ordered_date.setText(formatOrderedDate);
         holder.txt_order_address.setText(formatUserAddress);
         holder.txt_order_amount.setText(formatOrderAmount);
 
@@ -76,6 +88,19 @@ public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapte
             // Handle case where item_img is null or empty
             holder.imv_order_img.setImageResource(R.drawable.ic_launcher_background);
         }
+
+        // Set click listener for item view
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DetailsPendingOrders.class);
+            intent.putExtra("date_ordered", dateOrderedMillis);
+            intent.putExtra("order_icon", gsUrl);
+            intent.putExtra("order_id", order_items.getOrder_id());
+            intent.putExtra("order_items", (ArrayList<Map<String, Object>>) order_items.getOrder_items());
+            intent.putExtra("total_amount", order_items.getTotal_amount());
+            intent.putExtra("user_address", order_items.getUser_address());
+            intent.putExtra("user_id", order_items.getUser_id());
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -84,12 +109,13 @@ public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapte
     }
 
     public static class PendingOrderViewHolder extends RecyclerView.ViewHolder {
-        TextView txt_order_id, txt_order_address, txt_order_amount;
+        TextView txt_order_id, txt_ordered_date, txt_order_address, txt_order_amount;
         ImageView imv_order_img;
 
         public PendingOrderViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_order_id = itemView.findViewById(R.id.order_id);
+            txt_ordered_date = itemView.findViewById(R.id.ordered_date);
             txt_order_address = itemView.findViewById(R.id.order_address);
             txt_order_amount = itemView.findViewById(R.id.order_amount);
             imv_order_img = itemView.findViewById(R.id.order_img);
