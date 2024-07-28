@@ -74,34 +74,36 @@
             android:textColor="@color/black"
             android:layout_marginTop="8dp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_layout_order_status"
+        <RadioGroup
+            android:id="@+id/order_status_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:counterEnabled="false"
-            app:hintEnabled="true"
-            android:hint="papalitan nalang ng radio buttons hehe">
-            <!--
-              current initial order status is 'PENDING'
-              bale ang magiging choices dito ni delivery ay
-              1. 'InTransit'
-              2. 'Delivered'
-            -->
+            android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/order_current_status"
+            <RadioButton
+                android:id="@+id/order_current_status_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/text_input_bg_oblong"
-                android:paddingStart="16dp"
-                android:paddingTop="14dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="14dp"
-                android:singleLine="true"
+                android:text="PREPARING"
                 android:textColor="@color/black"
-                android:textColorHint="#757575"
-                tools:ignore="TextContrastCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:buttonTint="@color/black"/>
+
+            <RadioButton
+                android:id="@+id/order_current_status_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="INTRANSIT"
+                android:textColor="@color/black"
+                android:buttonTint="@color/black"/>
+
+            <RadioButton
+                android:id="@+id/order_current_status_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DELIVERED"
+                android:textColor="@color/black"
+                android:buttonTint="@color/black"/>
+        </RadioGroup>
 
     </LinearLayout>
 

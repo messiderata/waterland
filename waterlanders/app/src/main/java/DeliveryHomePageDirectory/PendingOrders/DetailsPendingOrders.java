@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.waterlanders.R;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -33,7 +34,9 @@ public class DetailsPendingOrders extends AppCompatActivity {
     private TextView userIDTextView;
     private TextView userAddressTextView;
     private TextView totalAmountTextView;
-    private TextInputEditText orderStatusEditText;
+    private RadioGroup orderStatusRadioGroup;
+    private RadioButton orderStatus1RadioButton;
+    private RadioButton orderStatus2RadioButton;
     private RecyclerView orderItemsRecyclerView;
     private Button cancelBtn;
     private Button takeOrderBtn;
@@ -57,7 +60,9 @@ public class DetailsPendingOrders extends AppCompatActivity {
         userIDTextView = findViewById(R.id.userID);
         userAddressTextView = findViewById(R.id.userAddress);
         totalAmountTextView = findViewById(R.id.totalAmount);
-        orderStatusEditText = findViewById(R.id.order_current_status);
+        orderStatusRadioGroup = findViewById(R.id.order_status_group);
+        orderStatus1RadioButton = findViewById(R.id.order_current_status_1);
+        orderStatus2RadioButton = findViewById(R.id.order_current_status_2);
         orderItemsRecyclerView = findViewById(R.id.rv_orderList);
         cancelBtn = findViewById(R.id.cancel_button);
         takeOrderBtn = findViewById(R.id.takerOrder_button);
@@ -97,7 +102,15 @@ public class DetailsPendingOrders extends AppCompatActivity {
         });
 
         takeOrderBtn.setOnClickListener(view -> {
-            String orderCurrStatus = String.valueOf(orderStatusEditText.getText());
+            // Check which radio button is checked
+            int selectedId = orderStatusRadioGroup.getCheckedRadioButtonId();
+            String orderCurrStatus = "";
+            if (selectedId == R.id.order_current_status_1) {
+                orderCurrStatus = orderStatus1RadioButton.getText().toString();
+            } else if (selectedId == R.id.order_current_status_2) {
+                orderCurrStatus = orderStatus2RadioButton.getText().toString();
+            }
+
             if (!TextUtils.isEmpty(orderCurrStatus)){
                 Map<String, Object> onDeliveryData = new HashMap<>();
                 String deliveryID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -133,7 +146,7 @@ public class DetailsPendingOrders extends AppCompatActivity {
                             Toast.makeText(DetailsPendingOrders.this, "Failed to save order", Toast.LENGTH_SHORT).show();
                         });
             } else {
-                Toast.makeText(DetailsPendingOrders.this, "Enter the current order location.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DetailsPendingOrders.this, "Enter the current order status.", Toast.LENGTH_SHORT).show();
             }
         });
 
