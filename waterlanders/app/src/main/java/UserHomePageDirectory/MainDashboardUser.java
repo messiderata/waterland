@@ -114,6 +114,11 @@ public class MainDashboardUser extends AppCompatActivity implements NavigationVi
             editText.setText(titleTextAboutUs);
             drawerLayout.closeDrawer(GravityCompat.START);
         }  else {
+            // testing lang haha hindi maka logout e
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(this, Login.class);
+            startActivity(intent);
+            finish();
             Toast.makeText(this, "Unknown option selected", Toast.LENGTH_SHORT).show();
         }
 
