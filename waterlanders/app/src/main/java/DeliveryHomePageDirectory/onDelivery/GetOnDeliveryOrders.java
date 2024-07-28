@@ -6,12 +6,12 @@ import java.util.Map;
 
 public class GetOnDeliveryOrders {
 
-    private String current_location;
     private Timestamp date_ordered;
     private String delivery_id;
     private String order_icon;
     private String order_id;
     private List<Map<String, Object>> order_items;
+    private String order_status;
     private int total_amount;
     private String user_address;
     private String user_id;
@@ -19,24 +19,24 @@ public class GetOnDeliveryOrders {
     public GetOnDeliveryOrders() {
     }
 
-    public GetOnDeliveryOrders(String current_location, Timestamp date_ordered, String delivery_id, String order_icon, String order_id, List<Map<String, Object>> order_items, int total_amount, String user_address, String user_id) {
-        this.current_location = current_location;
+    public GetOnDeliveryOrders(Timestamp date_ordered, String delivery_id, String order_icon, String order_id, List<Map<String, Object>> order_items, String order_status, int total_amount, String user_address, String user_id) {
         this.date_ordered = date_ordered;
         this.delivery_id = delivery_id;
         this.order_icon = order_icon;
         this.order_id = order_id;
         this.order_items = order_items;
+        this.order_status = order_status;
         this.total_amount = total_amount;
         this.user_address = user_address;
         this.user_id = user_id;
     }
 
-    public String getCurrent_location() {
-        return current_location;
+    public String getOrder_status() {
+        return order_status;
     }
 
-    public void setCurrent_location(String current_location) {
-        this.current_location = current_location;
+    public void setOrder_status(String order_status) {
+        this.order_status = order_status;
     }
 
     public Timestamp getDate_ordered() {
