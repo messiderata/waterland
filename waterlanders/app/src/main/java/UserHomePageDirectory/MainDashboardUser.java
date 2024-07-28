@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.waterlanders.R;
@@ -29,7 +28,6 @@ public class MainDashboardUser extends AppCompatActivity implements NavigationVi
     private DrawerLayout drawerLayout;
     private boolean doubleBackToExitPressedOnce = false;
     private TextView editText;
-    private ImageView menuItem;
 
     String titleTextHome = "Home";
     String titleTextSettings = "Settings";
@@ -40,9 +38,11 @@ public class MainDashboardUser extends AppCompatActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        EdgeToEdge.enable(this);
+//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main_dasboard_user); // Ensure this is the correct layout resource
-
+        // Enable immersive full-screen mode
+//        enableFullScreenMode();
+//        getWindow().setStatusBarColor(getResources().getColor(R.color.button_bg));
         // Initialize Firebase Auth
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null) {
@@ -56,8 +56,8 @@ public class MainDashboardUser extends AppCompatActivity implements NavigationVi
         // Initialize DrawerLayout
         drawerLayout = findViewById(R.id.drawer_layout);
         editText = findViewById(R.id.title_text_top);
-        menuItem = findViewById(R.id.menu_icon);
-        CardView logoutButton  = findViewById(R.id.logout_nav);
+        ImageView menuItem = findViewById(R.id.menu_icon);
+//        CardView logoutButton  = findViewById(R.id.logout_nav);
 
         // Initialize NavigationView
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -78,16 +78,18 @@ public class MainDashboardUser extends AppCompatActivity implements NavigationVi
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_home);
+            navigationView.setCheckedItem(R.id.home_nav);
         }
 
-        logoutButton.setOnClickListener(view -> {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();
-            Intent logoutIntent = new Intent(this, Login.class);
-            startActivity(logoutIntent);
-            finish();
-        });
+    }
+
+    private void enableFullScreenMode() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        );
+
     }
 
     @SuppressLint("NonConstantResourceId")

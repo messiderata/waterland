@@ -17,4 +17,12 @@
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
+
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@color/button_bg</item>
+        <item name="android:windowLightStatusBar">true</item> <!-- Use this if you want dark icons on the status bar -->
+    </style>
+
 </resources>

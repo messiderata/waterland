@@ -5,8 +5,11 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:theme="@style/Theme.AppCompat"
     tools:openDrawer="start"
     tools:context="UserHomePageDirectory.MainDashboardUser">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,87 +18,71 @@
         <LinearLayout
             android:id="@+id/toolbar_"
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:elevation="4dp"
+            android:layout_height="50dp"
             android:background="@drawable/button_bg"
             android:orientation="horizontal"
             android:gravity="center_vertical"> <!-- Center content vertically -->
 
-            <ImageView
-                android:id="@+id/menu_icon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="17dp"
-                android:layout_marginEnd="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:importantForAccessibility="no"
-                android:src="@drawable/menu_icon"
-                app:tint="@color/white"
-                tools:ignore="TouchTargetSizeCheck" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/title_text_top"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:fontFamily="@font/robotomedium"
-                android:gravity="center"
-                android:layout_marginStart="-70dp"
-                android:layout_marginTop="15dp"
-                android:text="@string/home"/>
+                <ImageView
+                    android:id="@+id/menu_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="5dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/menu_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.036"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <TextView
+                    android:id="@+id/title_text_top"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/robotomedium"
+                    android:gravity="center"
+                    android:text="@string/home"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.382"
+                    app:layout_constraintStart_toEndOf="@+id/menu_icon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlSymmetry" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true" />
 
     </LinearLayout>
 
-    <!---->
+<!---->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:itemIconTint="@color/black"
         android:background="@color/white"
-        app:itemTextColor="@color/black"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <!-- Place this as the header or main content of the NavigationView -->
-            <!-- Here, your existing header or menu items -->
-
-            <androidx.cardview.widget.CardView
-                android:layout_gravity="bottom|end"
-                android:paddingTop="100dp"
-                android:id="@+id/logout_nav"
-                android:layout_width="match_parent"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_height="50dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/logoutText"
-
-                    />
-
-            </androidx.cardview.widget.CardView>
-
-
-
-        </FrameLayout>
-    </com.google.android.material.navigation.NavigationView>
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
+        app:menu="@menu/nav_menu2"
+        android:fitsSystemWindows="true"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
