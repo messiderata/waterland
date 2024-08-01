@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,11 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.waterlanders.R;
-import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+
 
 
 public class DetailsPendingOrders extends AppCompatActivity {
@@ -29,10 +34,13 @@ public class DetailsPendingOrders extends AppCompatActivity {
     private TextView userIDTextView;
     private TextView userAddressTextView;
     private TextView totalAmountTextView;
-    private TextInputEditText orderLocationEditText;
+    private RadioGroup orderStatusRadioGroup;
+    private RadioButton orderStatus1RadioButton;
+    private RadioButton orderStatus2RadioButton;
     private RecyclerView orderItemsRecyclerView;
     private Button cancelBtn;
     private Button takeOrderBtn;
+    private FirebaseFirestore db;
 
     private static final String TAG = "PendingOrderDetails";
 
@@ -52,10 +60,13 @@ public class DetailsPendingOrders extends AppCompatActivity {
         userIDTextView = findViewById(R.id.userID);
         userAddressTextView = findViewById(R.id.userAddress);
         totalAmountTextView = findViewById(R.id.totalAmount);
-        orderLocationEditText = findViewById(R.id.order_current_location);
+        orderStatusRadioGroup = findViewById(R.id.order_status_group);
+        orderStatus1RadioButton = findViewById(R.id.order_current_status_1);
+        orderStatus2RadioButton = findViewById(R.id.order_current_status_2);
         orderItemsRecyclerView = findViewById(R.id.rv_orderList);
         cancelBtn = findViewById(R.id.cancel_button);
         takeOrderBtn = findViewById(R.id.takerOrder_button);
+        db = FirebaseFirestore.getInstance();
 
         // Retrieve data from Intent
         Intent intent = getIntent();
@@ -91,14 +102,51 @@ public class DetailsPendingOrders extends AppCompatActivity {
         });
 
         takeOrderBtn.setOnClickListener(view -> {
-            String orderCurrLocation = String.valueOf(orderLocationEditText.getText());
-            if (!TextUtils.isEmpty(orderCurrLocation)){
-                Toast.makeText(DetailsPendingOrders.this, "Order transferred to 'Your Deliveries'", Toast.LENGTH_SHORT).show();
-                // note:
-                // insert the current user id and the current order location named:
-                // 'delivery_id', and 'current_location'
+            // Check which radio button is checked
+            int selectedId = orderStatusRadioGroup.getCheckedRadioButtonId();
+            String orderCurrStatus = "";
+            if (selectedId == R.id.order_current_status_1) {
+                orderCurrStatus = orderStatus1RadioButton.getText().toString();
+            } else if (selectedId == R.id.order_current_status_2) {
+                orderCurrStatus = orderStatus2RadioButton.getText().toString();
+            }
+
+            if (!TextUtils.isEmpty(orderCurrStatus)){
+                Map<String, Object> onDeliveryData = new HashMap<>();
+                String deliveryID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                onDeliveryData.put("date_ordered", dateOrdered);
+                onDeliveryData.put("delivery_id", deliveryID);
+                onDeliveryData.put("order_icon", orderIcon);
+                onDeliveryData.put("order_id", orderID);
+                onDeliveryData.put("order_items", orderItems);
+                onDeliveryData.put("order_status", orderCurrStatus);
+                onDeliveryData.put("total_amount", totalAmount);
+                onDeliveryData.put("user_address", userAddress);
+                onDeliveryData.put("user_id", userID);
+
+                // Save the data to the 'onDelivery' collection
+                db.collection("onDelivery")
+                        .document(orderID)
+                        .set(onDeliveryData)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(DetailsPendingOrders.this, "Order saved successfully!", Toast.LENGTH_SHORT).show();
+                            // Remove the data from 'pendingOrders' collection
+                            db.collection("pendingOrders")
+                                    .document(orderID)
+                                    .delete()
+                                    .addOnSuccessListener(aVoid1 -> {
+                                        Toast.makeText(DetailsPendingOrders.this, "Order removed from pending orders", Toast.LENGTH_SHORT).show();
+                                        finish(); // Close the activity
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(DetailsPendingOrders.this, "Failed to remove order from pending orders", Toast.LENGTH_SHORT).show();
+                                    });
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(DetailsPendingOrders.this, "Failed to save order", Toast.LENGTH_SHORT).show();
+                        });
             } else {
-                Toast.makeText(DetailsPendingOrders.this, "Enter the current order location.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DetailsPendingOrders.this, "Enter the current order status.", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,10 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.waterlanders.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+
+import DeliveryHomePageDirectory.PendingOrders.DetailsPendingOrders;
 
 
 public class DetailsOnDeliveryOrders extends AppCompatActivity {
@@ -31,12 +38,15 @@ public class DetailsOnDeliveryOrders extends AppCompatActivity {
     private TextView userAddressTextView;
     private TextView deliveryIDTextView;
     private TextView totalAmountTextView;
-    private TextInputEditText orderLocationEditText;
-    private TextInputLayout orderLocationInputLayout;
+    private RadioGroup orderStatusRadioGroup;
+    private RadioButton orderStatus1RadioButton;
+    private RadioButton orderStatus2RadioButton;
+    private RadioButton orderStatus3RadioButton;
     private RecyclerView orderItemsRecyclerView;
     private Button backBtn;
     private Button updateBtn;
     private Button deliveredBtn;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,22 +65,25 @@ public class DetailsOnDeliveryOrders extends AppCompatActivity {
         userAddressTextView = findViewById(R.id.userAddress);
         deliveryIDTextView = findViewById(R.id.deliveryID);
         totalAmountTextView = findViewById(R.id.totalAmount);
-        orderLocationInputLayout = findViewById(R.id.text_input_layout_order_location);
-        orderLocationEditText = findViewById(R.id.order_current_location);
+        orderStatusRadioGroup = findViewById(R.id.order_status_group);
+        orderStatus1RadioButton = findViewById(R.id.order_current_status_1);
+        orderStatus2RadioButton = findViewById(R.id.order_current_status_2);
+        orderStatus3RadioButton = findViewById(R.id.order_current_status_3);
         orderItemsRecyclerView = findViewById(R.id.rv_orderList);
         backBtn = findViewById(R.id.back_button);
         updateBtn = findViewById(R.id.update_button);
         deliveredBtn = findViewById(R.id.delivered_button);
+        db = FirebaseFirestore.getInstance();
 
         // Retrieve data from Intent
         Intent intent = getIntent();
-        String curentLocation = intent.getStringExtra("current_location");
         long dateOrderedMillis = intent.getLongExtra("date_ordered", 0);
         Date dateOrdered = new Date(dateOrderedMillis);
         String deliveryID = intent.getStringExtra("delivery_id");
         String orderIcon = intent.getStringExtra("order_icon");
         String orderID = intent.getStringExtra("order_id");
         ArrayList<Map<String, Object>> orderItems = (ArrayList<Map<String, Object>>) intent.getSerializableExtra("order_items");
+        String orderStatus = intent.getStringExtra("order_status");
         int totalAmount = intent.getIntExtra("total_amount", 0);
         String userAddress = intent.getStringExtra("user_address");
         String userID = intent.getStringExtra("user_id");
@@ -82,7 +95,6 @@ public class DetailsOnDeliveryOrders extends AppCompatActivity {
         String fmt_userAddress = "User Address: "+ userAddress;
         String fmt_deliveryID = "Your Delivery ID: "+ deliveryID;
         String fmt_totalAmount = "Total Amount: ₱"+ totalAmount;
-        String fmt_currentLocation = "Previous Location: "+ curentLocation;
 
         orderIDTextView.setText(fmt_orderID);
         dateOrderedTextView.setText(fmt_dateOrdered);
@@ -90,7 +102,9 @@ public class DetailsOnDeliveryOrders extends AppCompatActivity {
         userAddressTextView.setText(fmt_userAddress);
         deliveryIDTextView.setText(fmt_deliveryID);
         totalAmountTextView.setText(fmt_totalAmount);
-        orderLocationInputLayout.setHint(fmt_currentLocation);
+
+        // Check the appropriate RadioButton based on the 'orderStatus'
+        setOrderStatus(orderStatus);
 
         // display the orderItems to the orderItemsRecyclerView
         DetailsAdapterOnDeliveryOrders adapter = new DetailsAdapterOnDeliveryOrders(this, orderItems);
@@ -102,21 +116,86 @@ public class DetailsOnDeliveryOrders extends AppCompatActivity {
         });
 
         updateBtn.setOnClickListener(view -> {
-            String orderCurrLocation = String.valueOf(orderLocationEditText.getText());
-            if (!TextUtils.isEmpty(orderCurrLocation)){
-                Toast.makeText(DetailsOnDeliveryOrders.this, "Location updated successfully.", Toast.LENGTH_SHORT).show();
+            String orderCurrStatus = ((RadioButton) findViewById(orderStatusRadioGroup.getCheckedRadioButtonId())).getText().toString();
+            if (!TextUtils.isEmpty(orderCurrStatus)){
+                if (orderCurrStatus.equals(orderStatus3RadioButton.getText().toString())){
+                    Toast.makeText(DetailsOnDeliveryOrders.this, "Click 'DELIVERED' button instead.", Toast.LENGTH_SHORT).show();
+                } else {
+                    db.collection("onDelivery")
+                            .document(orderID)
+                            .update("order_status", orderCurrStatus)
+                            .addOnSuccessListener(aVoid -> Toast.makeText(DetailsOnDeliveryOrders.this, "Location updated successfully.", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> Toast.makeText(DetailsOnDeliveryOrders.this, "Failed to update location.", Toast.LENGTH_SHORT).show());
+                    finish();
+                }
             } else {
-                Toast.makeText(DetailsOnDeliveryOrders.this, "Enter the current order location.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DetailsOnDeliveryOrders.this, "Enter the updated location.", Toast.LENGTH_SHORT).show();
             }
         });
 
         deliveredBtn.setOnClickListener(view -> {
-            String orderCurrLocation = String.valueOf(orderLocationEditText.getText());
-            if (!TextUtils.isEmpty(orderCurrLocation)){
-                Toast.makeText(DetailsOnDeliveryOrders.this, "Order Status Updated Successfully.", Toast.LENGTH_SHORT).show();
+            String orderCurrStatus = ((RadioButton) findViewById(orderStatusRadioGroup.getCheckedRadioButtonId())).getText().toString();
+            if (!TextUtils.isEmpty(orderCurrStatus)){
+                if (orderCurrStatus.equals(orderStatus3RadioButton.getText().toString())){
+                    Map<String, Object> deliveredOrder = new HashMap<>();
+                    deliveredOrder.put("date_delivered", Timestamp.now());
+                    deliveredOrder.put("date_ordered", dateOrdered);
+                    deliveredOrder.put("delivery_id", deliveryID);
+                    deliveredOrder.put("order_icon", orderIcon);
+                    deliveredOrder.put("order_id", orderID);
+                    deliveredOrder.put("order_items", orderItems);
+                    deliveredOrder.put("order_status", orderCurrStatus);
+                    deliveredOrder.put("total_amount", totalAmount);
+                    deliveredOrder.put("user_address", userAddress);
+                    deliveredOrder.put("user_confirmation", "PENDING");
+                    deliveredOrder.put("user_id", userID);
+
+                    // Save the data to the 'deliveredOrders' collection
+                    db.collection("deliveredOrders")
+                            .document(orderID)
+                            .set(deliveredOrder)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(DetailsOnDeliveryOrders.this, "Order saved successfully!", Toast.LENGTH_SHORT).show();
+                                // Remove the data from 'pendingOrders' collection
+                                db.collection("onDelivery")
+                                        .document(orderID)
+                                        .delete()
+                                        .addOnSuccessListener(aVoid1 -> {
+                                            Toast.makeText(DetailsOnDeliveryOrders.this, "Order removed from pending orders", Toast.LENGTH_SHORT).show();
+                                            finish(); // Close the activity
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(DetailsOnDeliveryOrders.this, "Failed to remove order from pending orders", Toast.LENGTH_SHORT).show();
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(DetailsOnDeliveryOrders.this, "Failed to save order", Toast.LENGTH_SHORT).show();
+                            });
+                } else {
+                    Toast.makeText(DetailsOnDeliveryOrders.this, "Check 'DELIVERED' option first.", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(DetailsOnDeliveryOrders.this, "Enter the current order location.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DetailsOnDeliveryOrders.this, "Enter the current status of the order.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void setOrderStatus(String orderStatus) {
+        switch (orderStatus) {
+            case "PREPARING":
+                orderStatus1RadioButton.setChecked(true);
+                break;
+            case "INTRANSIT":
+                orderStatus2RadioButton.setChecked(true);
+                break;
+            case "DELIVERED":
+                orderStatus3RadioButton.setChecked(true);
+                break;
+            default:
+                orderStatus1RadioButton.setChecked(false);
+                orderStatus2RadioButton.setChecked(false);
+                orderStatus3RadioButton.setChecked(false);
+                break;
+        }
     }
 }

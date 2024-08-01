@@ -16,7 +16,6 @@ public class GetItems {
         this.item_name = item_name;
         this.item_price = item_price;
         this.item_img = item_img;
-        Log.d("GetItems", "Created with item_img: " + item_img);
     }
 
     public String getItem_name() {

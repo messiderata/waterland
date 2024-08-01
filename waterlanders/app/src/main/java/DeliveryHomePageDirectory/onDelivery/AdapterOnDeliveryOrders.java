@@ -46,7 +46,7 @@ public class AdapterOnDeliveryOrders extends RecyclerView.Adapter<AdapterOnDeliv
     @Override
     public void onBindViewHolder(@NonNull AdapterOnDeliveryOrders.OnDeliveryOrdersViewHolder holder, int position) {
         GetOnDeliveryOrders onDelivery_orders = onDeliveryOrders.get(position);
-        Log.d(TAG, "->> getCurrent_location: " + onDelivery_orders.getCurrent_location());
+        Log.d(TAG, "->> getCurrent_location: " + onDelivery_orders.getOrder_status());
         Log.d(TAG, "->> getDate_ordered: " + onDelivery_orders.getDate_ordered());
         Log.d(TAG, "->> getDelivery_id: " + onDelivery_orders.getDelivery_id());
         Log.d(TAG, "->> getOrder_icon: " + onDelivery_orders.getOrder_icon());
@@ -94,12 +94,12 @@ public class AdapterOnDeliveryOrders extends RecyclerView.Adapter<AdapterOnDeliv
         // Set click listener for item view
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailsOnDeliveryOrders.class);
-            intent.putExtra("current_location", onDelivery_orders.getCurrent_location());
             intent.putExtra("date_ordered", dateOrderedMillis);
             intent.putExtra("delivery_id", onDelivery_orders.getDelivery_id());
             intent.putExtra("order_icon", gsUrl);
             intent.putExtra("order_id", onDelivery_orders.getOrder_id());
             intent.putExtra("order_items", (ArrayList<Map<String, Object>>) onDelivery_orders.getOrder_items());
+            intent.putExtra("order_status", onDelivery_orders.getOrder_status());
             intent.putExtra("total_amount", onDelivery_orders.getTotal_amount());
             intent.putExtra("user_address", onDelivery_orders.getUser_address());
             intent.putExtra("user_id", onDelivery_orders.getUser_id());
