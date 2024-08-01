@@ -1,71 +1,77 @@
 package UserHomePageDirectory;
 
-import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.example.waterlanders.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import androidx.fragment.app.Fragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Objects;
+
 import LoginDirectory.Login;
 import UserHomePageDirectory.FragmentsDirectory.AboutUsFragment;
+import UserHomePageDirectory.FragmentsDirectory.HelpUsFragment;
+import UserHomePageDirectory.FragmentsDirectory.HistoryFragment;
 import UserHomePageDirectory.FragmentsDirectory.HomeFragment;
 import UserHomePageDirectory.FragmentsDirectory.SettingsFragment;
 
-public class MainDashboardUser extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainDashboardUser extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
-    private boolean doubleBackToExitPressedOnce = false;
+    private BottomNavigationView bottomNavigationView;
     private TextView editText;
+    private static final String TitleTextHome = "Home";
+    private static final String TitleTextSettings = "Settings";
+    private static final String TITLE_TEXT_AboutUs = "About Us";
+    private static final String TitleTextHelp = "Help";
 
-    String titleTextHome = "Home";
-    String titleTextSettings = "Settings";
-    String titleTextAboutUs = "About Us";
 
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_dasboard_user);
 
-//        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main_dasboard_user); // Ensure this is the correct layout resource
-        // Enable immersive full-screen mode
-//        enableFullScreenMode();
-//        getWindow().setStatusBarColor(getResources().getColor(R.color.button_bg));
         // Initialize Firebase Auth
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null) {
-            // User is not logged in, redirect to login activity
             Intent intent = new Intent(this, Login.class);
             startActivity(intent);
-            finish(); // Prevent going back to this activity
-            return; // Exit onCreate to prevent further initialization
+            finish();
+            return;
         }
 
-        // Initialize DrawerLayout
+        // Initialize Views
         drawerLayout = findViewById(R.id.drawer_layout);
         editText = findViewById(R.id.title_text_top);
-        ImageView menuItem = findViewById(R.id.menu_icon);
-//        CardView logoutButton  = findViewById(R.id.logout_nav);
-
-        // Initialize NavigationView
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        ImageView menuItem = findViewById(R.id.menu_icon);
 
-        // Disable drawer sliding
-        disableDrawerSliding();
 
+        // Initialize and configure dialog
+
+
+        // Set default item checked in NavigationView
+        Menu menu = navigationView.getMenu();
+        MenuItem itemChecked = menu.findItem(R.id.home_nav);
+        itemChecked.setChecked(true);
+
+        // Set up drawer toggle
         menuItem.setOnClickListener(v -> {
             if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -74,71 +80,95 @@ public class MainDashboardUser extends AppCompatActivity implements NavigationVi
             }
         });
 
-        // Load the default fragment
+        // Set initial fragment
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new HomeFragment()).commit();
-            navigationView.setCheckedItem(R.id.home_nav);
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .commit();
+            bottomNavigationView.setSelectedItemId(R.id.nav_home);
         }
 
-    }
-
-    private void enableFullScreenMode() {
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        );
-
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.home_nav) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new HomeFragment()).commit();
-            editText.setText(titleTextHome);
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else if (id == R.id.settings_nav) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new SettingsFragment()).commit();
-            editText.setText(titleTextSettings);
-            drawerLayout.closeDrawer(GravityCompat.START);
-
-        } else if (id == R.id.about_nav) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new AboutUsFragment()).commit();
-            editText.setText(titleTextAboutUs);
-            drawerLayout.closeDrawer(GravityCompat.START);
-        }  else {
-            Toast.makeText(this, "Unknown option selected", Toast.LENGTH_SHORT).show();
-        }
-
-        return true;
-    }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            if (doubleBackToExitPressedOnce) {
-                finishAffinity(); // Close all activities and exit the app
-            } else {
-                this.doubleBackToExitPressedOnce = true;
-                Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
-
-                // Reset the flag after 2 seconds
-                new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+        // Set up NavigationView item selection
+        navigationView.setNavigationItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int itemId = item.getItemId();
+            if (itemId == R.id.home_nav) {
+                selectedFragment = new HomeFragment();
+                editText.setText(TitleTextHome);
+                bottomNavigationView.setVisibility(View.VISIBLE);
+            } else if (itemId == R.id.settings_nav) {
+                selectedFragment = new SettingsFragment();
+                editText.setText(TitleTextSettings);
+                bottomNavigationView.setVisibility(View.GONE);
+            } else if (itemId == R.id.about_nav) {
+                selectedFragment = new AboutUsFragment();
+                editText.setText(TITLE_TEXT_AboutUs);
+                bottomNavigationView.setVisibility(View.GONE);
+            } else if (itemId == R.id.help_nav) {
+                selectedFragment = new HelpUsFragment();
+                editText.setText(TitleTextHelp);
+                bottomNavigationView.setVisibility(View.GONE);
+            }else if (itemId == R.id.logout_nav) {
+                showLogoutDialog();
             }
-        }
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .commit();
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+
+        // Set up BottomNavigationView item selection
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_order) {
+                selectedFragment = new HomeFragment();
+            } else if (itemId == R.id.nav_history) {
+                selectedFragment = new HistoryFragment();
+            } else if (itemId == R.id.nav_profile) {
+                selectedFragment = new HistoryFragment();
+            }
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .commit();
+            }
+            return true;
+        });
+
+        // Handle back press with BackPressHandler
+        new BackPressHandler(this, drawerLayout);
     }
 
-    private void disableDrawerSliding() {
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    // Call this method to show the dialog when needed
+    private void showLogoutDialog() {
+        // Initialize and configure dialog
+        Dialog dialog = new Dialog(MainDashboardUser.this);
+        dialog.setContentView(R.layout.logout_dialog);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_bg);
+
+        // Find views in the dialog
+        MaterialButton btnCancel = dialog.findViewById(R.id.button_cancel);
+        MaterialButton btnOk = dialog.findViewById(R.id.ok_button);
+
+        // Set click listeners for buttons
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnOk.setOnClickListener(v -> {
+            // Perform logout action
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(MainDashboardUser.this, Login.class);
+            startActivity(intent);
+            finish();
+        });
+
+        // Show the dialog
+        dialog.show();
     }
 }
+
+
+

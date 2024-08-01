@@ -72,5 +72,10 @@
     <string name="settings_fragment">Settings Fragment</string>
     <string name="about_us">About Us</string>
     <string name="home">Home</string>
+    <string name="nav_order">Order</string>
+    <string name="nav_history">History</string>
+    <string name="nav_profile">Me</string>
+    <string name="nav_help">Help</string>
+
 
 </resources>

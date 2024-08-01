@@ -1,14 +1,11 @@
 package UserHomePageDirectory.FragmentsDirectory;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,21 +23,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.util.Log;
 
 import UserHomePageDirectory.AddedItems;
 import UserHomePageDirectory.GetItems;
 import UserHomePageDirectory.ItemAdapter;
-import UserHomePageDirectory.OrderConfirmation;
 
 public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountChangeListener {
 
     private ItemAdapter itemAdapter;
     private List<GetItems> itemsList;
     private FirebaseFirestore db;
-//    private TextView textTotalAmount;
-//    private Button purchase_order_btn;
-
     private static final String TAG = "UserHomePage";
 
     @Nullable
@@ -63,6 +55,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
 
         RecyclerView recyclerView = view.findViewById(R.id.rv_userList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true); // Added for optimization
 
         itemsList = new ArrayList<>();
 
@@ -71,27 +64,10 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
         itemAdapter.setOnTotalAmountChangeListener(this);
         recyclerView.setAdapter(itemAdapter);
 
-//        textTotalAmount = view.findViewById(R.id.text_total_amount);
-//        purchase_order_btn = view.findViewById(R.id.btn_purchase_order);
-
         db = FirebaseFirestore.getInstance();
         getItemsFromFireStore();
-        Log.d(TAG, "itemsList: "+ itemsList);
+        Log.d(TAG, "itemsList: " + itemsList);
 
-//        purchase_order_btn.setOnClickListener(v -> {
-//            AddedItems addedItems = itemAdapter.getAddedItems();
-//            Log.d(TAG, "-->>> Added Items: " + addedItems.getItemIds());
-//            Log.d(TAG, "--> Total Amount: " + addedItems.getTotalAmount());
-
-//            if (!addedItems.getItemIds().isEmpty()) {
-//                Intent intent = new Intent(getContext(), OrderConfirmation.class);
-//                intent.putExtra("addedItems", addedItems);
-//                startActivity(intent);
-//            } else {
-//                Toast.makeText(getContext(), "Select an item first.", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
         return view;
     }
 
@@ -101,24 +77,29 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if (error != null) {
+                            Log.e(TAG, "Error fetching data", error);
                             return;
                         }
-                        itemsList.clear();
-                        for (DocumentSnapshot snapshot : value.getDocuments()) {
-                            GetItems items = snapshot.toObject(GetItems.class);
-                            if (items != null) {
-                                items.setItem_id(snapshot.getId());
-                                Log.d(TAG, "--> items: " + items);
-                                itemsList.add(items);
+                        if (value != null) {
+                            List<GetItems> newItemsList = new ArrayList<>();
+                            for (DocumentSnapshot snapshot : value.getDocuments()) {
+                                GetItems items = snapshot.toObject(GetItems.class);
+                                if (items != null) {
+                                    items.setItem_id(snapshot.getId());
+                                    Log.d(TAG, "--> items: " + items);
+                                    newItemsList.add(items);
+                                }
                             }
+                            itemsList.clear();
+                            itemsList.addAll(newItemsList);
+                            itemAdapter.notifyDataSetChanged();
                         }
-                        itemAdapter.notifyDataSetChanged();
                     }
                 });
     }
 
     @Override
     public void onTotalAmountChange(int totalAmount, AddedItems addedItems) {
-//        textTotalAmount.setText("₱" + totalAmount);
+        // Implement your logic to handle total amount change
     }
 }

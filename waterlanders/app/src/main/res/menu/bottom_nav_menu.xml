@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view"
+    >
+
+    <item
+        android:title="@string/nav_order"
+        android:icon="@drawable/baseline_add_shopping_cart_24"
+        android:id="@+id/nav_order"/>
+    <item
+        android:icon="@drawable/baseline_history_24"
+        android:title="@string/nav_history"
+        android:id="@+id/nav_history"/>
+    <item
+        android:icon="@drawable/baseline_person_24"
+        android:title="@string/nav_profile"
+        android:id="@+id/nav_profile"/>
+
+</menu>

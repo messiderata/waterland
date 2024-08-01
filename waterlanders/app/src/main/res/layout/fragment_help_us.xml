@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/home_bg_color"
-    android:fitsSystemWindows="true"
-    tools:context="UserHomePageDirectory.FragmentsDirectory.AboutUsFragment">
+    tools:context="UserHomePageDirectory.FragmentsDirectory.HelpUsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

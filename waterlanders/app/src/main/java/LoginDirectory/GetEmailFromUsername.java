@@ -8,7 +8,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import HelpFul.ShowToast;
+import Handler.ShowToast;
 
 public class GetEmailFromUsername {
     private final Context context;

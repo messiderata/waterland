@@ -8,11 +8,25 @@
     android:fitsSystemWindows="true"
     tools:context="UserHomePageDirectory.MainDashboardUser">
 
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" /> <!-- Fixed height for top_view -->
+
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_userList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"/>
+        android:id="@+id/rv_userList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_below="@id/top_view"
+        android:layout_above="@id/bottom_view" />
+
+    <View
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="50dp" /> <!-- Fixed height for bottom_view -->
+
 </RelativeLayout>

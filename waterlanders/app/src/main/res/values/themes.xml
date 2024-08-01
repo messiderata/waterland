@@ -25,4 +25,51 @@
         <item name="android:windowLightStatusBar">true</item> <!-- Use this if you want dark icons on the status bar -->
     </style>
 
+
+    <style name="Base.Theme.app" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Add other theme attributes here -->
+        <item name="navigationViewStyle">@style/Widget.NavigationView.Custom</item>
+    </style>
+
+    <style name="Widget.NavigationView.Custom" parent="Widget.MaterialComponents.NavigationView">
+        <item name="itemTextColor">@color/button_bg</item>
+        <item name="itemIconTint">@color/button_bg</item>
+    </style>
+
+    <style name="ThemeOverlay.AppCompat.navTheme">
+
+        <!-- Color of text and icon when SELECTED -->
+        <item name="colorPrimary">@color/white</item>
+
+        <!-- Background color when SELECTED -->
+        <item name="colorControlHighlight">@color/button_bg</item>
+
+    </style>
+
+    <style name="Theme_Dialog" parent="android:Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
+    <style name="ButtonTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here -->
+    </style>
+
+    <style name="MyCancelButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/button_bg</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:textColor">@color/button_bg</item>
+        <item name="cornerRadius">25dp</item>
+        <item name="android:textSize">12sp</item>
+
+    </style>
+
+    <style name="MyOkButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="backgroundTint">@color/button_bg</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">25dp</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
 </resources>
