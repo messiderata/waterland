@@ -103,9 +103,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
                 int itemPrice = items.getItem_price();
                 int totalItemPrice = updateTotalPrice(holder, itemPrice, currentQuantity);
-                if (currentQuantity == 0) {
-                    addedItems.removeItem(items.getItem_id(), itemPrice, totalItemPrice);
-                }
+
+                addedItems.removeItem(items.getItem_id(), itemPrice, totalItemPrice);
                 notifyTotalAmountChange();
             }
         });
@@ -113,7 +112,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     @Override
     public int getItemCount() {
-        Log.d("ItemAdapter", "Item list size: " + itemsList.size());
         return itemsList.size();
     }
 

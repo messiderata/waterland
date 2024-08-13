@@ -1,5 +1,7 @@
 package UserHomePageDirectory;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,9 +39,9 @@ public class AddedItems implements Serializable {
 
     public void removeItem(String itemId, int itemPrice, int totalPrice) {
         if (itemIds.remove(itemId)) {
-            totalAmount -= totalPrice;
+            totalAmount -= itemPrice;
         } else {
-            totalAmount += itemPrice;
+            totalAmount -= itemPrice;
         }
     }
 }
