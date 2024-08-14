@@ -88,10 +88,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             currentQuantity++;
             holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
 
-            int itemPrice = items.getItem_price();
-            int totalItemPrice = updateTotalPrice(holder, itemPrice, currentQuantity);
+            int[] prices = updateTotalPrice(holder, items, currentQuantity, addedItems.getTotalAmount(), "btn_increase");
+            int itemPrice = prices[1];
+            int totalItemPrice = prices[0];
+
             addedItems.addItem(items.getItem_id(), itemPrice, totalItemPrice);
-            Log.e("GLIDE", "Item: "+items.getItem_id()+" totalItemPrice: "+ totalItemPrice);
             notifyTotalAmountChange();
         });
 
@@ -101,8 +102,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 currentQuantity--;
                 holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
 
-                int itemPrice = items.getItem_price();
-                int totalItemPrice = updateTotalPrice(holder, itemPrice, currentQuantity);
+                int[] prices = updateTotalPrice(holder, items, currentQuantity, addedItems.getTotalAmount(), "btn_decrease");
+                int itemPrice = prices[1];
+                int totalItemPrice = prices[0];
 
                 addedItems.removeItem(items.getItem_id(), itemPrice, totalItemPrice);
                 notifyTotalAmountChange();
@@ -115,11 +117,47 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         return itemsList.size();
     }
 
-    private int updateTotalPrice(ItemViewHolder holder, int itemPrice, int quantity) {
+    private int[] updateTotalPrice(ItemViewHolder holder, GetItems items, int quantity, int totalItemAmount, String mode) {
+        int itemPrice = items.getItem_price();
         int totalPrice = itemPrice * quantity;
         String priceWithCurrency = "₱" + totalPrice;
         holder.txt_item_quantity_price.setText(priceWithCurrency);
-        return totalPrice;
+
+        String currItemID = items.getItem_id();
+        if (currItemID.equals("Pp4FPWv56jS2cJcWOLlE")){
+            if (mode.equals("btn_increase")) {
+                // If increasing quantity and it's divisible by 3, reduce the price by 5
+                if (totalItemAmount != 0) {
+                    totalPrice = totalItemAmount + itemPrice;
+                    priceWithCurrency = "₱" + totalPrice;
+                    holder.txt_item_quantity_price.setText(priceWithCurrency);
+                }
+                if (quantity % 3 == 0) {
+                    itemPrice -= 5;
+                    totalPrice -= 5;
+                    priceWithCurrency = "₱" + totalPrice;
+                    holder.txt_item_quantity_price.setText(priceWithCurrency);
+                }
+            }
+            else if (mode.equals("btn_decrease")) {
+                if (totalItemAmount != 0) {
+                    totalPrice = totalItemAmount;
+                }
+
+                // If decreasing quantity and it's not divisible by 3, restore the price
+                int previousQuantity = quantity + 1;
+                if (previousQuantity % 3 == 0) {
+                    itemPrice -= 5;
+
+                }
+
+                totalPrice -= itemPrice;
+                priceWithCurrency = "₱" + totalPrice;
+                holder.txt_item_quantity_price.setText(priceWithCurrency);
+            }
+        }
+
+        return new int[]{totalPrice, itemPrice};
     }
 
     private void notifyTotalAmountChange() {

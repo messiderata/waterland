@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -114,6 +115,10 @@ public class Login extends AppCompatActivity {
     }
 
     private void redirectUser(FirebaseUser firebaseUser) {
+        setContentView(R.layout.activity_login);
+        progressBar = findViewById(R.id.progress_bar);
+        loginText = findViewById(R.id.log_text);
+
         db.collection("users").document(firebaseUser.getUid()).get()
                 .addOnCompleteListener(roleTask -> {
                     if (roleTask.isSuccessful()) {
@@ -148,6 +153,7 @@ public class Login extends AppCompatActivity {
                         ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Failed to retrieve role.", timeDelayInMillis);
                     }
                 });
+        initializeLoginScreen();
     }
 
     public void hideKeyboard(Activity activity) {

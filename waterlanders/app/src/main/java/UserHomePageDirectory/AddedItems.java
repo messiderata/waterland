@@ -31,7 +31,7 @@ public class AddedItems implements Serializable {
 
     public void addItem(String itemId, int itemPrice, int totalPrice) {
         if (itemIds.add(itemId)) {
-            totalAmount += totalPrice;
+            totalAmount += itemPrice;
         } else {
             totalAmount += itemPrice;
         }
