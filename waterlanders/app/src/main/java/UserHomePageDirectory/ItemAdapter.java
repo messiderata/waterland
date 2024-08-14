@@ -126,12 +126,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         String currItemID = items.getItem_id();
         if (currItemID.equals("Pp4FPWv56jS2cJcWOLlE")){
             if (mode.equals("btn_increase")) {
-                // If increasing quantity and it's divisible by 3, reduce the price by 5
-                if (totalItemAmount != 0) {
+                if (totalItemAmount != 0){
                     totalPrice = totalItemAmount + itemPrice;
                     priceWithCurrency = "₱" + totalPrice;
                     holder.txt_item_quantity_price.setText(priceWithCurrency);
                 }
+
+                // If increasing quantity and it's divisible by 3, reduce the price by 5
                 if (quantity % 3 == 0) {
                     itemPrice -= 5;
                     totalPrice -= 5;
@@ -140,8 +141,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 }
             }
             else if (mode.equals("btn_decrease")) {
-                if (totalItemAmount != 0) {
-                    totalPrice = totalItemAmount;
+                if (quantity % 3 == 0 && quantity!=0){
+                    totalPrice -= 5;
+                    priceWithCurrency = "₱" + totalPrice;
+                    holder.txt_item_quantity_price.setText(priceWithCurrency);
                 }
 
                 // If decreasing quantity and it's not divisible by 3, restore the price
@@ -151,9 +154,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
                 }
 
-                totalPrice -= itemPrice;
-                priceWithCurrency = "₱" + totalPrice;
-                holder.txt_item_quantity_price.setText(priceWithCurrency);
             }
         }
 
