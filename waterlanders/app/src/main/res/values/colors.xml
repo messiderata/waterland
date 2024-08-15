@@ -10,5 +10,8 @@
     <color name="banner">#0ec3e2</color>
     <color name="button_clicked">#1A436F</color>
     <color name="home_bg_color">#D9D9D9</color>
+    <color name="facebook_color">#4167b3</color>
+
+    #
 
 </resources>

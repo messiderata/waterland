@@ -55,14 +55,13 @@
             android:name=".activity.ValidateOTP"
             android:exported="false" />
         <activity
-            android:name="UserHomePageDirectory.UserHomePage"
-            android:exported="false" />
-        <activity
             android:name=".activity.ForgotPassword"
             android:exported="false" />
         <activity
             android:name="LoginDirectory.Login"
-            android:exported="true" />
+            android:exported="true"
+            />
+
         <activity
             android:name=".activity.MainActivity"
             android:exported="true"
