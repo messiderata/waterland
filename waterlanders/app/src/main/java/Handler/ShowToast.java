@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class ShowToast {
 
-    public static void showDelayedToast(final Context context, final ProgressBar progressBar, final TextView loginText, final String message,long timeDelayInMillis) {
+    public static void showDelayedToast(final Context context, final ProgressBar progressBar, final TextView loginText, final String message, long timeDelayInMillis) {
         progressBar.setVisibility(View.VISIBLE);
         loginText.setVisibility(View.GONE);
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -21,9 +21,9 @@ public class ShowToast {
     }
 
     public static void unshowProgressBar(final ProgressBar progressBar, final TextView loginText, long timeDelayInMillis) {
-        new Handler().postDelayed(() -> {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
             progressBar.setVisibility(View.INVISIBLE);
             loginText.setVisibility(View.VISIBLE);
-        }, timeDelayInMillis); // Delay for the specified time
+        }, timeDelayInMillis);
     }
 }

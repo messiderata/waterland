@@ -106,7 +106,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 int itemPrice = prices[1];
                 int totalItemPrice = prices[0];
 
-                addedItems.removeItem(items.getItem_id(), itemPrice, totalItemPrice);
+                addedItems.removeItem(items.getItem_id(), itemPrice);
                 notifyTotalAmountChange();
             }
         });

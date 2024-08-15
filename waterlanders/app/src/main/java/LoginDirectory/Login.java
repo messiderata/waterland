@@ -1,7 +1,5 @@
 package LoginDirectory;
 
-import static com.google.android.material.internal.ViewUtils.hideKeyboard;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,39 +22,49 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Objects;
+
 import AdminHomePageDirectory.AdminHomePage;
 import DeliveryHomePageDirectory.DeliveryHomePage;
 import Handler.ShowToast;
 
 public class Login extends AppCompatActivity {
 
-    TextInputEditText editLoginAcc, editLoginPass;
-    ProgressBar progressBar;
-    FirebaseAuth mAuth;
-    FirebaseFirestore db;
-    TextView txtForgotPass, txtCreateAcc, loginText;
+    private TextInputEditText editLoginAcc, editLoginPass;
+    private ProgressBar progressBar;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private TextView txtForgotPass, txtCreateAcc, loginText;
 
-    int timeDelayInMillis = 500;
-    private static final String TAG = "LoginProcess";
+    private static final int timeDelayInMillis = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Use a lightweight view to avoid unnecessary delays
+        setContentView(R.layout.activity_main);
+
         EdgeToEdge.enable(this);
 
-        // Initialize Firebase Auth and Firestore
+        // Perform Firebase query on a background thread
+        new Thread(this::performFirebaseQuery).start();
+    }
+
+    private void performFirebaseQuery() {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
         // Check if the user is already logged in
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser != null) {
-            // If the user is logged in, redirect them based on their role
-            redirectUser(firebaseUser);
-        } else {
-            // If the user is not logged in, show the login screen
-            initializeLoginScreen();
-        }
+        runOnUiThread(() -> {
+            if (firebaseUser != null) {
+                // If the user is logged in, redirect them based on their role
+                redirectUser(firebaseUser);
+            } else {
+                // If the user is not logged in, show the login screen
+                initializeLoginScreen();
+            }
+        });
     }
 
     private void initializeLoginScreen() {
@@ -65,17 +73,17 @@ public class Login extends AppCompatActivity {
         // Initialize views
         editLoginAcc = findViewById(R.id.login_account);
         editLoginPass = findViewById(R.id.login_password);
-        progressBar = findViewById(R.id.progress_bar);
         txtForgotPass = findViewById(R.id.forgot_password);
         txtCreateAcc = findViewById(R.id.create_account);
         loginText = findViewById(R.id.log_text);
+        progressBar = findViewById(R.id.progress_bar);
 
         // Set up login button click listener
         CardView btn_login = findViewById(R.id.login_button);
         btn_login.setOnClickListener(view -> {
             ShowToast.unshowProgressBar(progressBar, loginText, timeDelayInMillis);
-            String usernameOrEmail = editLoginAcc.getText().toString().trim();
-            String password = editLoginPass.getText().toString().trim();
+            String usernameOrEmail = Objects.requireNonNull(editLoginAcc.getText()).toString().trim();
+            String password = Objects.requireNonNull(editLoginPass.getText()).toString().trim();
             hideKeyboard(this);
 
             // Check if username/email and password are empty
@@ -120,34 +128,30 @@ public class Login extends AppCompatActivity {
         loginText = findViewById(R.id.log_text);
 
         db.collection("users").document(firebaseUser.getUid()).get()
-                .addOnCompleteListener(roleTask -> {
-                    if (roleTask.isSuccessful()) {
-                        DocumentSnapshot document = roleTask.getResult();
-                        if (document.exists()) {
-                            String role = document.getString("role");
-                            if (role != null) {
-                                Intent intent;
-                                switch (role) {
-                                    case "ADMIN":
-                                        intent = new Intent(Login.this, AdminHomePage.class);
-                                        break;
-                                    case "DELIVERY":
-                                        intent = new Intent(Login.this, DeliveryHomePage.class);
-                                        break;
-                                    case "customer":
-                                        intent = new Intent(Login.this, MainDashboardUser.class);
-                                        break;
-                                    default:
-                                        ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Unknown role.", timeDelayInMillis);
-                                        return;
-                                }
-                                startActivity(intent);
-                                finish(); // Close the login activity
-                            } else {
-                                ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Role is null.", timeDelayInMillis);
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        DocumentSnapshot document = task.getResult();
+                        String role = document.getString("role");
+                        Intent intent;
+                        if (role != null) {
+                            switch (role) {
+                                case "ADMIN":
+                                    intent = new Intent(Login.this, AdminHomePage.class);
+                                    break;
+                                case "DELIVERY":
+                                    intent = new Intent(Login.this, DeliveryHomePage.class);
+                                    break;
+                                case "customer":
+                                    intent = new Intent(Login.this, MainDashboardUser.class);
+                                    break;
+                                default:
+                                    ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Unknown role.", timeDelayInMillis);
+                                    return;
                             }
+                            startActivity(intent);
+                            finish(); // Close the login activity
                         } else {
-                            ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. But user role not found.", timeDelayInMillis);
+                            ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Role is null.", timeDelayInMillis);
                         }
                     } else {
                         ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Failed to retrieve role.", timeDelayInMillis);
