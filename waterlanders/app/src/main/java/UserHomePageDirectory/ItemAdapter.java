@@ -124,16 +124,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         holder.txt_item_quantity_price.setText(priceWithCurrency);
 
         String currItemID = items.getItem_id();
+        Log.e("HUUUH", "quantity: "+ quantity);
         if (currItemID.equals("Pp4FPWv56jS2cJcWOLlE")){
-            if (mode.equals("btn_increase")) {
-                if (totalItemAmount != 0){
-                    totalPrice = totalItemAmount + itemPrice;
-                    priceWithCurrency = "₱" + totalPrice;
-                    holder.txt_item_quantity_price.setText(priceWithCurrency);
-                }
-
-                // If increasing quantity and it's divisible by 3, reduce the price by 5
-                if (quantity % 3 == 0) {
+            if (mode.equals("btn_increase")){
+                if (quantity % 3 == 0){
                     itemPrice -= 5;
                     totalPrice -= 5;
                     priceWithCurrency = "₱" + totalPrice;
@@ -141,19 +135,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 }
             }
             else if (mode.equals("btn_decrease")) {
-                if (quantity % 3 == 0 && quantity!=0){
-                    totalPrice -= 5;
-                    priceWithCurrency = "₱" + totalPrice;
-                    holder.txt_item_quantity_price.setText(priceWithCurrency);
-                }
+                int totalDiscount = (quantity / 3) * 5;
+                Log.e("HUUUH", "totalDiscount: "+ totalDiscount);
+                totalPrice -= totalDiscount;
+                priceWithCurrency = "₱" + totalPrice;
+                holder.txt_item_quantity_price.setText(priceWithCurrency);
 
-                // If decreasing quantity and it's not divisible by 3, restore the price
                 int previousQuantity = quantity + 1;
                 if (previousQuantity % 3 == 0) {
                     itemPrice -= 5;
-
                 }
-
             }
         }
 
