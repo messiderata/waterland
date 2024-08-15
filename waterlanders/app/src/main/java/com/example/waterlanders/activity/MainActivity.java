@@ -12,7 +12,6 @@ import com.example.waterlanders.R;
 import LoginDirectory.Login;
 
 public class MainActivity extends AppCompatActivity {
-    int milliDelay = 2000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, Login.class);
             startActivity(intent);
             finish();
-        }, 1000); // Changed delay to 3000 milliseconds// Corrected delayMillis to 3000 (milliseconds)
+        }, 1); // Changed delay to 3000 milliseconds// Corrected delayMillis to 3000 (milliseconds)
 
     }
 }

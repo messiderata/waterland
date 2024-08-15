@@ -20,12 +20,16 @@ public class AddedItems implements Serializable {
 
     public AddedItems(String userId) {
         this.userId = userId;
+        this.itemIds = new HashSet<>();
         this.totalAmount = 0;
-        this.cartItems = new ArrayList<>();
     }
 
     public String getUserId() {
         return userId;
+    }
+
+    public Set<String> getItemIds() {
+        return itemIds;
     }
 
     public int getTotalAmount() {
