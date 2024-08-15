@@ -1,6 +1,7 @@
 package LoginDirectory;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
