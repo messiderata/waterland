@@ -67,7 +67,7 @@ public class OrderReceipt extends AppCompatActivity {
                             generateUniqueDocumentId(addedItems, userAddress);
                         } else {
                             // Document ID is unique, retrieve item details and save the order
-                            retrieveItemDetailsAndSaveOrder(documentId, addedItems, userAddress);
+                            saveOrderWithUniqueDocumentId(documentId, addedItems, userAddress);
                         }
                     } else {
                         Toast.makeText(OrderReceipt.this, "Failed to check onDelivery collection.", Toast.LENGTH_SHORT).show();
@@ -75,41 +75,12 @@ public class OrderReceipt extends AppCompatActivity {
                 });
     }
 
-    private void retrieveItemDetailsAndSaveOrder(String documentId, AddedItems addedItems, String userAddress) {
-        List<Map<String, Object>> orderItems = new ArrayList<>();
-        List<String> itemIds = new ArrayList<>(addedItems.getItemIds());
-
-        for (String itemId : itemIds) {
-            db.collection("items") // Assuming "items" is the collection name where item details are stored
-                    .document(itemId)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
-                            DocumentSnapshot document = task.getResult();
-                            Map<String, Object> itemData = new HashMap<>();
-                            itemData.put("item_id", document.getId());
-                            itemData.put("item_name", document.getString("item_name"));
-                            itemData.put("item_img", document.getString("item_img"));
-                            itemData.put("item_price", document.getDouble("item_price"));
-                            orderItems.add(itemData);
-
-                            if (orderItems.size() == itemIds.size()) {
-                                String orderIcon = document.getString("item_img");
-                                saveOrderWithUniqueDocumentId(documentId, addedItems, orderItems, userAddress, orderIcon);
-                            }
-                        } else {
-                            Toast.makeText(OrderReceipt.this, "Failed to retrieve item details.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-    }
-
-    private void saveOrderWithUniqueDocumentId(String documentId, AddedItems addedItems, List<Map<String, Object>> orderItems, String userAddress, String orderIcon) {
+    private void saveOrderWithUniqueDocumentId(String documentId, AddedItems addedItems, String userAddress) {
         Map<String, Object> orderData = new HashMap<>();
         orderData.put("date_ordered", Timestamp.now());
-        orderData.put("order_icon", orderIcon);
+        orderData.put("order_icon", addedItems.getOrderIcon());
         orderData.put("order_id", documentId);
-        orderData.put("order_items", orderItems);
+        orderData.put("order_items", addedItems.getCartItems());
         orderData.put("order_status", "ORDERED");
         orderData.put("total_amount", addedItems.getTotalAmount());
         orderData.put("user_address", userAddress);
