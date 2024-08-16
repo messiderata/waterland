@@ -34,7 +34,8 @@
             android:textSize="20sp"
             android:textColor="@color/white"
             android:fontFamily="@font/robotoregular"
-            android:text="Checkout"/>
+            android:text="Checkout"
+            tools:ignore="HardcodedText" />
 
 </LinearLayout>
 
@@ -138,21 +139,13 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-
-            <Button
-                android:id="@+id/btn_proceed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Proceed"/>
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/bottom_view"
             android:layout_width="match_parent"
-            android:backgroundTint="@color/home_bg_color"
-            android:layout_alignParentBottom="true"
+            android:background="@color/white"
             android:layout_height="wrap_content" > <!-- Fixed height for bottom_view -->
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -180,7 +173,7 @@
 
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/placeOrderButton"
+                android:id="@+id/btn_proceed"
                 android:layout_width="140dp"
                 android:layout_height="55dp"
                 android:layout_alignParentEnd="true"

@@ -15,6 +15,7 @@ public class AddedItems implements Serializable {
     private String userId;
     private int totalAmount;
     private List<Map<String, Object>> cartItems;
+    private Set<String> itemIds; // Declare itemIds here
 
     private static final String TAG = "AddedItems";
 
@@ -22,6 +23,7 @@ public class AddedItems implements Serializable {
         this.userId = userId;
         this.itemIds = new HashSet<>();
         this.totalAmount = 0;
+        this.cartItems = new ArrayList<>();
     }
 
     public String getUserId() {
