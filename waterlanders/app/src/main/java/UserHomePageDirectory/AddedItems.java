@@ -20,20 +20,16 @@ public class AddedItems implements Serializable {
 
     public AddedItems(String userId) {
         this.userId = userId;
-        this.itemIds = new HashSet<>();
         this.totalAmount = 0;
+        this.cartItems = new ArrayList<>();
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public Set<String> getItemIds() {
-        return itemIds;
-    }
-
     public int getTotalAmount() {
-        int totalAmount = 0;
+        totalAmount = 0;
 
         for (Map<String, Object> item : cartItems) {
             Integer itemTotalPrice = (Integer) item.get("item_total_price");
@@ -59,7 +55,7 @@ public class AddedItems implements Serializable {
         return false;
     }
 
-    public void addItem(GetItems items, int updatedItemPrice, int totalPrice, int itemQuantity) {
+    public void addItem(GetItems items, int totalPrice, int itemQuantity) {
         Map<String, Object> added_item = new HashMap<>();
         added_item.put("item_id", items.getItem_id());
         added_item.put("item_img", items.getItem_img());
@@ -71,7 +67,7 @@ public class AddedItems implements Serializable {
         cartItems.add(added_item);
     }
 
-    public void updateItemQuantity(String itemId, int updatedItemPrice, int totalItemPrice, int itemQuantity) {
+    public void updateItemQuantity(String itemId, int totalItemPrice, int itemQuantity) {
         for (Map<String, Object> item : cartItems) {
             if (itemId.equals(item.get("item_id"))) {
                 item.put("item_order_quantity", itemQuantity);
@@ -82,8 +78,6 @@ public class AddedItems implements Serializable {
     }
 
     public void removeItem(String itemId, int itemPrice, int itemQuantity) {
-        totalAmount -= itemPrice;
-
         Iterator<Map<String, Object>> iterator = cartItems.iterator();
         while (iterator.hasNext()) {
             Map<String, Object> item = iterator.next();
