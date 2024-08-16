@@ -36,18 +36,16 @@ public class Login extends AppCompatActivity {
     private FirebaseFirestore db;
     private TextView txtForgotPass, txtCreateAcc, loginText;
 
-    private static final int timeDelayInMillis = 500;
+    private static final int timeDelayInMillis = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Use a lightweight view to avoid unnecessary delays
-        setContentView(R.layout.activity_main);
-
         EdgeToEdge.enable(this);
 
         // Perform Firebase query on a background thread
-        new Thread(this::performFirebaseQuery).start();
+        performFirebaseQuery();
     }
 
     private void performFirebaseQuery() {

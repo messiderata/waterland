@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Set corner radius to 0dp to remove curves -->
+    <corners android:radius="0dp" />
+</shape>

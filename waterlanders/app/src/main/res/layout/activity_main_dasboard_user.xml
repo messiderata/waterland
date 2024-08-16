@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
+    android:theme="@style/AppTheme.NoActionBar.FullScreen"
     tools:context="UserHomePageDirectory.MainDashboardUser">
 
     <LinearLayout
@@ -68,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:fitsSystemWindows="true" />
+             />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
@@ -81,7 +82,6 @@
             android:layout_gravity="bottom"
             app:itemIconTint="@drawable/selector_nav_icon_text"
             app:itemTextColor="@drawable/selector_nav_icon_text"
-            android:fitsSystemWindows="true"
             style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
             app:menu="@menu/bottom_nav_menu"
             tools:ignore="VisualLintBottomNav" />
@@ -98,8 +98,9 @@
         app:itemTextColor="@drawable/selector_nav_icon_text"
         app:menu="@menu/nav_menu"
         app:headerLayout="@layout/nav_header"
+        style="@style/CustomNavigationViewStyle"
         app:itemBackground="@drawable/nav_item_background"
-        style="@style/Widget.MaterialComponents.NavigationRailView.PrimarySurface"
+
         android:fitsSystemWindows="true" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

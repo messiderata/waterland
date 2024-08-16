@@ -3,19 +3,17 @@ package UserHomePageDirectory;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.waterlanders.R;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,21 +22,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import LoginDirectory.Login;
-
 public class OrderConfirmation extends AppCompatActivity {
     private RecyclerView recyclerView;
     private OrdersAdapter ordersAdapter;
     private List<GetItems> itemsList;
     private FirebaseFirestore db;
     private TextView textTotalAmount;
-    private Button logout_button, back_btn, proceed_btn;
+    private Button proceed_btn;
+    private ImageView back_btn;
     private TextInputEditText edt_user_address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_order_confirmation);
 
         AtomicReference<Intent> intent = new AtomicReference<>(getIntent());
@@ -54,7 +50,6 @@ public class OrderConfirmation extends AppCompatActivity {
 
         back_btn = findViewById(R.id.btn_back);
         proceed_btn = findViewById(R.id.btn_proceed);
-        logout_button = findViewById(R.id.button);
 
         db = FirebaseFirestore.getInstance();
         showCurrentOrders(addedItems);
@@ -86,13 +81,6 @@ public class OrderConfirmation extends AppCompatActivity {
             }
         });
 
-        logout_button.setOnClickListener(view -> {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(OrderConfirmation.this, "Logged Out", Toast.LENGTH_SHORT).show();
-            Intent logoutIntent = new Intent(OrderConfirmation.this, Login.class);
-            startActivity(logoutIntent);
-            finish();
-        });
     }
 
     private void showCurrentOrders(AddedItems addedItems) {

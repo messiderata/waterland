@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, Login.class);
             startActivity(intent);
             finish();
-        }, 1); // Changed delay to 3000 milliseconds// Corrected delayMillis to 3000 (milliseconds)
+        }, 3000); // Changed delay to 3000 milliseconds// Corrected delayMillis to 3000 (milliseconds)
 
     }
 }
