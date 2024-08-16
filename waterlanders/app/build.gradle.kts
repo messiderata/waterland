@@ -46,6 +46,8 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.google.firebase.auth)
     implementation(libs.play.services.auth)
+    implementation(libs.com.google.firebase.firebase.auth)
+    implementation (libs.facebook.android.sdk)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database)
     implementation(libs.lifecycle.livedata.ktx)

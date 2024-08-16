@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +21,7 @@ import UserHomePageDirectory.MainDashboardUser;
 import com.example.waterlanders.R;
 import com.example.waterlanders.activity.ForgotPassword;
 import com.example.waterlanders.activity.Signup;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.facebook.CallbackManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -153,7 +153,9 @@ public class Login extends AppCompatActivity {
         });
 
         img_facebook_login.setOnClickListener(view -> {
-
+            Intent intent = new Intent(Login.this, LoginWithFacebook.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
         });
 
         img_google_login.setOnClickListener(view -> {
