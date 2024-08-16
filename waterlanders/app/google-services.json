@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "636704588651",
+    "firebase_url": "https://waterland-edffe-default-rtdb.firebaseio.com",
     "project_id": "waterland-edffe",
     "storage_bucket": "waterland-edffe.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.waterlanders"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "636704588651-0mqdc76b75p2s7c2f7qe10p7svd2oi6o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.waterlanders",
+            "certificate_hash": "de4b79b4255214affb65c347fa4b6d4371962b47"
+          }
+        },
+        {
+          "client_id": "636704588651-tg0qt3valnsghtksvgh59fnc2mjc9e4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCUqeFnwrbk_ttgRkPZYDmpmHbYoIhukUw"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636704588651-tg0qt3valnsghtksvgh59fnc2mjc9e4t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
