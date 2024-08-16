@@ -226,6 +226,7 @@
             tools:ignore="HardcodedText,SpeakableTextPresentCheck">
 
             <ImageView
+                android:id="@+id/facebookLogin"
                 android:layout_width="49dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center"
@@ -249,6 +250,7 @@
             tools:ignore="SpeakableTextPresentCheck">
 
             <ImageView
+                android:id="@+id/googleLogin"
                 android:layout_width="43dp"
                 android:layout_height="43dp"
                 android:layout_gravity="center"
