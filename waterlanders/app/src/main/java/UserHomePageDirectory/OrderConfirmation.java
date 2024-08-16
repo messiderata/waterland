@@ -29,10 +29,10 @@ public class OrderConfirmation extends AppCompatActivity {
     private OrdersAdapter ordersAdapter;
     private List<GetItems> itemsList;
     private FirebaseFirestore db;
-    private TextView textTotalAmount;
     private Button proceed_btn;
     private ImageView back_btn;
     private TextInputEditText edt_user_address;
+    private TextView edt_item_total_price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,11 @@ public class OrderConfirmation extends AppCompatActivity {
         showCurrentOrders(addedItems);
 
         edt_user_address = findViewById(R.id.user_address);
+        edt_item_total_price = findViewById(R.id.itemTotalPrice);
+
+        // display item total price
+        String itemTotalPriceFmt = "₱" + addedItems.getTotalAmount();
+        edt_item_total_price.setText(itemTotalPriceFmt);
 
         back_btn.setOnClickListener(view -> {
             Intent backIntent = new Intent(OrderConfirmation.this, MainDashboardUser.class);
