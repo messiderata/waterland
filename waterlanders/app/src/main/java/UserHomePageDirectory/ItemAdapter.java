@@ -84,17 +84,18 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             currentQuantity++;
             holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
 
-            int[] prices = updateTotalPrice(holder, items, currentQuantity, addedItems.getTotalAmount(), "btn_increase");
+            int[] prices = updateTotalPrice(holder, items, currentQuantity, "btn_increase");
             int totalItemPrice = prices[0];
-            int updatedItemPrice = prices[1];
+
+            Log.e("TANGENAAA", "totalItemPrice: "+ totalItemPrice);
 
             // check the item is already in the cartItems
             // if item is already in the cart then update the 'item_order_quantity' and 'item_total_price'
             // else add the item to the cart
             if (addedItems.isItemInCart(items.getItem_id())){
-                addedItems.updateItemQuantity(items.getItem_id(), updatedItemPrice, totalItemPrice, currentQuantity);
+                addedItems.updateItemQuantity(items.getItem_id(), totalItemPrice, currentQuantity);
             } else {
-                addedItems.addItem(items, updatedItemPrice, totalItemPrice, currentQuantity);
+                addedItems.addItem(items, totalItemPrice, currentQuantity);
             }
 
             notifyTotalAmountChange();
@@ -107,7 +108,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 currentQuantity--;
                 holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
 
-                int[] prices = updateTotalPrice(holder, items, currentQuantity, addedItems.getTotalAmount(), "btn_decrease");
+                int[] prices = updateTotalPrice(holder, items, currentQuantity, "btn_decrease");
                 int itemPrice = prices[1];
 
                 addedItems.removeItem(items.getItem_id(), itemPrice, currentQuantity);
@@ -123,7 +124,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         return itemsList.size();
     }
 
-    private int[] updateTotalPrice(ItemViewHolder holder, GetItems items, int quantity, int totalItemAmount, String mode) {
+    private int[] updateTotalPrice(ItemViewHolder holder, GetItems items, int quantity, String mode) {
         int itemPrice = items.getItem_price();
         int totalPrice = itemPrice * quantity;
         String priceWithCurrency = "₱" + totalPrice;
@@ -131,20 +132,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
         String currItemID = items.getItem_id();
         if (currItemID.equals("Pp4FPWv56jS2cJcWOLlE")){
-            if (mode.equals("btn_increase")){
-                if (quantity % 3 == 0){
-                    itemPrice -= 5;
-                    totalPrice -= 5;
-                    priceWithCurrency = "₱" + totalPrice;
-                    holder.txt_item_quantity_price.setText(priceWithCurrency);
-                }
-            }
-            else if (mode.equals("btn_decrease")) {
-                int totalDiscount = (quantity / 3) * 5;
-                totalPrice -= totalDiscount;
-                priceWithCurrency = "₱" + totalPrice;
-                holder.txt_item_quantity_price.setText(priceWithCurrency);
+            int totalDiscount = (quantity / 3) * 5;
+            totalPrice -= totalDiscount;
+            priceWithCurrency = "₱" + totalPrice;
+            holder.txt_item_quantity_price.setText(priceWithCurrency);
 
+            if (mode.equals("btn_decrease")){
                 int previousQuantity = quantity + 1;
                 if (previousQuantity % 3 == 0) {
                     itemPrice -= 5;
