@@ -40,8 +40,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
         holder.txt_item_name.setText(item.getItem_name());
 
         // Format price with peso sign
-        String priceWithCurrency = "₱" + item.getItem_price();
+        String priceWithCurrency = "₱" + item.getItem_total_price();
         holder.txt_item_price.setText(priceWithCurrency);
+
+        // format order quantity
+        String fmtOrderQuantity = "QTY: " + item.getItem_order_quantity();
+        holder.txt_item_order_quantity.setText(fmtOrderQuantity);
 
         String gsUrl = item.getItem_img();
         if (gsUrl != null && !gsUrl.isEmpty()) {
@@ -72,13 +76,14 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
     }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView txt_item_name, txt_item_price;
+        TextView txt_item_name, txt_item_price, txt_item_order_quantity;
         ImageView imv_item_img;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_item_name = itemView.findViewById(R.id.item_name);
             txt_item_price = itemView.findViewById(R.id.item_price);
+            txt_item_order_quantity = itemView.findViewById(R.id.item_order_quantity);
             imv_item_img = itemView.findViewById(R.id.item_img);
         }
     }

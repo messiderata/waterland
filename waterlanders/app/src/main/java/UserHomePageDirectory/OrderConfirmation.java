@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class OrderConfirmation extends AppCompatActivity {
@@ -37,8 +38,10 @@ public class OrderConfirmation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_confirmation);
 
-        AtomicReference<Intent> intent = new AtomicReference<>(getIntent());
-        AddedItems addedItems = (AddedItems) intent.get().getSerializableExtra("addedItems");
+        Intent intent = getIntent();
+        AddedItems addedItems = (AddedItems) intent.getSerializableExtra("addedItems");
+        Log.d("CartManager", "oerderConfirmation");
+        addedItems.logCartItems();
 
         recyclerView = findViewById(R.id.rv_order_confirm_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -84,22 +87,25 @@ public class OrderConfirmation extends AppCompatActivity {
     }
 
     private void showCurrentOrders(AddedItems addedItems) {
-        List<String> itemIds = new ArrayList<>(addedItems.getItemIds());
-        db.collection("items").whereIn(FieldPath.documentId(), itemIds).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        itemsList.clear();
-                        for (DocumentSnapshot snapshot : task.getResult()) {
-                            GetItems item = snapshot.toObject(GetItems.class);
-                            if (item != null) {
-                                item.setItem_id(snapshot.getId());
-                                itemsList.add(item);
-                            }
-                        }
-                        ordersAdapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(OrderConfirmation.this, "There is an error processsing your order.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        List<Map<String, Object>> cartItems = addedItems.getCartItems();
+        for (Map<String, Object> itemMap : cartItems) {
+            GetItems item = mapToGetItems(itemMap);
+            itemsList.add(item);
+        }
+        ordersAdapter.notifyDataSetChanged();
     }
+
+    private GetItems mapToGetItems(Map<String, Object> map) {
+        // Create a new GetItems object and populate it using the map data
+        String itemId = (String) map.get("item_id");
+        String itemImg = (String) map.get("item_img");
+        String itemName = (String) map.get("item_name");
+        Integer itemPrice = (Integer) map.get("item_price");
+        Integer itemOrderQuantity = (Integer) map.get("item_order_quantity");
+        Integer itemTotalPrice = (Integer) map.get("item_total_price");
+
+        // Assuming GetItems has a constructor or setters for these fields
+        return new GetItems(itemName, itemPrice, itemImg, itemOrderQuantity, itemTotalPrice);
+    }
+
 }

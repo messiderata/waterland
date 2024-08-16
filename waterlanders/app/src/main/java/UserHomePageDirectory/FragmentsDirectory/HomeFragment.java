@@ -64,14 +64,13 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
 
         db = FirebaseFirestore.getInstance();
         getItemsFromFireStore();
-        Log.d(TAG, "itemsList: " + itemsList);
 
         orderButton.setOnClickListener(v -> {
             AddedItems addedItems = itemAdapter.getAddedItems();
-            Log.d(TAG, "-->>> Added Items: " + addedItems.getItemIds());
-            Log.d(TAG, "--> Total Amount: " + addedItems.getTotalAmount());
+            Log.d("CartManager", "orderButton.setOnClickListener");
+            addedItems.logCartItems();
 
-            if (!addedItems.getItemIds().isEmpty()) {
+            if (!addedItems.getCartItems().isEmpty()) {
                 Intent intent = new Intent(getContext(), OrderConfirmation.class);
                 intent.putExtra("addedItems", addedItems);
                 startActivity(intent);
