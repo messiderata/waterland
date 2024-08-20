@@ -71,6 +71,9 @@
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         app:counterEnabled="false"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeWidthFocused="2dp"
+        app:counterMaxLength="30"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -86,6 +89,7 @@
             android:singleLine="true"
             android:textColor="@color/black"
             android:textColorHint="#757575"
+            android:textCursorDrawable="@null"
             tools:ignore="TextContrastCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -96,21 +100,26 @@
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         app:counterEnabled="false"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeWidthFocused="2dp"
+        app:counterMaxLength="30"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/register_fullName"
-            android:hint="@string/fullNameSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_input_bg_oblong"
+            android:hint="@string/fullNameSignup"
             android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:paddingTop="14dp"
+            android:paddingEnd="16dp"
             android:paddingBottom="14dp"
-            android:textColor="@color/black"
             android:singleLine="true"
-            android:textColorHint="#757575" />
+            android:textColor="@color/black"
+            android:textColorHint="#757575"
+            android:textCursorDrawable="@null"
+            tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!--  username  -->
@@ -119,6 +128,9 @@
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         app:counterEnabled="false"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeWidthFocused="2dp"
+        app:counterMaxLength="30"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -133,6 +145,7 @@
             android:paddingBottom="14dp"
             android:textColor="@color/black"
             android:singleLine="true"
+            android:textCursorDrawable="@null"
             android:hint="@string/usernameSignup"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -142,25 +155,30 @@
         android:layout_width="320dp"
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
-        app:counterEnabled="false"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/gray"
+        app:counterEnabled="false"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeWidthFocused="2dp"
+        app:counterMaxLength="30"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:background="@drawable/text_input_bg_oblong"
-            android:textColorHint="#757575"
             android:id="@+id/register_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp"
-            android:textColor="@color/black"
-            android:singleLine="true"
+            android:background="@drawable/text_input_bg_oblong"
+            android:hint="@string/passwordSignup"
             android:inputType="textPassword"
-            android:hint="@string/passwordSignup"/>
+            android:paddingStart="16dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="14dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="#757575"
+            android:textCursorDrawable="@null"
+            tools:ignore="TextContrastCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

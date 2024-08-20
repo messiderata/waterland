@@ -17,6 +17,12 @@
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
         <activity
+            android:name="UserHomePageDirectory.AddressSelection"
+            android:exported="false" />
+        <activity
+            android:name="UserHomePageDirectory.GcashConfirmation"
+            android:exported="false" />
+        <activity
             android:name="LoginDirectory.LoginWithFacebook"
             android:exported="false" />
 

@@ -14,15 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.waterlanders.R;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+
+import Handler.StatusBarUtil;
 
 public class OrderConfirmation extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -33,22 +33,28 @@ public class OrderConfirmation extends AppCompatActivity {
     private ImageView back_btn;
     private TextInputEditText edt_user_address;
     private TextView edt_item_total_price;
+    private MaterialCardView gCash_btn, cashOnDelivery;
+    private boolean isGcashSelected = false;
+    private boolean isPaymentMethodSelected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_confirmation);
+        StatusBarUtil.setStatusBarColor(this, R.color.button_bg);
 
         Intent intent = getIntent();
         AddedItems addedItems = (AddedItems) intent.getSerializableExtra("addedItems");
-        Log.d("CartManager", "oerderConfirmation");
+        Log.d("CartManager", "orderConfirmation");
         addedItems.logCartItems();
 
         recyclerView = findViewById(R.id.rv_order_confirm_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        itemsList = new ArrayList<>();
+        gCash_btn = findViewById(R.id.G_cash_button);
+        cashOnDelivery = findViewById(R.id.Cash_on_delivery_button);
 
+        itemsList = new ArrayList<>();
         ordersAdapter = new OrdersAdapter(itemsList, this);
         recyclerView.setAdapter(ordersAdapter);
 
@@ -58,37 +64,63 @@ public class OrderConfirmation extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         showCurrentOrders(addedItems);
 
-        edt_user_address = findViewById(R.id.user_address);
+        String userAddress = "Test";
         edt_item_total_price = findViewById(R.id.itemTotalPrice);
 
         // display item total price
         String itemTotalPriceFmt = "₱" + addedItems.getTotalAmount();
         edt_item_total_price.setText(itemTotalPriceFmt);
 
+        // Set the click listeners for the MaterialCardView buttons
+        gCash_btn.setOnClickListener(view -> {
+            togglePaymentMethod(gCash_btn, cashOnDelivery);
+        });
+
+        cashOnDelivery.setOnClickListener(view -> {
+            togglePaymentMethod(cashOnDelivery, gCash_btn);
+        });
+
         back_btn.setOnClickListener(view -> {
             Intent backIntent = new Intent(OrderConfirmation.this, MainDashboardUser.class);
             startActivity(backIntent);
             finish();
         });
-
         proceed_btn.setOnClickListener(view -> {
-            // for now lets save the data to the database
-            // regardless of the payment method lets add that later
-            // para may progress kahit papano
+            if (!TextUtils.isEmpty(userAddress)) {
+                if(gCash_btn.isChecked() || cashOnDelivery.isChecked()){
+                    if (isGcashSelected) {
+//                     Navigate to the Gcash confirmation screen
+                        Intent proceedIntent = new Intent(OrderConfirmation.this, GcashConfirmation.class);
+                        proceedIntent.putExtra("addedItems", addedItems);
+                        proceedIntent.putExtra("userAddress", userAddress);
+                        startActivity(proceedIntent);
+                    } else {
+                        // Navigate to the Cash on Delivery confirmation screen
+                        Intent proceedIntent = new Intent(OrderConfirmation.this, OrderReceipt.class);
+                        proceedIntent.putExtra("addedItems", addedItems);
+                        proceedIntent.putExtra("userAddress", userAddress);
+                        startActivity(proceedIntent);
+                    }
+                    finish();
+                }else{
+                    Toast.makeText(this, "Please select a payment method.", Toast.LENGTH_SHORT).show();
+                }
 
-            String userAddress = String.valueOf(edt_user_address.getText());
-            if (!TextUtils.isEmpty(userAddress)){
-                Toast.makeText(OrderConfirmation.this, "Order Success", Toast.LENGTH_SHORT).show();
-                Intent proceedIntent = new Intent(OrderConfirmation.this, OrderReceipt.class);
-                proceedIntent.putExtra("addedItems", addedItems);
-                proceedIntent.putExtra("userAddress", userAddress);
-                // pass the value of edt_user_address as well
-                startActivity(proceedIntent);
-                finish();
             } else {
                 Toast.makeText(OrderConfirmation.this, "Enter your delivery address.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void togglePaymentMethod(MaterialCardView selectedCard, MaterialCardView otherCard) {
+        selectedCard.setChecked(!selectedCard.isChecked());
+
+        if (selectedCard.isChecked()) {
+            otherCard.setChecked(false);
+
+            // Update the payment method based on the selected card
+            isGcashSelected = selectedCard == gCash_btn;
+        }
 
     }
 
@@ -102,7 +134,6 @@ public class OrderConfirmation extends AppCompatActivity {
     }
 
     private GetItems mapToGetItems(Map<String, Object> map) {
-        // Create a new GetItems object and populate it using the map data
         String itemId = (String) map.get("item_id");
         String itemImg = (String) map.get("item_img");
         String itemName = (String) map.get("item_name");
@@ -110,8 +141,6 @@ public class OrderConfirmation extends AppCompatActivity {
         Integer itemOrderQuantity = (Integer) map.get("item_order_quantity");
         Integer itemTotalPrice = (Integer) map.get("item_total_price");
 
-        // Assuming GetItems has a constructor or setters for these fields
         return new GetItems(itemName, itemPrice, itemImg, itemOrderQuantity, itemTotalPrice);
     }
-
 }

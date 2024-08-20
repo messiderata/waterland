@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,6 +7,7 @@
     android:background="@color/home_bg_color"
     tools:context="UserHomePageDirectory.OrderConfirmation">
 
+    <!-- Navigation Bar -->
     <LinearLayout
         android:id="@+id/nav_bar"
         android:layout_width="match_parent"
@@ -20,6 +21,7 @@
             android:layout_width="48dp"
             android:layout_height="30dp"
             android:clickable="true"
+            android:importantForAccessibility="no"
             android:padding="0dp"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
@@ -37,115 +39,181 @@
             android:text="Checkout"
             tools:ignore="HardcodedText" />
 
-</LinearLayout>
+    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/list_layout"
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:id="@+id/scrollable_content"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         android:layout_below="@id/nav_bar"
         android:layout_above="@id/total_amount_details_layout">
 
         <LinearLayout
+            android:id="@+id/list_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_order_confirm_list"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:orientation="vertical">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PAYMENT METHOD"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:textStyle="bold"/>
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CASH"
-                android:textColor="@color/black"
-                android:textSize="20sp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="GCASH"
-                android:textColor="@color/black"
-                android:textSize="20sp"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                app:counterEnabled="false"
-                app:hintEnabled="true"
-                android:hint="Address">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/user_address"
+                <include
+                    layout="@layout/address_selected"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_input_bg_oblong"
-                    android:paddingStart="16dp"
-                    android:paddingTop="14dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="14dp"
-                    android:singleLine="true"
+                    android:layout_marginTop="5dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/linear_layout_radius"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_order_confirm_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginTop="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_above="@id/bottom_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/linear_layout_radius"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/payment_method"
+                    android:textSize="15sp"
                     android:textColor="@color/black"
-                    android:textColorHint="#757575"
-                    tools:ignore="TextContrastCheck" />
+                    android:textStyle="bold"/>
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/Cash_on_delivery_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    app:checkedIconTint="@color/button_bg"
+                    app:cardBackgroundColor="#EEEEEE"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:contentDescription="@string/todo"
+                            android:src="@drawable/cash_on_delivery" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/cash"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/G_cash_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="48dp"
+                    android:orientation="vertical"
+                    app:checkedIconTint="@color/button_bg"
+                    app:cardBackgroundColor="#EEEEEE"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="3dp"
+                            android:src="@drawable/gcash" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="0dp"
+                            android:text="@string/gcash"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
+    <!-- Total Amount Details -->
     <LinearLayout
         android:id="@+id/total_amount_details_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:orientation="vertical"
         android:background="@color/bg1"
-        android:layout_alignParentBottom="true"
-       >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-        </LinearLayout>
+        android:layout_alignParentBottom="true">
 
         <RelativeLayout
             android:id="@+id/bottom_view"
             android:layout_width="match_parent"
-            android:background="@color/white"
-            android:layout_height="wrap_content" > <!-- Fixed height for bottom_view -->
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -161,17 +229,14 @@
                 android:id="@+id/itemTotalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="₱0"
+                android:text="@string/_0"
                 android:layout_marginTop="26dp"
                 android:textColor="@color/button_bg"
                 android:layout_marginEnd="150dp"
                 android:textStyle="bold"
                 android:textSize="17sp"
                 android:layout_alignParentEnd="true"
-                android:padding="0dp"
-
-                />
-
+                android:padding="0dp"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_proceed"
@@ -185,12 +250,8 @@
                 android:padding="0dp"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:fontFamily="@font"
-                style="@style/OrderButton"
-                />
-
+                style="@style/PlaceOrder"/>
         </RelativeLayout>
     </LinearLayout>
-
 
 </RelativeLayout>

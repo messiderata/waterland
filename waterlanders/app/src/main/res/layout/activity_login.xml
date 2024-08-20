@@ -28,6 +28,9 @@
         android:layout_marginTop="-200dp"
         android:layout_marginBottom="15dp"
         app:counterEnabled="false"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeWidthFocused="2dp"
+        app:counterMaxLength="30"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -39,6 +42,7 @@
             android:paddingStart="16dp"
             android:paddingTop="14dp"
             android:paddingEnd="16dp"
+            android:focusable="true"
             android:paddingBottom="14dp"
             android:singleLine="true"
             android:textColor="@color/black"
@@ -55,6 +59,7 @@
         app:counterEnabled="false"
         app:boxBackgroundMode="outline"
         app:passwordToggleEnabled="true"
+        app:boxStrokeWidthFocused="2dp"
         app:passwordToggleTint="@color/gray"
         app:hintEnabled="false">
 
@@ -74,7 +79,6 @@
             android:textColorHint="#757575"
             android:textCursorDrawable="@null"
             tools:ignore="TextContrastCheck" />
-
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView

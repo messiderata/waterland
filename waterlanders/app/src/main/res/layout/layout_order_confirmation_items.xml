@@ -1,22 +1,25 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="8dp"
-    app:cardBackgroundColor="#EEEEEE">
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginTop="-5dp"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
 
             <ImageView
                 android:id="@+id/item_img"
@@ -37,8 +40,8 @@
                     android:id="@+id/item_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Item Name"
-                    android:textColor="@android:color/black"
+                    android:text="@string/item_name"
+                    android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -52,8 +55,8 @@
                         android:id="@+id/item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Item Price"
-                        android:textColor="@android:color/black"
+                        android:text="@string/item_price"
+                        android:textColor="@color/button_bg"
                         android:textSize="15sp"
                         android:layout_weight="0"/>
 
@@ -61,14 +64,12 @@
                         android:id="@+id/item_order_quantity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Item order quantity"
+                        android:text="@string/item_order_quantity"
                         android:textAlignment="textEnd"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/button_bg"
                         android:textSize="15sp"
                         android:layout_weight="1"/>
-
                 </LinearLayout>
-
 
             </LinearLayout>
 

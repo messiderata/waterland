@@ -87,7 +87,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             int[] prices = updateTotalPrice(holder, items, currentQuantity, "btn_increase");
             int totalItemPrice = prices[0];
 
-            Log.e("TANGENAAA", "totalItemPrice: "+ totalItemPrice);
 
             // check the item is already in the cartItems
             // if item is already in the cart then update the 'item_order_quantity' and 'item_total_price'

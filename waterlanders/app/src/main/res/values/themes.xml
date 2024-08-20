@@ -6,6 +6,12 @@
         <item name="android:statusBarColor">@android:color/transparent</item> <!-- Make status bar transparent -->
         <item name="android:windowLightStatusBar">true</item> <!-- Use light status bar text/icons (optional) -->
 
+        <item name="android:textColorHighlight">@color/bg1</item>
+        <item name="android:textSelectHandleLeft">@drawable/custom_text_select_handle_left</item>
+        <item name="android:textSelectHandleRight">@drawable/custom_text_select_handle_right</item>
+
+
+
     </style>
 
     <style name="Theme.Waterlanders" parent="Base.Theme.Waterlanders" />
@@ -64,6 +70,14 @@
 
     </style>
 
+    <style name="OrderTrackingButton" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/screen_bg</item>
+        <item name="cardCornerRadius">25dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="contentPadding">16dp</item>
+        <!-- You can add other CardView-specific attributes here -->
+    </style>
+
     <style name="MyOkButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="backgroundTint">@color/button_bg</item>
         <item name="android:textColor">@color/white</item>
@@ -77,6 +91,20 @@
         <item name="android:textSize">12sp</item>
         <item name="fontFamily">@font/robotoregular</item>
         <item name="android:text">Buy Now</item>
+        <item name="android:radius">0dp</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+
+    <style name="PlaceOrder" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/button_bg</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/robotoregular</item>
+        <item name="android:text">Place Order</item>
         <item name="android:radius">0dp</item>
         <item name="cornerRadius">0dp</item>
         <item name="android:minHeight">0dp</item>
@@ -102,5 +130,12 @@
     <style name="ShapeAppearanceOverlay.NoRoundedCorners" parent="">
         <item name="cornerSize">0dp</item>
     </style>
+
+    <style name="Theme.AppCompat.NoActionBar.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
 </resources>
 

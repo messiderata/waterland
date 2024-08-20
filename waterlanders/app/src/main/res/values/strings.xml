@@ -77,6 +77,7 @@
     <string name="nav_profile">Me</string>
     <string name="nav_help">Help</string>
     <string name="logo">Logo</string>
+    <string name="address">Address</string>
 
     <string name="client_id">636704588651-tg0qt3valnsghtksvgh59fnc2mjc9e4t.apps.googleusercontent.com</string>
 
@@ -84,6 +85,19 @@
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">34d2142ee3750a3479f67016ab8c7a63</string>
     <string name="app_name">Waterland</string>
+    <string name="payment_method">PAYMENT METHOD</string>
+    <string name="cash">Cash on Delivery</string>
+    <string name="gcash">GCash e-Wallet</string>
+    <string name="item_name">Item Name</string>
+    <string name="item_order_quantity">Item order quantity</string>
+    <string name="item_price">Item Price</string>
+    <string name="todo">TODO</string>
+    <string name="_0">₱0</string>
+    <string name="bold_page_order">Check the status of your order on the <b>order tracking</b> page</string>
+    <string name="order_tracking">Order Tracking</string>
+    <string name="continue_shopping">Continue Shopping</string>
+    <string name="thank_you_for_your_order">Thank you for your order.</string>
+    <string name="order_confirmed">ORDER CONFIRMED</string>
 
 
 </resources>

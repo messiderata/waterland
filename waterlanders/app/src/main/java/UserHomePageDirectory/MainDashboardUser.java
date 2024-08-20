@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Objects;
 
+import Handler.StatusBarUtil;
 import LoginDirectory.Login;
 import UserHomePageDirectory.FragmentsDirectory.AboutUsFragment;
 import UserHomePageDirectory.FragmentsDirectory.HelpUsFragment;
@@ -45,6 +46,8 @@ public class MainDashboardUser extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_dasboard_user);
+        StatusBarUtil.setStatusBarColor(this, R.color.button_bg);
+
 
         // Initialize Firebase Auth
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -152,7 +155,7 @@ public class MainDashboardUser extends AppCompatActivity {
 
         // Find views in the dialog
         MaterialButton btnCancel = dialog.findViewById(R.id.button_cancel);
-        MaterialButton btnOk = dialog.findViewById(R.id.ok_button);
+        MaterialButton btnOk = dialog.findViewById(R.id.button_ok);
 
         // Set click listeners for buttons
         btnCancel.setOnClickListener(v -> dialog.dismiss());

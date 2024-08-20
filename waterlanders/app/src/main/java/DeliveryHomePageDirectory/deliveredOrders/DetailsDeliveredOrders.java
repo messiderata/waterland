@@ -54,7 +54,7 @@ public class DetailsDeliveredOrders extends AppCompatActivity {
         customerConfirmationTextView = findViewById(R.id.userConfirmation);
         totalAmountTextView = findViewById(R.id.totalAmount);
         orderItemsRecyclerView = findViewById(R.id.rv_orderList);
-        okBtn = findViewById(R.id.ok_button);
+        okBtn = findViewById(R.id.button_ok);
 
         // Retrieve data from Intent
         Intent intent = getIntent();

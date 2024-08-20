@@ -1,4 +1,4 @@
-package com.example.waterlanders.activity;
+package UserHomePageDirectory;
 
 import android.os.Bundle;
 
@@ -10,14 +10,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.waterlanders.R;
 
-public class activity_reset_password extends AppCompatActivity {
+public class GcashConfirmation extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_reset_password);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.button_ok), (v, insets) -> {
+        setContentView(R.layout.activity_gcash_confirmation);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
