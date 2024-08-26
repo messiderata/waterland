@@ -17,7 +17,11 @@
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
         <activity
-            android:name="UserHomePageDirectory.AddressSelection"
+            android:name="UserHomePageDirectory.AddressList.AddressInput"
+            android:exported="false" />
+
+        <activity
+            android:name="UserHomePageDirectory.AddressList.AddressSelection"
             android:exported="false" />
         <activity
             android:name="UserHomePageDirectory.GcashConfirmation"
@@ -96,6 +100,7 @@
             android:exported="false" />
         <activity
             android:name="LoginDirectory.Login"
+
             android:exported="true" />
         <activity
             android:name=".activity.MainActivity"

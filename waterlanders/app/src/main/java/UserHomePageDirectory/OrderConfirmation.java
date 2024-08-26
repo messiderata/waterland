@@ -1,14 +1,20 @@
 package UserHomePageDirectory;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,14 +24,17 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import Handler.StatusBarUtil;
+import UserHomePageDirectory.AddressList.AddressSelection;
 
 public class OrderConfirmation extends AppCompatActivity {
-    private RecyclerView recyclerView;
     private OrdersAdapter ordersAdapter;
     private List<GetItems> itemsList;
     private FirebaseFirestore db;
@@ -35,7 +44,11 @@ public class OrderConfirmation extends AppCompatActivity {
     private TextView edt_item_total_price;
     private MaterialCardView gCash_btn, cashOnDelivery;
     private boolean isGcashSelected = false;
-    private boolean isPaymentMethodSelected = false;
+    private TextView selectedDate;
+    private long minDateInMillis;
+    private long maxDateInMillis;
+    private Button btnPickDate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +61,13 @@ public class OrderConfirmation extends AppCompatActivity {
         Log.d("CartManager", "orderConfirmation");
         addedItems.logCartItems();
 
-        recyclerView = findViewById(R.id.rv_order_confirm_list);
+        RecyclerView recyclerView = findViewById(R.id.rv_order_confirm_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         gCash_btn = findViewById(R.id.G_cash_button);
         cashOnDelivery = findViewById(R.id.Cash_on_delivery_button);
+
+        LinearLayout linearLayoutButton = findViewById(R.id.address_selector_button);
 
         itemsList = new ArrayList<>();
         ordersAdapter = new OrdersAdapter(itemsList, this);
@@ -64,6 +79,30 @@ public class OrderConfirmation extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         showCurrentOrders(addedItems);
 
+
+        btnPickDate = findViewById(R.id.btn_pick_date);
+        selectedDate = findViewById(R.id.selected_date);
+
+        // Calculate the date range
+        Calendar today = Calendar.getInstance();
+        minDateInMillis = today.getTimeInMillis();
+
+        // Add 5 days to today's date
+        Calendar maxDate = Calendar.getInstance();
+        maxDate.add(Calendar.DAY_OF_YEAR, 4);
+        maxDateInMillis = maxDate.getTimeInMillis();
+        maxDate.set(Calendar.HOUR_OF_DAY, 23);
+        maxDate.set(Calendar.MINUTE, 59);
+        maxDate.set(Calendar.SECOND, 59);
+        maxDate.set(Calendar.MILLISECOND, 999);
+
+        maxDateInMillis = maxDate.getTimeInMillis();
+
+        // Set up button click listener
+        btnPickDate.setOnClickListener(view -> showDatePickerDialog());
+
+
+        //Yung address dito test lang value kaya inaacept na agad na may address---------------------------------------------------------------------------------------------
         String userAddress = "Test";
         edt_item_total_price = findViewById(R.id.itemTotalPrice);
 
@@ -85,6 +124,8 @@ public class OrderConfirmation extends AppCompatActivity {
             startActivity(backIntent);
             finish();
         });
+
+        // Set up proceed button
         proceed_btn.setOnClickListener(view -> {
             if (!TextUtils.isEmpty(userAddress)) {
                 if(gCash_btn.isChecked() || cashOnDelivery.isChecked()){
@@ -109,6 +150,13 @@ public class OrderConfirmation extends AppCompatActivity {
             } else {
                 Toast.makeText(OrderConfirmation.this, "Enter your delivery address.", Toast.LENGTH_SHORT).show();
             }
+        });
+
+
+        linearLayoutButton.setOnClickListener(view -> {
+            Intent backintent = new Intent(OrderConfirmation.this, AddressSelection.class);
+            backintent.putExtra("fromOrderConfirmation", true);
+            startActivity(backintent);
         });
     }
 
@@ -142,5 +190,54 @@ public class OrderConfirmation extends AppCompatActivity {
         Integer itemTotalPrice = (Integer) map.get("item_total_price");
 
         return new GetItems(itemName, itemPrice, itemImg, itemOrderQuantity, itemTotalPrice);
+    }
+
+    private void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+
+        DatePickerDialog datePickerDialog = getDatePickerDialog(year, month, day);
+
+
+        // Set the minimum and maximum date for the DatePickerDialog
+        datePickerDialog.getDatePicker().setMinDate(minDateInMillis);
+        datePickerDialog.getDatePicker().setMaxDate(maxDateInMillis);
+
+        // Show the date picker dialog
+        datePickerDialog.show();
+    }
+
+    private @NonNull DatePickerDialog getDatePickerDialog(int year, int month, int day) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.CustomDatePickerDialog, this::onDateSet, year, month, day);
+        datePickerDialog.setOnShowListener(dialog -> {
+            Button positiveButton = datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE);
+            Button negativeButton = datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE);
+
+            // Change text color and background programmatically
+            positiveButton.setTextColor(getResources().getColor(R.color.button_bg));
+            negativeButton.setTextColor(getResources().getColor(R.color.button_bg));
+
+        });
+        return datePickerDialog;
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private void onDateSet(DatePicker view, int year1, int month1, int dayOfMonth) {
+        Calendar selectedCalendar = Calendar.getInstance();
+        selectedCalendar.set(year1, month1, dayOfMonth);
+        long selectedDateInMillis = selectedCalendar.getTimeInMillis();
+
+        if (selectedDateInMillis >= minDateInMillis  && selectedDateInMillis <= maxDateInMillis ) {
+            // Format and display the selected date
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+            String formattedDate = sdf.format(selectedCalendar.getTime());
+            selectedDate.setText(String.format("Selected Date: %s", formattedDate));
+        } else {
+            selectedDate.setText("Selected date is out of range");
+        }
     }
 }

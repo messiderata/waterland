@@ -74,7 +74,7 @@
     <string name="home">Home</string>
     <string name="nav_order">Order</string>
     <string name="nav_history">History</string>
-    <string name="nav_profile">Me</string>
+    <string name="nav_profile">Profile</string>
     <string name="nav_help">Help</string>
     <string name="logo">Logo</string>
     <string name="address">Address</string>
@@ -98,6 +98,11 @@
     <string name="continue_shopping">Continue Shopping</string>
     <string name="thank_you_for_your_order">Thank you for your order.</string>
     <string name="order_confirmed">ORDER CONFIRMED</string>
+    <string name="delivery_address">Select Delivery Adddress</string>
+    <string name="mobile_number">Mobile number</string>
+    <string name="address_input">Address</string>
+    <string name="phone_logo">Logo</string>
+    <string name="fix_address">Region, Province, City, Baranggay</string>
 
 
 </resources>

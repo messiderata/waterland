@@ -1,4 +1,4 @@
-  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:textSize="20sp"
+            android:gravity="center"
             android:textColor="@color/white"
             android:fontFamily="@font/robotoregular"
             android:text="Checkout"
@@ -57,6 +58,7 @@
             android:padding="10dp">
 
             <LinearLayout
+                android:id="@+id/address_selector_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -87,8 +89,65 @@
                     android:id="@+id/rv_order_confirm_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:layout_marginTop="5dp"/>
+                    android:layout_marginTop="5dp"
+                    android:nestedScrollingEnabled="false" />
+            </LinearLayout>
+
+            <!-- Calendar View -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/linear_layout_radius">
+
+                <TextView
+                    android:id="@+id/selected_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selected Date: "
+                    android:padding="10dp"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_pick_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select Delivery Date"
+                    android:layout_marginTop="20dp" />
+
+                <LinearLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <EditText
+                        android:id="@+id/et_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Type your message here"
+                        android:inputType="textMultiLine"
+                        android:maxLength="200"
+                        android:gravity="top"
+                        android:minHeight="100dp"
+                        android:padding="10dp"
+                        android:background="@android:drawable/editbox_background"/>
+
+                    <TextView
+                        android:id="@+id/tv_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:paddingTop="8dp"
+                        android:text="0/200"
+                        android:textColor="@android:color/darker_gray"/>
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <LinearLayout
