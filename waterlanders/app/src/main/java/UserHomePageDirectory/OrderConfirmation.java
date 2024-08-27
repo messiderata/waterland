@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.waterlanders.R;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -38,6 +40,7 @@ public class OrderConfirmation extends AppCompatActivity {
     private OrdersAdapter ordersAdapter;
     private List<GetItems> itemsList;
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private Button proceed_btn;
     private ImageView back_btn;
     private TextInputEditText edt_user_address;
@@ -49,6 +52,8 @@ public class OrderConfirmation extends AppCompatActivity {
     private long maxDateInMillis;
     private MaterialCardView btnPickDate;
 
+    // selected address
+    private TextView txt_Full_name, txt_mobile_number, txt_order_address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,32 +61,38 @@ public class OrderConfirmation extends AppCompatActivity {
         setContentView(R.layout.activity_order_confirmation);
         StatusBarUtil.setStatusBarColor(this, R.color.button_bg);
 
+        // get the items added from orders
         Intent intent = getIntent();
         AddedItems addedItems = (AddedItems) intent.getSerializableExtra("addedItems");
         Log.d("CartManager", "orderConfirmation");
         addedItems.logCartItems();
 
+        // display the added items to the recycler view
         RecyclerView recyclerView = findViewById(R.id.rv_order_confirm_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        gCash_btn = findViewById(R.id.G_cash_button);
-        cashOnDelivery = findViewById(R.id.Cash_on_delivery_button);
-
-        LinearLayout linearLayoutButton = findViewById(R.id.address_selector_button);
 
         itemsList = new ArrayList<>();
         ordersAdapter = new OrdersAdapter(itemsList, this);
         recyclerView.setAdapter(ordersAdapter);
 
+        // initialize variables
+        gCash_btn = findViewById(R.id.G_cash_button);
+        cashOnDelivery = findViewById(R.id.Cash_on_delivery_button);
+        btnPickDate = findViewById(R.id.btn_pick_date);
         back_btn = findViewById(R.id.btn_back);
         proceed_btn = findViewById(R.id.btn_proceed);
 
-        db = FirebaseFirestore.getInstance();
-        showCurrentOrders(addedItems);
-
-
-        btnPickDate = findViewById(R.id.btn_pick_date);
         selectedDate = findViewById(R.id.selected_date);
+        edt_item_total_price = findViewById(R.id.itemTotalPrice);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        // update and get the current address
+        LinearLayout linearLayoutButton = findViewById(R.id.address_selector_button);
+        String userAddress = updateDeliveryAddress();
+
+        showCurrentOrders(addedItems);
 
         // Calculate the date range
         Calendar today = Calendar.getInstance();
@@ -100,11 +111,6 @@ public class OrderConfirmation extends AppCompatActivity {
 
         // Set up button click listener
         btnPickDate.setOnClickListener(view -> showDatePickerDialog());
-
-
-        //Yung address dito test lang value kaya inaacept na agad na may address---------------------------------------------------------------------------------------------
-        String userAddress = "Test";
-        edt_item_total_price = findViewById(R.id.itemTotalPrice);
 
         // display item total price
         String itemTotalPriceFmt = "₱" + addedItems.getTotalAmount();
@@ -130,7 +136,7 @@ public class OrderConfirmation extends AppCompatActivity {
             if (!TextUtils.isEmpty(userAddress)) {
                 if(gCash_btn.isChecked() || cashOnDelivery.isChecked()){
                     if (isGcashSelected) {
-//                     Navigate to the Gcash confirmation screen
+                        // Navigate to the Gcash confirmation screen
                         Intent proceedIntent = new Intent(OrderConfirmation.this, GcashConfirmation.class);
                         proceedIntent.putExtra("addedItems", addedItems);
                         proceedIntent.putExtra("userAddress", userAddress);
@@ -155,6 +161,7 @@ public class OrderConfirmation extends AppCompatActivity {
 
         linearLayoutButton.setOnClickListener(view -> {
             Intent backintent = new Intent(OrderConfirmation.this, AddressSelection.class);
+            backintent.putExtra("addedItems", addedItems);
             backintent.putExtra("fromOrderConfirmation", true);
             startActivity(backintent);
         });
@@ -239,5 +246,65 @@ public class OrderConfirmation extends AppCompatActivity {
         } else {
             selectedDate.setText("Selected date is out of range");
         }
+    }
+
+    private String updateDeliveryAddress() {
+        // Access the include layout in activity_order_confirmation.xml
+        LinearLayout addressLayout = findViewById(R.id.address_selector_button);
+
+        txt_Full_name = addressLayout.findViewById(R.id.Full_name);
+        txt_mobile_number = addressLayout.findViewById(R.id.mobile_number);
+        txt_order_address = addressLayout.findViewById(R.id.order_address);
+
+        // Get the current user data from the database
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+            // Get user ID
+            String userId = firebaseUser.getUid();
+
+            // Access Firestore to retrieve user data
+            db.collection("users").document(userId).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // Extract the list of delivery details
+                            List<Map<String, Object>> deliveryDetailsList = (List<Map<String, Object>>) documentSnapshot.get("deliveryDetails");
+
+                            if (deliveryDetailsList != null) {
+                                // Loop through the list to find the default address
+                                for (Map<String, Object> details : deliveryDetailsList) {
+                                    int isDefaultAddress = ((Long) details.get("isDefaultAddress")).intValue();
+
+                                    if (isDefaultAddress == 1) {
+                                        String fullName = (String) details.get("fullName");
+                                        String mobileNumber = (String) details.get("phoneNumber");
+                                        String orderAddress = (String) details.get("deliveryAddress");
+
+                                        // Update the UI with the default address
+                                        txt_Full_name.setText(fullName);
+                                        txt_mobile_number.setText(mobileNumber);
+                                        txt_order_address.setText(orderAddress);
+                                        break; // Exit the loop once the default address is found
+                                    }
+                                }
+                            }
+                        } else {
+                            // Handle the case where the user data doesn't exist
+                            Log.d("OrderConfirmation", "User data does not exist");
+                            Toast.makeText(this, "User data not found.", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle any errors that occur while retrieving the data
+                        Log.e("OrderConfirmation", "Error fetching user data", e);
+                        Toast.makeText(this, "Failed to retrieve user data.", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            // Handle the case where the user is not authenticated
+            Log.d("OrderConfirmation", "User not authenticated");
+            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+        }
+
+        return txt_order_address.getText().toString();
     }
 }

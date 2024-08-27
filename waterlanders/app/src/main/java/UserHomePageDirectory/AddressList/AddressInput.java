@@ -1,10 +1,12 @@
 package UserHomePageDirectory.AddressList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -16,14 +18,26 @@ import androidx.cardview.widget.CardView;
 import com.example.waterlanders.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import Handler.StatusBarUtil;
+import UserHomePageDirectory.AddedItems;
+import UserHomePageDirectory.DeliveryDetails;
+import UserHomePageDirectory.OrderConfirmation;
 
 public class AddressInput extends AppCompatActivity {
     private static final String ITEM_ADDRESS = "NCR, Metro Manila, Marikina, Barangka";
     private static final String ITEM_POSTAL = "1803";
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +53,9 @@ public class AddressInput extends AppCompatActivity {
 
         setupAutoCompleteTextView(fixAddressSelected, ITEM_ADDRESS);
         setupAutoCompleteTextView(fixPostalSelected, ITEM_POSTAL);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         backButton.setOnClickListener(view -> finish()); // Close AddressInput and return to AddressSelection
 
@@ -137,6 +154,73 @@ public class AddressInput extends AppCompatActivity {
         // Show Toast if any errors
         if (!isValid) {
             Toast.makeText(this, "Please fix the errors", Toast.LENGTH_SHORT).show();
+        } else {
+            String fullAddress = fixStreetInput + ", " + fixAddressInput + ", " + fixPostalCodeInput;
+
+            // Get the current user data from the database
+            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+            if (firebaseUser != null) {
+                String userId = firebaseUser.getUid();
+
+                db.collection("users").document(userId).get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot.exists()) {
+                                List<Map<String, Object>> deliveryDetailsList = (List<Map<String, Object>>) documentSnapshot.get("deliveryDetails");
+
+                                if (deliveryDetailsList != null) {
+                                    boolean foundDefault = false;
+
+                                    for (Map<String, Object> details : deliveryDetailsList) {
+                                        if ((long) details.get("isDefaultAddress") == 1) {
+                                            details.put("isDefaultAddress", 0);
+                                            foundDefault = true;
+                                            Log.d("AddressInput", "default address value: "+ details.get("isDefaultAddress"));
+                                            break;
+                                        }
+                                    }
+
+                                    // Add the new address with isDefaultAddress set to 1
+                                    Map<String, Object> newDetail = new DeliveryDetails(fullName, phoneNumber, fullAddress, 1).toMap();
+
+                                    if (foundDefault) {
+                                        deliveryDetailsList.add(newDetail);
+                                        db.collection("users").document(userId)
+                                                .update("deliveryDetails", deliveryDetailsList)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Log.d("AddressInput", "New address added successfully.");
+                                                    Toast.makeText(this, "New address added successfully.", Toast.LENGTH_SHORT).show();
+
+                                                    Intent intentAddressInput = new Intent(this, AddressSelection.class);
+                                                    intentAddressInput.putExtra("addedItems", (AddedItems) getIntent().getSerializableExtra("addedItems"));
+                                                    startActivity(intentAddressInput);
+                                                    finish();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Log.d("AddressInput", "Error: ", e);
+                                                    Toast.makeText(this, "Error updating address: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                });
+                                    } else {
+                                        Log.d("AddressInput", "No default address found to update.");
+                                        Toast.makeText(this, "No default address found to update.", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Log.d("AddressInput", "No delivery details found.");
+                                    Toast.makeText(this, "No delivery details found.", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Log.d("AddressInput", "User data does not exist");
+                                Toast.makeText(this, "User data not found.", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("AddressInput", "Error fetching user data", e);
+                            Toast.makeText(this, "Failed to retrieve user data.", Toast.LENGTH_SHORT).show();
+                        });
+            } else {
+                Log.d("AddressInput", "User not authenticated");
+                Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import UserHomePageDirectory.DeliveryDetails;
 import UserHomePageDirectory.MainDashboardUser;
 import com.example.waterlanders.R;
 import com.example.waterlanders.activity.ForgotPassword;
@@ -39,7 +40,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -279,6 +282,11 @@ public class Login extends AppCompatActivity {
         userData.put("username", user.getDisplayName());
         userData.put("fullName", user.getDisplayName());
         userData.put("role", "customer");
+
+        // initialize the delivery details and put it on userData
+        List<DeliveryDetails> deliveryDetails = new ArrayList<>();
+        deliveryDetails.add(new DeliveryDetails(user.getDisplayName(), "+63", "none", 1));
+        userData.put("deliveryDetails", deliveryDetails);
 
         db.collection("users").document(user.getUid())
                 .set(userData)
