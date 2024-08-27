@@ -103,6 +103,14 @@
     <string name="address_input">Address</string>
     <string name="phone_logo">Logo</string>
     <string name="fix_address">Region, Province, City, Baranggay</string>
+    <string name="dropdown_icon">Dropdown Icon</string>
+    <string name="G_cash_logo">Gcash logo</string>
+    <string name="select_your_delivery_date">Select your delivery date:</string>
+    <string name="delivery_day">Delivery Day</string>
+    <string name="your_message_to_the_seller">Your message to the seller</string>
+    <string name="leave_a_message">Leave a Message</string>
+    <string name="enter_any_special_requests">Enter any special requests.</string>
+    <string name="postal_code">Postal Code</string>
 
 
 </resources>

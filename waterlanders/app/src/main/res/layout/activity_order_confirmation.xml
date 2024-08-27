@@ -1,4 +1,4 @@
-      <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -104,54 +104,113 @@
                 android:background="@drawable/linear_layout_radius">
 
                 <TextView
-                    android:id="@+id/selected_date"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Selected Date: "
+                    android:text="@string/delivery_day"
+                    android:textStyle="bold"
                     android:padding="10dp"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/btn_pick_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Select Delivery Date"
-                    android:layout_marginTop="20dp" />
+                    android:textSize="15sp" />
 
                 <LinearLayout
-                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/btn_pick_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        app:cardElevation="2dp"
+                        app:cardCornerRadius="10dp"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="10dp"
+                            android:gravity="center_vertical"
+                            tools:ignore="UseCompoundDrawables">
+
+                            <TextView
+                                android:id="@+id/selected_date"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:text="@string/select_your_delivery_date"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                android:drawableEnd="@drawable/drop_down_icon"
+                                android:drawablePadding="8dp"
+                                android:contentDescription="@string/dropdown_icon"
+                                tools:ignore="UseCompatTextViewDrawableXml" />
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    >
 
-                    <EditText
-                        android:id="@+id/et_message"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Type your message here"
-                        android:inputType="textMultiLine"
-                        android:maxLength="200"
-                        android:gravity="top"
-                        android:minHeight="100dp"
-                        android:padding="10dp"
-                        android:background="@android:drawable/editbox_background"/>
-
+                    <!-- Title for the section -->
                     <TextView
-                        android:id="@+id/tv_counter"
+                        android:id="@+id/message_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:paddingTop="8dp"
-                        android:text="0/200"
-                        android:textColor="@android:color/darker_gray"/>
-                </LinearLayout>
+                        android:layout_marginStart="10dp"
+                        android:text="@string/leave_a_message"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="8dp"
+                        android:textStyle="bold" />
 
+                    <!-- Text Input Layout for Message Input -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/message_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:hint="@string/your_message_to_the_seller"
+                        app:boxBackgroundMode="outline"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:boxStrokeColor="@color/black"
+                        app:counterEnabled="true"
+                        app:hintEnabled="false"
+                        app:counterMaxLength="5">
+                        <!-- Text Input EditText for the message -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/message_input"
+                            android:layout_margin="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:paddingStart="16dp"
+                            android:paddingTop="14dp"
+                            android:paddingEnd="16dp"
+                            android:hint="@string/enter_any_special_requests"
+                            android:paddingBottom="14dp"
+                            android:inputType="textMultiLine"
+                            android:gravity="top"
+                            android:minLines="4"
+                            android:maxLines="6"
+                            android:textCursorDrawable="@null"
+
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/gray"
+                            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
 
+
             <LinearLayout
-                android:layout_above="@id/bottom_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -189,7 +248,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="24dp"
@@ -197,7 +257,8 @@
                             android:layout_gravity="center"
                             android:layout_marginStart="10dp"
                             android:contentDescription="@string/todo"
-                            android:src="@drawable/cash_on_delivery" />
+                            android:src="@drawable/cash_on_delivery"
+                            tools:ignore="ImageContrastCheck" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -233,13 +294,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_marginStart="3dp"
-                            android:src="@drawable/gcash" />
+                            android:contentDescription="@string/G_cash_logo"
+                            android:src="@drawable/gcash"
+                            tools:ignore="ImageContrastCheck" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -282,7 +346,8 @@
                 android:textStyle="bold"
                 android:textColor="@color/gray"
                 android:padding="0dp"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/itemTotalPrice"

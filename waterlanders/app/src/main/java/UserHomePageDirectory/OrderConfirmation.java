@@ -47,7 +47,7 @@ public class OrderConfirmation extends AppCompatActivity {
     private TextView selectedDate;
     private long minDateInMillis;
     private long maxDateInMillis;
-    private Button btnPickDate;
+    private MaterialCardView btnPickDate;
 
 
     @Override
@@ -89,7 +89,7 @@ public class OrderConfirmation extends AppCompatActivity {
 
         // Add 5 days to today's date
         Calendar maxDate = Calendar.getInstance();
-        maxDate.add(Calendar.DAY_OF_YEAR, 4);
+        maxDate.add(Calendar.DAY_OF_YEAR, 5);
         maxDateInMillis = maxDate.getTimeInMillis();
         maxDate.set(Calendar.HOUR_OF_DAY, 23);
         maxDate.set(Calendar.MINUTE, 59);
