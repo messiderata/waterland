@@ -26,7 +26,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Isabella Reyes"
+                android:text="Name"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -59,7 +59,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+63(555) 867-5309"
+                android:text="Phone number"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -85,7 +85,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="P.O. Box 4321, Manila Central Post Office, 1050 Manila"
+                android:text="Address"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />
         </LinearLayout>

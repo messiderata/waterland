@@ -47,6 +47,7 @@ public class OrderConfirmation extends AppCompatActivity {
     private TextView edt_item_total_price;
     private MaterialCardView gCash_btn, cashOnDelivery;
     private boolean isGcashSelected = false;
+    private boolean isDateSelected = false;  // Track if date is selected
     private TextView selectedDate;
     private long minDateInMillis;
     private long maxDateInMillis;
@@ -134,7 +135,12 @@ public class OrderConfirmation extends AppCompatActivity {
         // Set up proceed button
         proceed_btn.setOnClickListener(view -> {
             if (!TextUtils.isEmpty(userAddress)) {
-                if(gCash_btn.isChecked() || cashOnDelivery.isChecked()){
+                if (!isDateSelected) {
+                    Toast.makeText(this, "Please select a delivery date.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (gCash_btn.isChecked() || cashOnDelivery.isChecked()) {
                     if (isGcashSelected) {
                         // Navigate to the Gcash confirmation screen
                         Intent proceedIntent = new Intent(OrderConfirmation.this, GcashConfirmation.class);
@@ -149,7 +155,7 @@ public class OrderConfirmation extends AppCompatActivity {
                         startActivity(proceedIntent);
                     }
                     finish();
-                }else{
+                } else {
                     Toast.makeText(this, "Please select a payment method.", Toast.LENGTH_SHORT).show();
                 }
 
@@ -157,7 +163,6 @@ public class OrderConfirmation extends AppCompatActivity {
                 Toast.makeText(OrderConfirmation.this, "Enter your delivery address.", Toast.LENGTH_SHORT).show();
             }
         });
-
 
         linearLayoutButton.setOnClickListener(view -> {
             Intent backintent = new Intent(OrderConfirmation.this, AddressSelection.class);
@@ -176,7 +181,6 @@ public class OrderConfirmation extends AppCompatActivity {
             // Update the payment method based on the selected card
             isGcashSelected = selectedCard == gCash_btn;
         }
-
     }
 
     private void showCurrentOrders(AddedItems addedItems) {
@@ -205,9 +209,7 @@ public class OrderConfirmation extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-
         DatePickerDialog datePickerDialog = getDatePickerDialog(year, month, day);
-
 
         // Set the minimum and maximum date for the DatePickerDialog
         datePickerDialog.getDatePicker().setMinDate(minDateInMillis);
@@ -231,20 +233,21 @@ public class OrderConfirmation extends AppCompatActivity {
         return datePickerDialog;
     }
 
-
     @SuppressLint("SetTextI18n")
     private void onDateSet(DatePicker view, int year1, int month1, int dayOfMonth) {
         Calendar selectedCalendar = Calendar.getInstance();
         selectedCalendar.set(year1, month1, dayOfMonth);
         long selectedDateInMillis = selectedCalendar.getTimeInMillis();
 
-        if (selectedDateInMillis >= minDateInMillis  && selectedDateInMillis <= maxDateInMillis ) {
+        if (selectedDateInMillis >= minDateInMillis && selectedDateInMillis <= maxDateInMillis) {
             // Format and display the selected date
             SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
             String formattedDate = sdf.format(selectedCalendar.getTime());
             selectedDate.setText(String.format("Selected Date: %s", formattedDate));
+            isDateSelected = true;  // Set date selected flag to true
         } else {
             selectedDate.setText("Selected date is out of range");
+            isDateSelected = false;  // Reset date selected flag
         }
     }
 
