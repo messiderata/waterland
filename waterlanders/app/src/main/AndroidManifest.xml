@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission
-        android:name="android.permission.INTERNET"
-        tools:ignore="ManifestOrder" />
+    <uses-permission android:name="android.permission.INTERNET" tools:ignore="ManifestOrder" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:targetApi="34" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+
 
     <application
         android:allowBackup="true"
@@ -17,14 +18,13 @@
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
         <activity
+            android:name="UserHomePageDirectory.GcashConfirmation"
+            android:exported="false" />
+        <activity
             android:name="UserHomePageDirectory.AddressList.AddressInput"
             android:exported="false" />
-
         <activity
             android:name="UserHomePageDirectory.AddressList.AddressSelection"
-            android:exported="false" />
-        <activity
-            android:name="UserHomePageDirectory.GcashConfirmation"
             android:exported="false" />
         <activity
             android:name="LoginDirectory.LoginWithFacebook"
@@ -100,15 +100,14 @@
             android:exported="false" />
         <activity
             android:name="LoginDirectory.Login"
-
             android:exported="true" />
         <activity
             android:name=".activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Transparent">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

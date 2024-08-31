@@ -143,7 +143,7 @@ public class OrderConfirmation extends AppCompatActivity {
                 if (gCash_btn.isChecked() || cashOnDelivery.isChecked()) {
                     if (isGcashSelected) {
                         // Navigate to the Gcash confirmation screen
-                        Intent proceedIntent = new Intent(OrderConfirmation.this, GcashConfirmation.class);
+                        Intent proceedIntent = new Intent(OrderConfirmation.this,GcashConfirmation.class);
                         proceedIntent.putExtra("addedItems", addedItems);
                         proceedIntent.putExtra("userAddress", userAddress);
                         startActivity(proceedIntent);

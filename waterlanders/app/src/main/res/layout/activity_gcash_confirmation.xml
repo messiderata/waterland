@@ -1,10 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="UserHomePageDirectory.GcashConfirmation">
+    android:background="@color/screen_bg"
+    android:orientation="horizontal">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/button_bg"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="30dp"
+            android:clickable="true"
+            android:padding="0dp"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/baseline_arrow_back_24"
+            app:tint="@color/white"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <!-- Title Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:fontFamily="@font/robotoregular"
+            android:text="Gcash Payment" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_below="@+id/nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:orientation="vertical"
+            android:id="@+id/image_holder"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginTop="35dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="15dp"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/gcash_qr"
+                android:contentDescription="@string/image"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp"
+            android:layout_width="205dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center">
+
+            <LinearLayout
+                android:id="@+id/upload_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/dashed_border">
+
+                <!-- New Upload Image Section -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_centerInParent="true">
+
+                        <!-- Upload Icon -->
+                        <ImageView
+                            android:id="@+id/upload_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/upload_file_img"
+                            android:layout_gravity="center" />
+
+                        <!-- Drop your file here, or Browse -->
+                        <TextView
+                            android:id="@+id/upload_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Browse your image"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:layout_gravity="center" />
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            app:counterEnabled="false"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:boxBackgroundMode="outline"
+            app:boxStrokeWidthFocused="2dp"
+            app:counterMaxLength="30"
+            app:helperTextTextColor="@android:color/holo_red_dark"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Reference NO."
+                android:background="@drawable/text_input_bg_oblong"
+                android:elevation="1dp"
+                android:paddingStart="16dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="16dp"
+                android:focusable="true"
+                android:paddingBottom="14dp"
+                android:inputType="number"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="#757575"
+                android:textCursorDrawable="@null"
+                tools:ignore="TextContrastCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_alignParentBottom="true"
+        android:id="@+id/submit_button"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/button_bg"
+        android:enabled="true"
+        app:cardElevation="0dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:fontFamily="@font/robotomedium"
+            android:text="@string/submit"
+            android:textColor="@color/white" />
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

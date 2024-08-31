@@ -5,7 +5,6 @@ import android.util.Log;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +15,6 @@ public class AddedItems implements Serializable {
     private int totalAmount;
     private List<Map<String, Object>> cartItems;
     private Set<String> itemIds; // Declare itemIds here
-
-    private static final String TAG = "AddedItems";
 
     public AddedItems(String userId) {
         this.userId = userId;
@@ -130,4 +127,5 @@ public class AddedItems implements Serializable {
                     "Total Price: " + item.get("item_total_price"));
         }
     }
+
 }
