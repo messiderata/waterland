@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,6 +45,7 @@ public class OrderConfirmation extends AppCompatActivity {
     private Button proceed_btn;
     private ImageView back_btn;
     private TextInputEditText edt_user_address;
+    private TextInputEditText messageInput;
     private TextView edt_item_total_price;
     private MaterialCardView gCash_btn, cashOnDelivery;
     private boolean isGcashSelected = false;
@@ -55,6 +57,7 @@ public class OrderConfirmation extends AppCompatActivity {
 
     // selected address
     private TextView txt_Full_name, txt_mobile_number, txt_order_address;
+    private Map<String, Object> currentDefaultAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +94,7 @@ public class OrderConfirmation extends AppCompatActivity {
 
         // update and get the current address
         LinearLayout linearLayoutButton = findViewById(R.id.address_selector_button);
-        String userAddress = updateDeliveryAddress();
+        updateDeliveryAddress();
 
         showCurrentOrders(addedItems);
 
@@ -134,24 +137,31 @@ public class OrderConfirmation extends AppCompatActivity {
 
         // Set up proceed button
         proceed_btn.setOnClickListener(view -> {
-            if (!TextUtils.isEmpty(userAddress)) {
+            if (!currentDefaultAddress.isEmpty()) {
                 if (!isDateSelected) {
                     Toast.makeText(this, "Please select a delivery date.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (gCash_btn.isChecked() || cashOnDelivery.isChecked()) {
+                    // get the additional message
+                    messageInput = findViewById(R.id.message_input);
+                    String additionalMessage = String.valueOf(messageInput.getText());
+
                     if (isGcashSelected) {
                         // Navigate to the Gcash confirmation screen
                         Intent proceedIntent = new Intent(OrderConfirmation.this,GcashConfirmation.class);
                         proceedIntent.putExtra("addedItems", addedItems);
-                        proceedIntent.putExtra("userAddress", userAddress);
+                        proceedIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
+                        proceedIntent.putExtra("additionalMessage", additionalMessage);
                         startActivity(proceedIntent);
                     } else {
                         // Navigate to the Cash on Delivery confirmation screen
                         Intent proceedIntent = new Intent(OrderConfirmation.this, OrderReceipt.class);
                         proceedIntent.putExtra("addedItems", addedItems);
-                        proceedIntent.putExtra("userAddress", userAddress);
+                        proceedIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
+                        proceedIntent.putExtra("additionalMessage", additionalMessage);
+                        proceedIntent.putExtra("modeOfPayment", "Cash on Delivery");
                         startActivity(proceedIntent);
                     }
                     finish();
@@ -251,26 +261,29 @@ public class OrderConfirmation extends AppCompatActivity {
         }
     }
 
-    private String updateDeliveryAddress() {
-        // Access the include layout in activity_order_confirmation.xml
+
+    // this method will update the default address displayed on the order confirmation screen
+    // flow:
+    // 1. initialize the variables respected to their ids
+    // 2. get the current user login then locate the user data to the firebase
+    // 3. iterate through the 'deliveryDetails' field then look for the default address
+    // 4. if located then update the details then set that object for saving
+    // 5. else display error message
+    private void updateDeliveryAddress() {
         LinearLayout addressLayout = findViewById(R.id.address_selector_button);
 
         txt_Full_name = addressLayout.findViewById(R.id.Full_name);
         txt_mobile_number = addressLayout.findViewById(R.id.mobile_number);
         txt_order_address = addressLayout.findViewById(R.id.order_address);
 
-        // Get the current user data from the database
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
         if (firebaseUser != null) {
-            // Get user ID
             String userId = firebaseUser.getUid();
 
-            // Access Firestore to retrieve user data
             db.collection("users").document(userId).get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
-                            // Extract the list of delivery details
                             List<Map<String, Object>> deliveryDetailsList = (List<Map<String, Object>>) documentSnapshot.get("deliveryDetails");
 
                             if (deliveryDetailsList != null) {
@@ -287,7 +300,8 @@ public class OrderConfirmation extends AppCompatActivity {
                                         txt_Full_name.setText(fullName);
                                         txt_mobile_number.setText(mobileNumber);
                                         txt_order_address.setText(orderAddress);
-                                        break; // Exit the loop once the default address is found
+                                        currentDefaultAddress = details;
+                                        break;
                                     }
                                 }
                             }
@@ -307,7 +321,5 @@ public class OrderConfirmation extends AppCompatActivity {
             Log.d("OrderConfirmation", "User not authenticated");
             Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
         }
-
-        return txt_order_address.getText().toString();
     }
 }

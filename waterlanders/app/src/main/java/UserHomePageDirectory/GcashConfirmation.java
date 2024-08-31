@@ -1,8 +1,6 @@
 package UserHomePageDirectory;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -20,12 +18,16 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.waterlanders.R;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.Map;
 
 public class GcashConfirmation extends AppCompatActivity {
 
     private static final int REQUEST_CODE_PICK_IMAGE = 100;
     private static final int PERMISSION_REQUEST_CODE = 101;
     private TextView uploadText;
+    private TextInputEditText referenceNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +35,20 @@ public class GcashConfirmation extends AppCompatActivity {
         setContentView(R.layout.activity_gcash_confirmation);
 
         uploadText = findViewById(R.id.upload_text);
+        referenceNumber = findViewById(R.id.reference_number);
+
+        // receive the data pass from the OrderConfirmation.java
+        Intent receiveIntent = getIntent();
+        AddedItems addedItems = (AddedItems) receiveIntent.getSerializableExtra("addedItems");
+        Map<String, Object> currentDefaultAddress = (Map<String, Object>) receiveIntent.getSerializableExtra("deliveryAddress");
+        String additionalMessage = (String) receiveIntent.getSerializableExtra("additionalMessage");
 
         findViewById(R.id.upload_image).setOnClickListener(v -> handleImageSelection());
     }
 
     private void handleImageSelection() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            // Android 14+ - Request READ_MEDIA_IMAGES permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ - Request READ_MEDIA_IMAGES permission
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
