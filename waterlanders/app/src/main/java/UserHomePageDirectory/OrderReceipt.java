@@ -18,6 +18,7 @@ public class OrderReceipt extends AppCompatActivity {
     FirebaseFirestore db;
     private AddedItems addedItems;
     private Map<String, Object> currentDefaultAddress;
+    private Map<String, Object> GCashPaymentDetails;
     private String modeOfPayment, additionalMessage;
 
     @Override
@@ -34,6 +35,10 @@ public class OrderReceipt extends AppCompatActivity {
         currentDefaultAddress = (Map<String, Object>) intent.getSerializableExtra("deliveryAddress");
         modeOfPayment = (String) intent.getSerializableExtra("modeOfPayment");
         additionalMessage = (String) intent.getSerializableExtra("additionalMessage");
+
+        if (modeOfPayment.equals("GCash")){
+            GCashPaymentDetails = (Map<String, Object>) intent.getSerializableExtra("GCashPaymentDetails");
+        }
 
         // Save order to Firebase
         generateUniqueDocumentId();
@@ -91,8 +96,7 @@ public class OrderReceipt extends AppCompatActivity {
         orderData.put("additional_message", additionalMessage);
 
         if (modeOfPayment.equals("GCash")){
-            orderData.put("reference_number", "put-the-reference-number-here");
-            orderData.put("uploaded_receipt", "link-to-uploaded-receipt");
+            orderData.put("gcash_payment_details", GCashPaymentDetails);
         }
 
         db.collection("pendingOrders")
