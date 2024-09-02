@@ -14,12 +14,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.waterlanders.R;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class GcashConfirmation extends AppCompatActivity {
@@ -28,6 +34,14 @@ public class GcashConfirmation extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 101;
     private TextView uploadText;
     private TextInputEditText referenceNumber;
+    private String referenceNumberInput;
+    private CardView submitButton;
+    private Uri imageUri;
+
+    // passed intent values
+    private AddedItems addedItems;
+    private Map<String, Object> currentDefaultAddress;
+    private String additionalMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +49,36 @@ public class GcashConfirmation extends AppCompatActivity {
         setContentView(R.layout.activity_gcash_confirmation);
 
         uploadText = findViewById(R.id.upload_text);
-        referenceNumber = findViewById(R.id.reference_number);
+        submitButton = findViewById(R.id.submit_button);
 
         // receive the data pass from the OrderConfirmation.java
         Intent receiveIntent = getIntent();
-        AddedItems addedItems = (AddedItems) receiveIntent.getSerializableExtra("addedItems");
-        Map<String, Object> currentDefaultAddress = (Map<String, Object>) receiveIntent.getSerializableExtra("deliveryAddress");
-        String additionalMessage = (String) receiveIntent.getSerializableExtra("additionalMessage");
+        addedItems = (AddedItems) receiveIntent.getSerializableExtra("addedItems");
+        currentDefaultAddress = (Map<String, Object>) receiveIntent.getSerializableExtra("deliveryAddress");
+        additionalMessage = (String) receiveIntent.getSerializableExtra("additionalMessage");
 
+        // handle image upload if the 'browse your image' layout is clicked
         findViewById(R.id.upload_image).setOnClickListener(v -> handleImageSelection());
+
+        // onclick event listener to handle the uploaded image
+        // and save the image to the firebase storage /order_receipts
+        submitButton.setOnClickListener(v -> {
+            if (imageUri != null) {
+                // check first if customer input the reference number
+                // because since customer choose to may via gcash
+                // then there must always be reference number
+                referenceNumber = findViewById(R.id.reference_number);
+                referenceNumberInput = String.valueOf(referenceNumber.getText());
+
+                if (!referenceNumberInput.isEmpty()){
+                    uploadImageToFirebase(imageUri);
+                } else {
+                    Toast.makeText(this, "Please input reference number first.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Please select an image first", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void handleImageSelection() {
@@ -73,7 +108,9 @@ public class GcashConfirmation extends AppCompatActivity {
     private void openPhotoPicker() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        // i comment this line because we want to prevent multiple file upload in the firebase storage
+        // so it only takes 1 image receipt per order
+        // intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(Intent.createChooser(intent, "Select Pictures"), REQUEST_CODE_PICK_IMAGE);
     }
 
@@ -97,25 +134,57 @@ public class GcashConfirmation extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
-            if (data != null) {
-                // Handle single image selection
-                if (data.getData() != null) {
-                    Uri uri = data.getData();
-                    String fileName = getFileName(uri);
-                    uploadText.setText(fileName);
-                }
-                // Handle multiple images selection
-                if (data.getClipData() != null) {
-                    int count = data.getClipData().getItemCount();
-                    StringBuilder fileNames = new StringBuilder();
-                    for (int i = 0; i < count; i++) {
-                        Uri uri = data.getClipData().getItemAt(i).getUri();
-                        fileNames.append(getFileName(uri)).append("\n");
-                    }
-                    uploadText.setText(fileNames.toString());
-                }
+            if (data != null && data.getData() != null) {
+                imageUri = data.getData();
+                String fileName = getFileName(imageUri);
+                uploadText.setText(fileName);
+            } else {
+                Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void uploadImageToFirebase(Uri uri) {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference("order_receipts");
+        StorageReference fileRef = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
+
+        fileRef.putFile(uri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    fileRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                        String storageLocation = fileRef.toString();
+
+                        // Create a Map to store image URL and reference number
+                        Map<String, Object> GcashPaymentDetailsMap = new HashMap<>();
+                        GcashPaymentDetailsMap.put("imageLink", storageLocation);
+                        GcashPaymentDetailsMap.put("referenceNumber", referenceNumberInput);
+
+                        // pass the value to the OrderReceipt.java to save to the firestore
+                        Intent orderReceiptIntent = new Intent(this, OrderReceipt.class);
+                        orderReceiptIntent.putExtra("addedItems", addedItems);
+                        orderReceiptIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
+                        orderReceiptIntent.putExtra("additionalMessage", additionalMessage);
+                        orderReceiptIntent.putExtra("modeOfPayment", "GCash");
+                        orderReceiptIntent.putExtra("GCashPaymentDetails", (Serializable) GcashPaymentDetailsMap);
+                        startActivity(orderReceiptIntent);
+                        finish();
+
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(GcashConfirmation.this, "Failed to get download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(GcashConfirmation.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private String getFileExtension(Uri uri) {
+        String extension = null;
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            extension = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)).split("\\.")[1];
+            cursor.close();
+        }
+        return extension;
     }
 
     private String getFileName(Uri uri) {
