@@ -15,7 +15,7 @@
     <color name="secondary_color">#b3000000</color>
     <color name="secondary_color_white">#b3ffffff</color>
     <color name="pending_orders_bg_color">#F5676A</color>
-
+    <color name="total_sales_value_bg_color">#94D9EF</color>
 
     #
 

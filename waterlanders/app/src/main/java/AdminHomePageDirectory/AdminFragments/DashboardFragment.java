@@ -1,7 +1,9 @@
 package AdminHomePageDirectory.AdminFragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -18,7 +20,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Calendar;
 import java.util.List;
 
+import AdminHomePageDirectory.SalesReport.DashboardSalesReport;
+
 public class DashboardFragment extends Fragment {
+
+    private CardView annualSalesReportCard;
+    private CardView monthlySalesReportCard;
+    private CardView dailySalesReportCard;
 
     private TextView totalAnnualSale;
     private TextView currentAnnualYear;
@@ -55,10 +63,45 @@ public class DashboardFragment extends Fragment {
         setTotalOrders();
         setTotalUsers();
 
+        // set event listeners to the cards to show the details
+        annualSalesReportCard.setOnClickListener(v -> {
+            Intent showSalesIntent = new Intent(getActivity(), DashboardSalesReport.class);
+            showSalesIntent.putExtra("activity_title", "ANNUAL SALES REPORT");
+            showSalesIntent.putExtra("sales_report_icon", "annual_sales_report_icon");
+            showSalesIntent.putExtra("total_orders_text", "Total Orders This Year");
+            showSalesIntent.putExtra("current_date_text", currentAnnualYear.getText());
+            showSalesIntent.putExtra("total_sales_text", "Total Sales This Year");
+            startActivity(showSalesIntent);
+        });
+
+        monthlySalesReportCard.setOnClickListener(v -> {
+            Intent showSalesIntent = new Intent(getActivity(), DashboardSalesReport.class);
+            showSalesIntent.putExtra("activity_title", "MONTHLY SALES REPORT");
+            showSalesIntent.putExtra("sales_report_icon", "monthly_sales_report_icon");
+            showSalesIntent.putExtra("total_orders_text", "Total Orders This Month");
+            showSalesIntent.putExtra("current_date_text", currentMonth.getText());
+            showSalesIntent.putExtra("total_sales_text", "Total Sales This Month");
+            startActivity(showSalesIntent);
+        });
+
+        dailySalesReportCard.setOnClickListener(v -> {
+            Intent showSalesIntent = new Intent(getActivity(), DashboardSalesReport.class);
+            showSalesIntent.putExtra("activity_title", "DAILY SALES REPORT");
+            showSalesIntent.putExtra("sales_report_icon", "daily_sales_report_icon");
+            showSalesIntent.putExtra("total_orders_text", "Total Orders Today");
+            showSalesIntent.putExtra("current_date_text", currentDay.getText());
+            showSalesIntent.putExtra("total_sales_text", "Total Sales Today");
+            startActivity(showSalesIntent);
+        });
+
         return view;
     }
 
     private void initializeTextValues(View view){
+        annualSalesReportCard = view.findViewById(R.id.annual_sales_report_card);
+        monthlySalesReportCard = view.findViewById(R.id.monthly_sales_report_card);
+        dailySalesReportCard = view.findViewById(R.id.daily_sales_report_card);
+
         totalAnnualSale = view.findViewById(R.id.total_annual_sale);
         currentAnnualYear = view.findViewById(R.id.current_annual_year);
         currentMonth = view.findViewById(R.id.current_month);
@@ -154,7 +197,7 @@ public class DashboardFragment extends Fragment {
 
     private void setTotalOrders(){
         // pending orders
-        db.collection("pending_orders").get().addOnCompleteListener(task -> {
+        db.collection("pendingOrders").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 int totalOrdersCount = task.getResult().size();
                 totalPendingOrders.setText(String.valueOf(totalOrdersCount));

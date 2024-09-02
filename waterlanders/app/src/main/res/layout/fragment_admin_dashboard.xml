@@ -17,6 +17,7 @@
 
             <!-- annual report card -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/annual_sales_report_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -91,6 +92,7 @@
 
                 <!-- monthly sales -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/monthly_sales_report_card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
@@ -164,6 +166,7 @@
 
                 <!-- daily sales -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/daily_sales_report_card"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="5dp"
