@@ -112,6 +112,7 @@
     <string name="enter_any_special_requests">Enter any special requests.</string>
     <string name="postal_code">Postal Code</string>
     <string name="image">Image</string>
+    <string name="log_out">Log out</string>
 
 
 </resources>
