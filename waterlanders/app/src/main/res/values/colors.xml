@@ -12,7 +12,9 @@
     <color name="home_bg_color">#D9D9D9</color>
     <color name="facebook_color">#4167b3</color>
     <color name="screen_bg">#EEEEEE</color>
-
+    <color name="secondary_color">#b3000000</color>
+    <color name="secondary_color_white">#b3ffffff</color>
+    <color name="pending_orders_bg_color">#F5676A</color>
 
 
     #
