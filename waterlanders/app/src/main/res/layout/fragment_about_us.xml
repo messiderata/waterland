@@ -18,7 +18,7 @@
             android:layout_marginLeft="32dp"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="16dp"
-            android:text="Aly in Waterland"
+            android:text="@string/Aly"
             android:textColor="@color/button_bg"
             android:textSize="32sp"
             android:textStyle="bold" />
@@ -33,9 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="357dp"
             android:lineSpacingExtra="4dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Platea cubilia platea feugiat dapibus;
-            montes praesent inceptos. Ipsum nibh cubilia laoreet montes ad a maecenas luctus. Auctor massa a cras nisl;
-            porttitor lacinia porta non."
+            android:text="@string/loren"
             android:textColor="@color/button_bg"
             android:textSize="16sp" />
 

@@ -113,5 +113,10 @@
     <string name="postal_code">Postal Code</string>
     <string name="image">Image</string>
 
+    <string name="loren">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Platea cubilia platea feugiat dapibus;
+            montes praesent inceptos. Ipsum nibh cubilia laoreet montes ad a maecenas luctus. Auctor massa a cras nisl;
+            porttitor lacinia porta non.</string>
+    <string name="Aly">Aly in Waterland</string>
+
 
 </resources>
