@@ -71,6 +71,7 @@ public class DashboardFragment extends Fragment {
             showSalesIntent.putExtra("total_orders_text", "Total Orders This Year");
             showSalesIntent.putExtra("current_date_text", currentAnnualYear.getText());
             showSalesIntent.putExtra("total_sales_text", "Total Sales This Year");
+            showSalesIntent.putExtra("mode", "ANNUAL");
             startActivity(showSalesIntent);
         });
 
@@ -81,6 +82,7 @@ public class DashboardFragment extends Fragment {
             showSalesIntent.putExtra("total_orders_text", "Total Orders This Month");
             showSalesIntent.putExtra("current_date_text", currentMonth.getText());
             showSalesIntent.putExtra("total_sales_text", "Total Sales This Month");
+            showSalesIntent.putExtra("mode", "MONTHLY");
             startActivity(showSalesIntent);
         });
 
@@ -91,6 +93,7 @@ public class DashboardFragment extends Fragment {
             showSalesIntent.putExtra("total_orders_text", "Total Orders Today");
             showSalesIntent.putExtra("current_date_text", currentDay.getText());
             showSalesIntent.putExtra("total_sales_text", "Total Sales Today");
+            showSalesIntent.putExtra("mode", "DAY");
             startActivity(showSalesIntent);
         });
 

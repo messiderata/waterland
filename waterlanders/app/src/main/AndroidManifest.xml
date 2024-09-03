@@ -23,6 +23,18 @@
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
         <activity
+            android:name="AdminHomePageDirectory.Products.DeleteItem"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Products.EditItem"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.SuccessScreen"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Products.AddNewItem"
+            android:exported="false" />
+        <activity
             android:name="AdminHomePageDirectory.SalesReport.DashboardSalesReport"
             android:exported="false" />
         <activity
@@ -61,9 +73,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="AdminHomePageDirectory.SalesReport.DetailsSalesReport"
-            android:exported="false" />
         <activity
             android:name="DeliveryHomePageDirectory.deliveredOrders.DetailsDeliveredOrders"
             android:exported="false" />

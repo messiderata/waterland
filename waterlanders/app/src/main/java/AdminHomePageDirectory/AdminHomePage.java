@@ -35,7 +35,7 @@ public class AdminHomePage extends AppCompatActivity {
         setContentView(R.layout.activity_admin_home_page);
         StatusBarUtil.setStatusBarColor(this, R.color.button_bg);
         checkCurrentUserIfLogIn();
-        initializeFirstFragment(savedInstanceState);
+        checkIntentFragment(savedInstanceState);
 
         // initialize objects
         titleTextTop = findViewById(R.id.title_text_top);
@@ -74,6 +74,19 @@ public class AdminHomePage extends AppCompatActivity {
             Intent intent = new Intent(this, Login.class);
             startActivity(intent);
             finish();
+        }
+    }
+
+    private void checkIntentFragment(Bundle savedInstanceState){
+        Intent intent = getIntent();
+        String fragmentToOpen = intent.getStringExtra("open_fragment");
+
+        if (fragmentToOpen != null && fragmentToOpen.equals("products")) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ProductsFragment())
+                    .commit();
+        } else {
+            initializeFirstFragment(savedInstanceState);
         }
     }
 
