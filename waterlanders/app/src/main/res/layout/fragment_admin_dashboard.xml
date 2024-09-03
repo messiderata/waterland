@@ -1,0 +1,586 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/home_bg_color"
+    tools:context="AdminHomePageDirectory.AdminFragments.DashboardFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+
+            <!-- annual report card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/annual_sales_report_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@color/white">
+
+                <!-- icon and text container -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/annual_sales_report_icon"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"/>
+
+                    <!-- text content container -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:id="@+id/total_annual_sale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₱ANNUAL SALE"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="32sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Annual Sales Report"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/current_annual_year"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/secondary_color"
+                            android:textSize="10sp"
+                            android:text="YEAR"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- 2 cards report -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp">
+
+                <!-- monthly sales -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/monthly_sales_report_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    app:cardCornerRadius="20dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white">
+
+                    <!-- icon and text container -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp">
+
+                        <!-- icon and text content container -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/monthly_sales_report_icon"
+                                android:layout_marginEnd="10dp"/>
+
+                            <!-- text content container -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Monthly Sales Report"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/black"/>
+
+                                <TextView
+                                    android:id="@+id/current_month"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/secondary_color"
+                                    android:textSize="12sp"
+                                    android:text="1 MONTH"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/total_monthly_sale"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="₱MONTHLY SALE"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginEnd="10dp"/>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- daily sales -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/daily_sales_report_card"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    app:cardCornerRadius="20dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white">
+
+                    <!-- icon and text container -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp">
+
+                        <!-- icon and text content container -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/daily_sales_report_icon"
+                                android:layout_marginEnd="10dp"/>
+
+                            <!-- text content container -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Daily Sales Report"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/black"/>
+
+                                <TextView
+                                    android:id="@+id/current_day"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/secondary_color"
+                                    android:textSize="12sp"
+                                    android:text="1 DAY"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/total_today_sale"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="₱TODAY SALE"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginEnd="10dp"/>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <!-- pending orders card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@color/pending_orders_bg_color">
+
+                <!-- icon and text container -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/pending_orders_icon"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="20dp"/>
+
+                    <!-- text content container -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
+
+                        <TextView
+                            android:id="@+id/total_pending_orders"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TOTAL PENDING ORDERS"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="32sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="PENDING ORDERS"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:text="This orders need your approval"
+                            android:textSize="10sp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- 3 cards orders -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp">
+
+                <!-- waiting for courier -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    app:cardCornerRadius="20dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white">
+
+                    <!-- container for 2 container text and number -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <!-- container for icon and text -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/waiting_for_courier_icon"
+                                android:layout_marginEnd="5dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="WAITING FOR COURIER"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="15sp"
+                                android:textAlignment="center"/>
+
+                        </LinearLayout>
+
+                        <!-- container for numbers -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ORDERS"
+                                android:textColor="@color/secondary_color"
+                                android:textSize="7sp"/>
+
+                            <TextView
+                                android:id="@+id/total_waiting_orders"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TOTAL ORDERS"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="20sp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- on delivery -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    app:cardCornerRadius="20dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white">
+
+                    <!-- container for 2 container text and number -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <!-- container for icon and text -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/on_delivery_icon"
+                                android:layout_marginEnd="5dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ON DELIVERY"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="15sp"
+                                android:textAlignment="center"/>
+
+                        </LinearLayout>
+
+                        <!-- container for numbers -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ORDERS"
+                                android:textColor="@color/secondary_color"
+                                android:textSize="7sp"/>
+
+                            <TextView
+                                android:id="@+id/total_onDelivery_orders"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TOTAL ORDERS"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="20sp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- delivered -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    app:cardCornerRadius="20dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white">
+
+                    <!-- container for 2 container text and number -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <!-- container for icon and text -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/delivered_icon"
+                                android:layout_marginEnd="5dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="DELIVERED"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="15sp"/>
+
+                        </LinearLayout>
+
+                        <!-- container for numbers -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ORDERS"
+                                android:textColor="@color/secondary_color"
+                                android:textSize="7sp"/>
+
+                            <TextView
+                                android:id="@+id/total_delivered_orders"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="TOTAL ORDERS"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:textSize="20sp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <!-- total app users card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@color/white">
+
+                <!-- icon and text container -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/total_app_users_icon"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="20dp"/>
+
+                    <!-- text content container -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
+
+                        <TextView
+                            android:id="@+id/total_app_users"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TOTAL USERS"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="32sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TOTAL APP USERS"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

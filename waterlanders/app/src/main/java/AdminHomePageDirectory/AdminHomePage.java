@@ -2,212 +2,88 @@ package AdminHomePageDirectory;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 
 import com.example.waterlanders.R;
-import com.google.firebase.Timestamp;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Calendar;
-import java.util.List;
-
-import AdminHomePageDirectory.SalesReport.DetailsSalesReport;
+import AdminHomePageDirectory.AdminFragments.AccountFragment;
+import AdminHomePageDirectory.AdminFragments.DashboardFragment;
+import AdminHomePageDirectory.AdminFragments.OrdersFragment;
+import AdminHomePageDirectory.AdminFragments.ProductsFragment;
+import Handler.StatusBarUtil;
 import LoginDirectory.Login;
 
 public class AdminHomePage extends AppCompatActivity {
-    private CardView dailySalesReportCardView;
-    private CardView monthlySalesReportCardView;
-    private CardView annualSalesReportCardView;
-    private TextView dailyTotalSalesTextView;
-    private TextView monthlyTotalSalesTextView;
-    private TextView annualTotalSalesTextView;
-    private TextView currentDayTextView;
-    private TextView currentMonthTextView;
-    private TextView currentYearTextView;
-    private Button logoutButtonButton;
-    private FirebaseFirestore db;
+
+    private BottomNavigationView bottomNavigationView;
+    private TextView titleTextTop;
+
+    // titles
+    private final String DASHBOARD_TITLE = "DASHBOARD";
+    private final String PRODUCTS_TITLE = "PRODUCTS";
+    private final String ORDERS_TITLE = "ORDERS";
+    private final String ACCOUNT_TITLE = "ACCOUNT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_admin_home_page);
+        StatusBarUtil.setStatusBarColor(this, R.color.button_bg);
+        checkCurrentUserIfLogIn();
+        initializeFirstFragment(savedInstanceState);
 
-        dailySalesReportCardView = findViewById(R.id.dailySalesReport);
-        monthlySalesReportCardView = findViewById(R.id.monthlySalesReport);
-        annualSalesReportCardView = findViewById(R.id.annualSalesReport);
-        dailyTotalSalesTextView = findViewById(R.id.dailyTotalSales);
-        monthlyTotalSalesTextView = findViewById(R.id.monthlyTotalSales);
-        annualTotalSalesTextView = findViewById(R.id.annualTotalSales);
-        currentDayTextView = findViewById(R.id.currentDay);
-        currentMonthTextView = findViewById(R.id.currentMonth);
-        currentYearTextView = findViewById(R.id.currentYear);
-        logoutButtonButton = findViewById(R.id.logoutButton);
-        db = FirebaseFirestore.getInstance();
+        // initialize objects
+        titleTextTop = findViewById(R.id.title_text_top);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        setDates();
-        setSales();
-
-        dailySalesReportCardView.setOnClickListener(view -> {
-            Intent intent = new Intent(this, DetailsSalesReport.class);
-            intent.putExtra("mode", "DAILY");
-            startActivity(intent);
+        // Set up BottomNavigationView item selection
+        // this handles the fragment state which fragment is active
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int itemId = item.getItemId();
+            if (itemId == R.id.dashboard) {
+                selectedFragment = new DashboardFragment();
+                titleTextTop.setText(DASHBOARD_TITLE);
+            } else if (itemId == R.id.products) {
+                selectedFragment = new ProductsFragment();
+                titleTextTop.setText(PRODUCTS_TITLE);
+            } else if (itemId == R.id.orders) {
+                selectedFragment = new OrdersFragment();
+                titleTextTop.setText(ORDERS_TITLE);
+            } else if (itemId == R.id.account) {
+                selectedFragment = new AccountFragment();
+                titleTextTop.setText(ACCOUNT_TITLE);
+            }
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .commit();
+            }
+            return true;
         });
+    }
 
-        monthlySalesReportCardView.setOnClickListener(view -> {
-            Intent intent = new Intent(this, DetailsSalesReport.class);
-            intent.putExtra("mode", "MONTHLY");
-            startActivity(intent);
-        });
-
-        annualSalesReportCardView.setOnClickListener(view -> {
-            Intent intent = new Intent(this, DetailsSalesReport.class);
-            intent.putExtra("mode", "ANNUAL");
-            startActivity(intent);
-        });
-
-        logoutButtonButton.setOnClickListener(view -> {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(AdminHomePage.this, "Logged Out", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(AdminHomePage.this, Login.class);
+    private void checkCurrentUserIfLogIn(){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() == null) {
+            Intent intent = new Intent(this, Login.class);
             startActivity(intent);
             finish();
-        });
-    }
-
-    private void setDates(){
-        Calendar calendar = Calendar.getInstance();
-
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        int currentMonth = calendar.get(Calendar.MONTH);
-        int currentYear = calendar.get(Calendar.YEAR);
-
-        // format day
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        String dayName = "";
-        switch (dayOfWeek) {
-            case Calendar.SUNDAY:
-                dayName = "Sunday";
-                break;
-            case Calendar.MONDAY:
-                dayName = "Monday";
-                break;
-            case Calendar.TUESDAY:
-                dayName = "Tuesday";
-                break;
-            case Calendar.WEDNESDAY:
-                dayName = "Wednesday";
-                break;
-            case Calendar.THURSDAY:
-                dayName = "Thursday";
-                break;
-            case Calendar.FRIDAY:
-                dayName = "Friday";
-                break;
-            case Calendar.SATURDAY:
-                dayName = "Saturday";
-                break;
         }
+    }
 
-        // format month
-        String monthName = "";
-        switch (currentMonth){
-            case Calendar.JANUARY:
-                monthName = "January";
-                break;
-            case Calendar.FEBRUARY:
-                monthName = "February";
-                break;
-            case Calendar.MARCH:
-                monthName = "March";
-                break;
-            case Calendar.APRIL:
-                monthName = "April";
-                break;
-            case Calendar.MAY:
-                monthName = "May";
-                break;
-            case Calendar.JUNE:
-                monthName = "June";
-                break;
-            case Calendar.JULY:
-                monthName = "July";
-                break;
-            case Calendar.AUGUST:
-                monthName = "August";
-                break;
-            case Calendar.SEPTEMBER:
-                monthName = "September";
-                break;
-            case Calendar.OCTOBER:
-                monthName = "October";
-                break;
-            case Calendar.NOVEMBER:
-                monthName = "November";
-                break;
-            case Calendar.DECEMBER:
-                monthName = "December";
-                break;
+    private void initializeFirstFragment(Bundle savedInstanceState){
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new DashboardFragment())
+                    .commit();
         }
-
-        currentDayTextView.setText(String.format(currentDay+ " "+ dayName));
-        currentMonthTextView.setText(String.format(currentDay+ " "+ monthName));
-        currentYearTextView.setText(String.valueOf(currentYear));
     }
 
-    private void setSales(){
-        Calendar calendar = Calendar.getInstance();
 
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        int currentMonth = calendar.get(Calendar.MONTH) + 1;
-        int currentYear = calendar.get(Calendar.YEAR);
-
-        db.collection("deliveredOrders").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                List<DocumentSnapshot> documents = task.getResult().getDocuments();
-
-                int dailyTotal = 0;
-                int monthlyTotal = 0;
-                int annualTotal = 0;
-
-                for (DocumentSnapshot document : documents) {
-                    Timestamp timestamp = document.getTimestamp("date_delivered");
-                    Calendar docCalendar = Calendar.getInstance();
-                    docCalendar.setTime(timestamp.toDate());
-
-                    int docDay = docCalendar.get(Calendar.DAY_OF_MONTH);
-                    int docMonth = docCalendar.get(Calendar.MONTH) + 1;
-                    int docYear = docCalendar.get(Calendar.YEAR);
-
-                    int totalAmount = document.getLong("total_amount").intValue();
-
-                    if (docYear == currentYear) {
-                        annualTotal += totalAmount;
-
-                        if (docMonth == currentMonth) {
-                            monthlyTotal += totalAmount;
-
-                            if (docDay == currentDay) {
-                                dailyTotal += totalAmount;
-                            }
-                        }
-                    }
-                }
-
-                dailyTotalSalesTextView.setText(String.format("₱"+ dailyTotal));
-                monthlyTotalSalesTextView.setText(String.format("₱"+ monthlyTotal));
-                annualTotalSalesTextView.setText(String.format("₱"+ annualTotal));
-            } else {
-                Toast.makeText(AdminHomePage.this, "Failed to retrieve sales data", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 }

@@ -112,6 +112,10 @@
     <string name="enter_any_special_requests">Enter any special requests.</string>
     <string name="postal_code">Postal Code</string>
     <string name="image">Image</string>
+    <string name="account">ACCOUNT</string>
+    <string name="orders">ORDERS</string>
+    <string name="products">PRODUCTS</string>
+    <string name="dashboard">DASHBOARD</string>
     <string name="log_out">Log out</string>
 
     <string name="loren">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Platea cubilia platea feugiat dapibus;
