@@ -45,115 +45,125 @@
 
     </LinearLayout>
 
-    <!-- Total Amount Container -->
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/header_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/linearLayout2"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_below="@+id/nav_bar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/sales_report_icon"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal">
+                android:src="@drawable/daily_sales_report_icon"
+                android:layout_marginEnd="5dp"/>
 
-                <ImageView
-                    android:id="@+id/sales_report_icon"
+            <!-- text content container -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/total_orders_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/daily_sales_report_icon"
-                    android:layout_marginEnd="5dp"/>
+                    android:text="Total Orders Today"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
 
-                <!-- text content container -->
-                <LinearLayout
+                <TextView
+                    android:id="@+id/current_date_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/total_orders_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total Orders Today"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"/>
-
-                    <TextView
-                        android:id="@+id/current_date_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1 Day"
-                        android:textColor="@color/black"
-                        android:textSize="15sp"/>
-
-                </LinearLayout>
+                    android:text="1 Day"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"/>
 
             </LinearLayout>
 
-            <!-- title and icon container -->
-            <TableLayout
-                android:id="@+id/table_layout_items"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="20dp">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAlignment="center"
-                        android:text="No"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:textAlignment="center"
-                        android:text="Product"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAlignment="center"
-                        android:text="Sold"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAlignment="center"
-                        android:text="Total sale"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"/>
-
-                </TableRow>
-
-
-            </TableLayout>
-
         </LinearLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:text="No"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textAlignment="center"
+                    android:text="Product"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:text="Sold"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:text="Total sale"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+
+    <!-- Total Amount Container -->
+    <ScrollView
+        android:id="@+id/scroll_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_below="@+id/header_title">
+
+        <TableLayout
+            android:id="@+id/table_layout_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp">
+
+        </TableLayout>
 
     </ScrollView>
 

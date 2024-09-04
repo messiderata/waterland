@@ -146,7 +146,7 @@ public class GcashConfirmation extends AppCompatActivity {
 
     private void uploadImageToFirebase(Uri uri) {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference("order_receipts");
-        StorageReference fileRef = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
+        StorageReference fileRef = storageReference.child(getFileName(imageUri));
 
         fileRef.putFile(uri)
                 .addOnSuccessListener(taskSnapshot -> {
@@ -175,16 +175,6 @@ public class GcashConfirmation extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Toast.makeText(GcashConfirmation.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
-    }
-
-    private String getFileExtension(Uri uri) {
-        String extension = null;
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            extension = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)).split("\\.")[1];
-            cursor.close();
-        }
-        return extension;
     }
 
     private String getFileName(Uri uri) {

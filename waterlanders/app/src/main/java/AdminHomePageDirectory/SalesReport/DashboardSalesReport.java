@@ -20,11 +20,13 @@ import android.graphics.Color;
 
 import com.bumptech.glide.Glide;
 import com.example.waterlanders.R;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +37,7 @@ public class DashboardSalesReport extends AppCompatActivity {
     private String totalOrdersTextIntent;
     private String currentDateTextIntent;
     private String totalSalesTextInput;
+    private String mode;
 
     private ImageView backButton;
     private TextView activityTitle;
@@ -91,6 +94,7 @@ public class DashboardSalesReport extends AppCompatActivity {
         totalOrdersTextIntent = (String) intent.getSerializableExtra("total_orders_text");
         currentDateTextIntent = (String) intent.getSerializableExtra("current_date_text");
         totalSalesTextInput = (String) intent.getSerializableExtra("total_sales_text");
+        mode = (String) intent.getSerializableExtra("mode");
     }
 
     private void setTextContents(){
@@ -117,9 +121,6 @@ public class DashboardSalesReport extends AppCompatActivity {
                 List<DocumentSnapshot> itemsList = task.getResult().getDocuments();
                 totalSalesValueInt = 0;
 
-                final int totalItemCount = itemsList.size();
-                final int[] processedItemCount = {0};
-
                 for (int i = 0; i < itemsList.size(); i++) {
                     DocumentSnapshot itemDoc = itemsList.get(i);
                     String itemId = itemDoc.getId();
@@ -127,7 +128,7 @@ public class DashboardSalesReport extends AppCompatActivity {
                     String itemImgUrl = itemDoc.getString("item_img");
 
                     int finalI = i;
-                    calculateTotalSoldAndSales(itemId, totalSold -> {
+                    calculateTotalSoldAndSales(itemId, (totalSold, totalItemPrice) -> {
                         TableRow row = new TableRow(this);
                         row.setLayoutParams(new TableRow.LayoutParams(
                                 TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -200,9 +201,8 @@ public class DashboardSalesReport extends AppCompatActivity {
 
                         // "Total Sale" Column
                         TextView totalSaleColumn = new TextView(this);
-                        int totalSale = totalSold * itemDoc.getLong("item_price").intValue();
-                        totalSalesValueInt += totalSale;
-                        totalSaleColumn.setText(String.format("₱%d", totalSold * itemDoc.getLong("item_price")));
+                        totalSalesValueInt += totalItemPrice;
+                        totalSaleColumn.setText(String.format("₱"+ totalItemPrice));
                         totalSaleColumn.setTextColor(ContextCompat.getColor(this, R.color.black));
                         totalSaleColumn.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         totalSaleColumn.setLayoutParams(new TableRow.LayoutParams(
@@ -211,11 +211,7 @@ public class DashboardSalesReport extends AppCompatActivity {
 
                         // Add the row to the table layout
                         tableLayoutItems.addView(row);
-
-                        processedItemCount[0]++;
-                        if (processedItemCount[0] == totalItemCount) {
-                            totalSalesValue.setText(String.valueOf(totalSalesValueInt));
-                        }
+                        totalSalesValue.setText(String.format("₱" + totalSalesValueInt));
                     });
                 }
             } else {
@@ -233,27 +229,89 @@ public class DashboardSalesReport extends AppCompatActivity {
         // temporarily the collection is set to 'pendingOrders'
         // will set to 'deliveredOrders' later
 
-        // as for now it will calculate for all items
-        // i will add a filter later that will base on daily, monthly, and yearly
+        Calendar calendar = Calendar.getInstance();
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentYear = calendar.get(Calendar.YEAR);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("pendingOrders").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 int totalSold = 0;
+                int totalItemPrice = 0;
 
                 for (DocumentSnapshot orderDoc : task.getResult().getDocuments()) {
-                    List<Map<String, Object>> orderItems = (List<Map<String, Object>>) orderDoc.get("order_items");
-                    if (orderItems != null) {
-                        for (Map<String, Object> itemData : orderItems) {
-                            // Check if the current map entry has the target itemId
-                            if (itemData.containsKey("item_id") && itemData.get("item_id").equals(itemId)) {
-                                totalSold += ((Number) itemData.get("item_order_quantity")).intValue();
-                            }
+                    // will change later to 'date_delivered'
+                    Timestamp timestamp = orderDoc.getTimestamp("date_ordered");
+
+                    if (timestamp != null){
+                        List<Map<String, Object>> orderItems = (List<Map<String, Object>>) orderDoc.get("order_items");
+                        Calendar docCalendar = Calendar.getInstance();
+                        docCalendar.setTime(timestamp.toDate());
+
+                        int docDay = docCalendar.get(Calendar.DAY_OF_MONTH);
+                        int docMonth = docCalendar.get(Calendar.MONTH) + 1;
+                        int docYear = docCalendar.get(Calendar.YEAR);
+
+                        switch (mode){
+                            case "ANNUAL":
+                                if (docYear == currentYear) {
+                                    if (orderItems != null) {
+                                        for (Map<String, Object> itemData : orderItems) {
+                                            // Check if the current map entry has the target itemId
+                                            if (itemData.containsKey("item_id") && itemData.get("item_id").equals(itemId)) {
+                                                totalSold += ((Number) itemData.get("item_order_quantity")).intValue();
+
+                                                // Calculate the total price for the current item
+                                                if (itemData.containsKey("item_total_price")) {
+                                                    totalItemPrice += ((Number) itemData.get("item_total_price")).intValue();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            case "MONTHLY":
+                                if (docMonth == currentMonth) {
+                                    if (orderItems != null) {
+                                        for (Map<String, Object> itemData : orderItems) {
+                                            // Check if the current map entry has the target itemId
+                                            if (itemData.containsKey("item_id") && itemData.get("item_id").equals(itemId)) {
+                                                totalSold += ((Number) itemData.get("item_order_quantity")).intValue();
+
+                                                // Calculate the total price for the current item
+                                                if (itemData.containsKey("item_total_price")) {
+                                                    totalItemPrice += ((Number) itemData.get("item_total_price")).intValue();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            case "DAY":
+                                if (docDay == currentDay) {
+                                    if (orderItems != null) {
+                                        for (Map<String, Object> itemData : orderItems) {
+                                            // Check if the current map entry has the target itemId
+                                            if (itemData.containsKey("item_id") && itemData.get("item_id").equals(itemId)) {
+                                                totalSold += ((Number) itemData.get("item_order_quantity")).intValue();
+
+                                                // Calculate the total price for the current item
+                                                if (itemData.containsKey("item_total_price")) {
+                                                    totalItemPrice += ((Number) itemData.get("item_total_price")).intValue();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
 
-                listener.onTotalSoldCalculated(totalSold);
+                listener.onTotalSoldCalculated(totalSold, totalItemPrice);
             } else {
                 Toast.makeText(this, "Failed to retrieve order data", Toast.LENGTH_SHORT).show();
             }
@@ -261,6 +319,6 @@ public class DashboardSalesReport extends AppCompatActivity {
     }
 
     interface OnTotalSoldCalculatedListener {
-        void onTotalSoldCalculated(int totalSold);
+        void onTotalSoldCalculated(int totalSold, int totalItemPrice);
     }
 }
