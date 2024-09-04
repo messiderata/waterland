@@ -85,6 +85,10 @@ public class AdminHomePage extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new ProductsFragment())
                     .commit();
+        } else if (fragmentToOpen != null && fragmentToOpen.equals("pending_orders")) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new OrdersFragment())
+                    .commit();
         } else {
             initializeFirstFragment(savedInstanceState);
         }
