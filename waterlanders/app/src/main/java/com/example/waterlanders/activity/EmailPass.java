@@ -39,7 +39,7 @@ public class EmailPass extends AppCompatActivity {
             backIntent.putExtra("success_description","The reset link is sent to your email.");
             startActivity(backIntent);
         });
-//hi
+
         backIcon.setOnClickListener(view -> {
             finish();
         });
