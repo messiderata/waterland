@@ -226,23 +226,19 @@ public class DashboardSalesReport extends AppCompatActivity {
     }
 
     private void calculateTotalSoldAndSales(String itemId, OnTotalSoldCalculatedListener listener) {
-        // temporarily the collection is set to 'pendingOrders'
-        // will set to 'deliveredOrders' later
-
         Calendar calendar = Calendar.getInstance();
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
         int currentYear = calendar.get(Calendar.YEAR);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("pendingOrders").get().addOnCompleteListener(task -> {
+        db.collection("deliveredOrders").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 int totalSold = 0;
                 int totalItemPrice = 0;
 
                 for (DocumentSnapshot orderDoc : task.getResult().getDocuments()) {
-                    // will change later to 'date_delivered'
-                    Timestamp timestamp = orderDoc.getTimestamp("date_ordered");
+                    Timestamp timestamp = orderDoc.getTimestamp("date_delivered");
 
                     if (timestamp != null){
                         List<Map<String, Object>> orderItems = (List<Map<String, Object>>) orderDoc.get("order_items");

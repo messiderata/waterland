@@ -23,12 +23,12 @@
             app:itemIconTint="@drawable/selector_nav_icon_text"
             app:itemTextColor="@drawable/selector_nav_icon_text"
             style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
-            app:menu="@menu/admin_bottom_nav"
+            app:menu="@menu/admin_orders_top_nav"
             tools:ignore="VisualLintBottomNav"
             app:labelVisibilityMode="labeled"/>
 
         <FrameLayout
-            android:id="@+id/admin_product_fragment_container"
+            android:id="@+id/admin_orders_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>

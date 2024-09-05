@@ -47,6 +47,24 @@
             android:name=".activity.EmailPass"
             android:exported="true" />
         <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersProofOfDelivery"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersCurrentOrdersDetails"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOrdersCurrentOrdersDetails"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.WaitingOrders.WaitingOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.GCashPaymentDetails"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
             android:name="AdminHomePageDirectory.Products.DeleteItem"
             android:exported="false" />
         <activity

@@ -3,12 +3,10 @@ package AdminHomePageDirectory.AdminFragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +15,7 @@ import android.widget.Toast;
 
 import com.example.waterlanders.R;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +23,6 @@ import java.util.List;
 import AdminHomePageDirectory.Products.AddNewItem;
 import AdminHomePageDirectory.Products.ItemsAdapter;
 import AdminHomePageDirectory.Products.ItemsConstructor;
-import DeliveryHomePageDirectory.DeliveryHomePage;
-import DeliveryHomePageDirectory.onDelivery.AdapterOnDeliveryOrders;
-import DeliveryHomePageDirectory.onDelivery.GetOnDeliveryOrders;
 
 public class ProductsFragment extends Fragment {
 

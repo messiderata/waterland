@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="5dp"
+    app:cardBackgroundColor="#D1EAF9">
+
+    <!-- main container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <!-- picture -->
+        <ImageView
+            android:id="@+id/item_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/ic_launcher_background"/>
+
+        <!-- text container -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ITEM NAME"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/item_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ITEM ID: "
+                android:textSize="12sp"
+                android:textColor="@color/secondary_color"/>
+
+            <TextView
+                android:id="@+id/item_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ITEM PRICE: ₱ 123"
+                android:textSize="12sp"
+                android:textColor="@color/secondary_color"/>
+
+            <TextView
+                android:id="@+id/item_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QTY: "
+                android:textSize="12sp"
+                android:textColor="@color/secondary_color"/>
+
+        </LinearLayout>
+
+        <!-- price container -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Amount:"
+                android:textColor="@color/secondary_color"
+                android:textSize="12sp"
+                android:layout_marginEnd="5dp"/>
+
+            <TextView
+                android:id="@+id/total_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="₱123"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textAlignment="center"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
