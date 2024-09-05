@@ -22,6 +22,7 @@ import UserHomePageDirectory.MainDashboardUser;
 import com.example.waterlanders.R;
 import com.example.waterlanders.activity.ForgotPassword;
 import com.example.waterlanders.activity.Signup;
+import com.example.waterlanders.activity.signUp2;
 import com.facebook.CallbackManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -146,13 +147,11 @@ public class Login extends AppCompatActivity {
         txtForgotPass.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), ForgotPassword.class);
             startActivity(intent);
-            finish();
         });
 
         txtCreateAcc.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), Signup.class);
+            Intent intent = new Intent(getApplicationContext(), signUp2.class);
             startActivity(intent);
-            finish();
         });
 
         img_facebook_login.setOnClickListener(view -> {

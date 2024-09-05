@@ -23,6 +23,30 @@
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
         <activity
+            android:name=".activity.newPass"
+            android:exported="false" />
+        <activity
+            android:name=".activity.success"
+            android:exported="false" />
+        <activity
+            android:name=".activity.OTP"
+            android:exported="false" />
+        <activity
+            android:name=".activity.registration"
+            android:exported="false" />
+        <activity
+            android:name=".activity.signUp2"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ForgotPassword"
+            android:exported="false" />
+        <activity
+            android:name=".activity.PhonePass"
+            android:exported="true" />
+        <activity
+            android:name=".activity.EmailPass"
+            android:exported="true" />
+        <activity
             android:name="AdminHomePageDirectory.Products.DeleteItem"
             android:exported="false" />
         <activity
@@ -111,9 +135,6 @@
             android:exported="false" />
         <activity
             android:name=".activity.ValidateOTP"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ForgotPassword"
             android:exported="false" />
         <activity
             android:name="LoginDirectory.Login"
