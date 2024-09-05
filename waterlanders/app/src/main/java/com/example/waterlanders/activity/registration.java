@@ -33,7 +33,9 @@ public class registration extends AppCompatActivity {
         CardView registerbtn = findViewById(R.id.registerbtn);
 
         registerbtn.setOnClickListener(view -> {
-            Intent backIntent = new Intent(registration.this, Login.class);
+            Intent backIntent = new Intent(registration.this, success.class);
+            backIntent.putExtra("success_message","Account Registered");
+            backIntent.putExtra("success_description","The account is succesfully registered");
             startActivity(backIntent);
         });
 

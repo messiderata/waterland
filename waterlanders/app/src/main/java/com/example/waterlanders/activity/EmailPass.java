@@ -1,5 +1,6 @@
 package com.example.waterlanders.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +32,13 @@ public class EmailPass extends AppCompatActivity {
         TextView subTitleText = findViewById(R.id.subtitleText);
         EditText emailField = findViewById(R.id.emailField);
         Button sendButton = findViewById(R.id.sendButton);
+
+        sendButton.setOnClickListener(view -> {
+            Intent backIntent = new Intent(EmailPass.this, success.class);
+            backIntent.putExtra("success_message","Password Reset Link Sent");
+            backIntent.putExtra("success_description","The reset link is sent to your email.");
+            startActivity(backIntent);
+        });
 
         backIcon.setOnClickListener(view -> {
             finish();
