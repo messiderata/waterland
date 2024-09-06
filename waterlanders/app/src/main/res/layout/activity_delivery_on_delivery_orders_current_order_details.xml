@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/home_bg_color"
-    tools:context="AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersCurrentOrdersDetails">
+    tools:context="DeliveryHomePageDirectory.DeliveryOrders.Utils.OnDeliveryOrders.DeliveryOnDeliveryOrdersCurrentOrderDetails">
 
     <!-- Header -->
     <LinearLayout
@@ -37,7 +37,7 @@
             android:layout_marginStart="5dp"
             android:fontFamily="@font/robotoregular"
             android:gravity="center"
-            android:text="DELIVERED ORDERS"
+            android:text="ON DELIVERY ORDERS"
             android:textColor="@color/white"
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
@@ -143,63 +143,29 @@
                     android:layout_marginEnd="5dp"
                     android:src="@drawable/admin_orders_date_ordered_icon"/>
 
+                <!-- text container -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginEnd="20dp">
 
-                    <!-- text container -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginEnd="20dp">
+                        android:text="Date Ordered"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Date Ordered"
-                            android:textColor="@color/black"
-                            android:textSize="12sp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:id="@+id/date_ordered"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="DATE ORDERED"
-                            android:textColor="@color/secondary_color"
-                            android:textSize="12sp"
-                            android:layout_marginTop="5dp"/>
-
-                    </LinearLayout>
-
-                    <!-- text container -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/date_ordered"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginTop="5dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Date Delivered"
-                            android:textColor="@color/black"
-                            android:textSize="12sp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:id="@+id/date_delivered"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="DATE DELIVERED"
-                            android:textColor="@color/secondary_color"
-                            android:textSize="12sp"
-                            android:layout_marginTop="5dp"/>
-
-                    </LinearLayout>
+                        android:text="DATE ORDERED"
+                        android:textColor="@color/secondary_color"
+                        android:textSize="12sp"
+                        android:layout_marginTop="5dp"/>
 
                 </LinearLayout>
 
@@ -212,6 +178,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:layout_marginTop="3dp"
+                android:orientation="horizontal"
                 android:background="@color/white">
 
                 <ImageView
@@ -476,100 +443,6 @@
 
             </LinearLayout>
 
-            <!-- proof of delivery container -->
-            <LinearLayout
-                android:id="@+id/proof_of_delivery_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_marginTop="3dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginStart="20dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/admin_orders_proof_of_delivery_icon"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="PROOF OF DELIVERY"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="5dp"
-                        android:layout_gravity="center"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- customer confirmation container -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_marginTop="3dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginStart="20dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginEnd="5dp"
-                        android:src="@drawable/admin_orders_customer_confirmation_icon"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CUSTOMER CONFIRMATION:"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="5dp"
-                        android:layout_gravity="center"/>
-
-                    <TextView
-                        android:id="@+id/user_confirmation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="USER CONFIRMATION"
-                        android:textSize="12sp"
-                        android:textColor="@color/secondary_color"
-                        android:layout_gravity="center"/>
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/customer_feedback"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="CUSTOMER FEEDBACK"
-                    android:textSize="12sp"
-                    android:textColor="@color/secondary_color"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginStart="55dp"/>
-
-            </LinearLayout>
-
         </LinearLayout>
 
     </ScrollView>
@@ -589,7 +462,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="OK"
+            android:text="CANCEL"
+            android:textColor="@color/white"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/cancel_button_bg_color"/>
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TAKE ORDER"
             android:textColor="@color/white"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="5dp"

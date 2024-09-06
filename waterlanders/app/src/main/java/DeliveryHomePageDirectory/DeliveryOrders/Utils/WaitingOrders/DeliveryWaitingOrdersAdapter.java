@@ -1,4 +1,4 @@
-package AdminHomePageDirectory.Orders.Utils.DeliveredOrders;
+package DeliveryHomePageDirectory.DeliveryOrders.Utils.WaitingOrders;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,23 +19,25 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
+import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersConstructor;
 
-public class DeliveredOrdersAdapter extends RecyclerView.Adapter<DeliveredOrdersAdapter.DeliveredOrdersAdapterViewHolder> {
+
+public class DeliveryWaitingOrdersAdapter extends RecyclerView.Adapter<DeliveryWaitingOrdersAdapter.DeliveryWaitingOrdersAdapterViewHolder> {
     Context context;
-    List<DeliveredOrdersConstructor> deliveredOrdersConstructorList;
+    List<PendingOrdersConstructor> pendingOrdersConstructorList;
 
-    public DeliveredOrdersAdapter(Context context, List<DeliveredOrdersConstructor> deliveredOrdersConstructorList) {
+    public DeliveryWaitingOrdersAdapter(Context context, List<PendingOrdersConstructor> pendingOrdersConstructorList) {
         this.context = context;
-        this.deliveredOrdersConstructorList = deliveredOrdersConstructorList;
+        this.pendingOrdersConstructorList = pendingOrdersConstructorList;
     }
 
-    public static class DeliveredOrdersAdapterViewHolder extends RecyclerView.ViewHolder {
+    public static class DeliveryWaitingOrdersAdapterViewHolder extends RecyclerView.ViewHolder{
         ImageView orderIMG;
         TextView orderID;
         TextView userID;
         TextView orderPrice;
 
-        public DeliveredOrdersAdapterViewHolder(@NonNull View itemView) {
+        public DeliveryWaitingOrdersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             orderIMG = itemView.findViewById(R.id.order_img);
             orderID = itemView.findViewById(R.id.order_id);
@@ -46,19 +48,19 @@ public class DeliveredOrdersAdapter extends RecyclerView.Adapter<DeliveredOrders
 
     @NonNull
     @Override
-    public DeliveredOrdersAdapter.DeliveredOrdersAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DeliveryWaitingOrdersAdapter.DeliveryWaitingOrdersAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_pending_orders_card, parent, false);
-        return new DeliveredOrdersAdapter.DeliveredOrdersAdapterViewHolder(view);
+        return new DeliveryWaitingOrdersAdapter.DeliveryWaitingOrdersAdapterViewHolder(view);
     }
 
     @Override
     public int getItemCount() {
-        return deliveredOrdersConstructorList.size();
+        return pendingOrdersConstructorList.size();
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DeliveredOrdersAdapter.DeliveredOrdersAdapterViewHolder holder, int position) {
-        DeliveredOrdersConstructor orderCard = deliveredOrdersConstructorList.get(position);
+    public void onBindViewHolder(@NonNull DeliveryWaitingOrdersAdapter.DeliveryWaitingOrdersAdapterViewHolder holder, int position) {
+        PendingOrdersConstructor orderCard = pendingOrdersConstructorList.get(position);
 
         // display the icon
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -77,7 +79,7 @@ public class DeliveredOrdersAdapter extends RecyclerView.Adapter<DeliveredOrders
         holder.orderPrice.setText(String.format("₱" + orderCard.getTotal_amount()));
 
         holder.itemView.setOnClickListener(v -> {
-            Intent showCurrentOrderDetailsIntent = new Intent(context, DeliveredOrdersCurrentOrdersDetails.class);
+            Intent showCurrentOrderDetailsIntent = new Intent(context, DeliveryWaitingOrdersCurrentOrderDetails.class);
             showCurrentOrderDetailsIntent.putExtra("current_order", orderCard);
             context.startActivity(showCurrentOrderDetailsIntent);
         });

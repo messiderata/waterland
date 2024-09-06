@@ -1,4 +1,4 @@
-package AdminHomePageDirectory.Orders.Utils.DeliveredOrders;
+package DeliveryHomePageDirectory.DeliveryOrders.Utils.DeliveredOrders;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,23 +19,25 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
+import AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersConstructor;
 
-public class DeliveredOrdersAdapter extends RecyclerView.Adapter<DeliveredOrdersAdapter.DeliveredOrdersAdapterViewHolder> {
+
+public class DeliveryDeliveredOrdersAdapter extends RecyclerView.Adapter<DeliveryDeliveredOrdersAdapter.DeliveryDeliveredOrdersAdapterViewHolder> {
     Context context;
     List<DeliveredOrdersConstructor> deliveredOrdersConstructorList;
 
-    public DeliveredOrdersAdapter(Context context, List<DeliveredOrdersConstructor> deliveredOrdersConstructorList) {
+    public DeliveryDeliveredOrdersAdapter(Context context, List<DeliveredOrdersConstructor> deliveredOrdersConstructorList) {
         this.context = context;
         this.deliveredOrdersConstructorList = deliveredOrdersConstructorList;
     }
 
-    public static class DeliveredOrdersAdapterViewHolder extends RecyclerView.ViewHolder {
+    public static class DeliveryDeliveredOrdersAdapterViewHolder extends RecyclerView.ViewHolder {
         ImageView orderIMG;
         TextView orderID;
         TextView userID;
         TextView orderPrice;
 
-        public DeliveredOrdersAdapterViewHolder(@NonNull View itemView) {
+        public DeliveryDeliveredOrdersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             orderIMG = itemView.findViewById(R.id.order_img);
             orderID = itemView.findViewById(R.id.order_id);
@@ -46,9 +48,9 @@ public class DeliveredOrdersAdapter extends RecyclerView.Adapter<DeliveredOrders
 
     @NonNull
     @Override
-    public DeliveredOrdersAdapter.DeliveredOrdersAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DeliveryDeliveredOrdersAdapter.DeliveryDeliveredOrdersAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_pending_orders_card, parent, false);
-        return new DeliveredOrdersAdapter.DeliveredOrdersAdapterViewHolder(view);
+        return new DeliveryDeliveredOrdersAdapter.DeliveryDeliveredOrdersAdapterViewHolder(view);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class DeliveredOrdersAdapter extends RecyclerView.Adapter<DeliveredOrders
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DeliveredOrdersAdapter.DeliveredOrdersAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DeliveryDeliveredOrdersAdapter.DeliveryDeliveredOrdersAdapterViewHolder holder, int position) {
         DeliveredOrdersConstructor orderCard = deliveredOrdersConstructorList.get(position);
 
         // display the icon
@@ -77,10 +79,9 @@ public class DeliveredOrdersAdapter extends RecyclerView.Adapter<DeliveredOrders
         holder.orderPrice.setText(String.format("₱" + orderCard.getTotal_amount()));
 
         holder.itemView.setOnClickListener(v -> {
-            Intent showCurrentOrderDetailsIntent = new Intent(context, DeliveredOrdersCurrentOrdersDetails.class);
+            Intent showCurrentOrderDetailsIntent = new Intent(context, DeliveryDeliveredOrdersCurrentOrdersDetails.class);
             showCurrentOrderDetailsIntent.putExtra("current_order", orderCard);
             context.startActivity(showCurrentOrderDetailsIntent);
         });
     }
-
 }

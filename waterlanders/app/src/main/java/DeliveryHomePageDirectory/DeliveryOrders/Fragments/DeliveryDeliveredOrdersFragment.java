@@ -1,4 +1,4 @@
-package AdminHomePageDirectory.Orders.Fragments;
+package DeliveryHomePageDirectory.DeliveryOrders.Fragments;
 
 import android.os.Bundle;
 
@@ -18,26 +18,26 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-import AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersAdapter;
 import AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersConstructor;
+import DeliveryHomePageDirectory.DeliveryOrders.Utils.DeliveredOrders.DeliveryDeliveredOrdersAdapter;
 
-public class AdminDeliveredFragment extends Fragment {
+public class DeliveryDeliveredOrdersFragment extends Fragment {
 
     private RecyclerView recyclerViewHolder;
 
     private List<DeliveredOrdersConstructor> deliveredOrdersConstructorList;
-    private DeliveredOrdersAdapter deliveredOrdersAdapter;
+    private DeliveryDeliveredOrdersAdapter deliveryDeliveredOrdersAdapter;
 
     private FirebaseFirestore db;
 
-    public AdminDeliveredFragment() {
+    public DeliveryDeliveredOrdersFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_admin_delivered, container, false);
+        View view = inflater.inflate(R.layout.fragment_delivery_delivered_orders, container, false);
         initializeObjects(view);
         populateDeliveredOrdersList();
 
@@ -49,8 +49,8 @@ public class AdminDeliveredFragment extends Fragment {
         recyclerViewHolder.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         deliveredOrdersConstructorList = new ArrayList<>();
-        deliveredOrdersAdapter = new DeliveredOrdersAdapter(getActivity(), deliveredOrdersConstructorList);
-        recyclerViewHolder.setAdapter(deliveredOrdersAdapter);
+        deliveryDeliveredOrdersAdapter = new DeliveryDeliveredOrdersAdapter(getActivity(), deliveredOrdersConstructorList);
+        recyclerViewHolder.setAdapter(deliveryDeliveredOrdersAdapter);
 
         db = FirebaseFirestore.getInstance();
     }
@@ -68,7 +68,7 @@ public class AdminDeliveredFragment extends Fragment {
                         }
                     }
                 }
-                deliveredOrdersAdapter.notifyDataSetChanged();
+                deliveryDeliveredOrdersAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(getActivity(), "Failed to retrieve items data", Toast.LENGTH_SHORT).show();
             }

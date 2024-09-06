@@ -1,4 +1,4 @@
-package AdminHomePageDirectory.Orders.Fragments;
+package DeliveryHomePageDirectory.DeliveryOrders.Fragments;
 
 import android.os.Bundle;
 
@@ -18,28 +18,31 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-import AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersAdapter;
-import AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersConstructor;
+import AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOrdersAdapter;
+import AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOrdersConstructor;
+import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersConstructor;
+import DeliveryHomePageDirectory.DeliveryOrders.Utils.OnDeliveryOrders.DeliveryOnDeliveryOrdersAdapter;
+import DeliveryHomePageDirectory.DeliveryOrders.Utils.WaitingOrders.DeliveryWaitingOrdersAdapter;
 
-public class AdminDeliveredFragment extends Fragment {
+public class DeliveryOnDeliveryOrdersFragment extends Fragment {
 
     private RecyclerView recyclerViewHolder;
 
-    private List<DeliveredOrdersConstructor> deliveredOrdersConstructorList;
-    private DeliveredOrdersAdapter deliveredOrdersAdapter;
+    private List<OnDeliveryOrdersConstructor> onDeliveryOrdersConstructorList;
+    private DeliveryOnDeliveryOrdersAdapter deliveryOnDeliveryOrdersAdapter;
 
     private FirebaseFirestore db;
 
-    public AdminDeliveredFragment() {
+    public DeliveryOnDeliveryOrdersFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_admin_delivered, container, false);
+        View view = inflater.inflate(R.layout.fragment_delivery_on_delivery_orders, container, false);
         initializeObjects(view);
-        populateDeliveredOrdersList();
+        populateOnDeliveryOrdersList();
 
         return view;
     }
@@ -48,27 +51,27 @@ public class AdminDeliveredFragment extends Fragment {
         recyclerViewHolder = view.findViewById(R.id.recycle_view_holder);
         recyclerViewHolder.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        deliveredOrdersConstructorList = new ArrayList<>();
-        deliveredOrdersAdapter = new DeliveredOrdersAdapter(getActivity(), deliveredOrdersConstructorList);
-        recyclerViewHolder.setAdapter(deliveredOrdersAdapter);
+        onDeliveryOrdersConstructorList = new ArrayList<>();
+        deliveryOnDeliveryOrdersAdapter = new DeliveryOnDeliveryOrdersAdapter(getActivity(), onDeliveryOrdersConstructorList);
+        recyclerViewHolder.setAdapter(deliveryOnDeliveryOrdersAdapter);
 
         db = FirebaseFirestore.getInstance();
     }
 
-    private void populateDeliveredOrdersList(){
-        db.collection("deliveredOrders").get().addOnCompleteListener(task -> {
+    private void populateOnDeliveryOrdersList(){
+        db.collection("onDelivery").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null){
                 List<DocumentSnapshot> OrdersList = task.getResult().getDocuments();
 
                 for (DocumentSnapshot document : OrdersList){
                     if (!document.getId().equals("test_id")){
-                        DeliveredOrdersConstructor currentPendingOrder = document.toObject(DeliveredOrdersConstructor.class);
+                        OnDeliveryOrdersConstructor currentPendingOrder = document.toObject(OnDeliveryOrdersConstructor.class);
                         if (currentPendingOrder != null){
-                            deliveredOrdersConstructorList.add(currentPendingOrder);
+                            onDeliveryOrdersConstructorList.add(currentPendingOrder);
                         }
                     }
                 }
-                deliveredOrdersAdapter.notifyDataSetChanged();
+                deliveryOnDeliveryOrdersAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(getActivity(), "Failed to retrieve items data", Toast.LENGTH_SHORT).show();
             }

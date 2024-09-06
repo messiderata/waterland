@@ -61,12 +61,14 @@ public class AdminOnDeliveryFragment extends Fragment {
                 List<DocumentSnapshot> OrdersList = task.getResult().getDocuments();
 
                 for (DocumentSnapshot document : OrdersList){
-                    OnDeliveryOrdersConstructor currentPendingOrder = document.toObject(OnDeliveryOrdersConstructor.class);
-                    if (currentPendingOrder != null){
-                        onDeliveryOrdersConstructorList.add(currentPendingOrder);
+                    if (!document.getId().equals("test_id")){
+                        OnDeliveryOrdersConstructor currentPendingOrder = document.toObject(OnDeliveryOrdersConstructor.class);
+                        if (currentPendingOrder != null){
+                            onDeliveryOrdersConstructorList.add(currentPendingOrder);
+                        }
                     }
-                    onDeliveryOrdersAdapter.notifyDataSetChanged();
                 }
+                onDeliveryOrdersAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(getActivity(), "Failed to retrieve items data", Toast.LENGTH_SHORT).show();
             }
