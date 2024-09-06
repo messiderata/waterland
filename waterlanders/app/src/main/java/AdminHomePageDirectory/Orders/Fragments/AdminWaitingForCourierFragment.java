@@ -61,12 +61,14 @@ public class AdminWaitingForCourierFragment extends Fragment {
                 List<DocumentSnapshot> pendingOrdersList = task.getResult().getDocuments();
 
                 for (DocumentSnapshot document : pendingOrdersList){
-                    PendingOrdersConstructor currentPendingOrder = document.toObject(PendingOrdersConstructor.class);
-                    if (currentPendingOrder != null){
-                        pendingOrdersConstructorList.add(currentPendingOrder);
+                    if (!document.getId().equals("test_id")){
+                        PendingOrdersConstructor currentPendingOrder = document.toObject(PendingOrdersConstructor.class);
+                        if (currentPendingOrder != null){
+                            pendingOrdersConstructorList.add(currentPendingOrder);
+                        }
                     }
-                    waitingOrdersAdapter.notifyDataSetChanged();
                 }
+                waitingOrdersAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(getActivity(), "Failed to retrieve items data", Toast.LENGTH_SHORT).show();
             }

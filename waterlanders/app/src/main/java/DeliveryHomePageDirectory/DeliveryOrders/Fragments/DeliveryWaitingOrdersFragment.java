@@ -1,4 +1,4 @@
-package AdminHomePageDirectory.Orders.Fragments;
+package DeliveryHomePageDirectory.DeliveryOrders.Fragments;
 
 import android.os.Bundle;
 
@@ -18,28 +18,28 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-import AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersAdapter;
-import AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersConstructor;
+import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersConstructor;
+import DeliveryHomePageDirectory.DeliveryOrders.Utils.WaitingOrders.DeliveryWaitingOrdersAdapter;
 
-public class AdminDeliveredFragment extends Fragment {
+public class DeliveryWaitingOrdersFragment extends Fragment {
 
     private RecyclerView recyclerViewHolder;
 
-    private List<DeliveredOrdersConstructor> deliveredOrdersConstructorList;
-    private DeliveredOrdersAdapter deliveredOrdersAdapter;
+    private List<PendingOrdersConstructor> pendingOrdersConstructorList;
+    private DeliveryWaitingOrdersAdapter deliveryWaitingOrdersAdapter;
 
     private FirebaseFirestore db;
 
-    public AdminDeliveredFragment() {
+    public DeliveryWaitingOrdersFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_admin_delivered, container, false);
+        View view = inflater.inflate(R.layout.fragment_delivery_waiting_orders, container, false);
         initializeObjects(view);
-        populateDeliveredOrdersList();
+        populateWaitingOrdersList();
 
         return view;
     }
@@ -48,27 +48,27 @@ public class AdminDeliveredFragment extends Fragment {
         recyclerViewHolder = view.findViewById(R.id.recycle_view_holder);
         recyclerViewHolder.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        deliveredOrdersConstructorList = new ArrayList<>();
-        deliveredOrdersAdapter = new DeliveredOrdersAdapter(getActivity(), deliveredOrdersConstructorList);
-        recyclerViewHolder.setAdapter(deliveredOrdersAdapter);
+        pendingOrdersConstructorList = new ArrayList<>();
+        deliveryWaitingOrdersAdapter = new DeliveryWaitingOrdersAdapter(getActivity(), pendingOrdersConstructorList);
+        recyclerViewHolder.setAdapter(deliveryWaitingOrdersAdapter);
 
         db = FirebaseFirestore.getInstance();
     }
 
-    private void populateDeliveredOrdersList(){
-        db.collection("deliveredOrders").get().addOnCompleteListener(task -> {
+    private void populateWaitingOrdersList(){
+        db.collection("waitingForCourier").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null){
-                List<DocumentSnapshot> OrdersList = task.getResult().getDocuments();
+                List<DocumentSnapshot> pendingOrdersList = task.getResult().getDocuments();
 
-                for (DocumentSnapshot document : OrdersList){
+                for (DocumentSnapshot document : pendingOrdersList){
                     if (!document.getId().equals("test_id")){
-                        DeliveredOrdersConstructor currentPendingOrder = document.toObject(DeliveredOrdersConstructor.class);
+                        PendingOrdersConstructor currentPendingOrder = document.toObject(PendingOrdersConstructor.class);
                         if (currentPendingOrder != null){
-                            deliveredOrdersConstructorList.add(currentPendingOrder);
+                            pendingOrdersConstructorList.add(currentPendingOrder);
                         }
                     }
                 }
-                deliveredOrdersAdapter.notifyDataSetChanged();
+                deliveryWaitingOrdersAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(getActivity(), "Failed to retrieve items data", Toast.LENGTH_SHORT).show();
             }

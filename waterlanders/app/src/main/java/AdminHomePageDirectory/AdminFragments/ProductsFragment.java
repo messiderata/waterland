@@ -71,10 +71,12 @@ public class ProductsFragment extends Fragment {
                 List<DocumentSnapshot> itemsList = task.getResult().getDocuments();
 
                 for (DocumentSnapshot document : itemsList) {
-                    ItemsConstructor items = document.toObject(ItemsConstructor.class);
-                    if (items != null) {
-                        items.setItem_id(document.getId());
-                        itemsConstructorList.add(items);
+                    if (!document.getId().equals("test_id")) {
+                        ItemsConstructor items = document.toObject(ItemsConstructor.class);
+                        if (items != null) {
+                            items.setItem_id(document.getId());
+                            itemsConstructorList.add(items);
+                        }
                     }
                 }
 

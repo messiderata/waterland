@@ -1,0 +1,38 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/home_bg_color"
+    tools:context="DeliveryHomePageDirectory.DeliveryFragments.DeliveryOrdersFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/top_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="0dp"
+            app:itemPaddingTop="5dp"
+            app:itemPaddingBottom="5dp"
+            app:itemBackground="@color/white"
+            android:layout_gravity="top"
+            app:itemIconTint="@drawable/selector_nav_icon_text"
+            app:itemTextColor="@drawable/selector_nav_icon_text"
+            style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
+            app:menu="@menu/delivery_orders_top_nav"
+            tools:ignore="VisualLintBottomNav"
+            app:labelVisibilityMode="labeled"/>
+
+        <FrameLayout
+            android:id="@+id/delivery_orders_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</FrameLayout>

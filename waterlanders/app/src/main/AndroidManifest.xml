@@ -23,6 +23,21 @@
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
         <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.DeliveredOrders.DeliveryDeliveredOrdersCurrentOrdersDetails"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.OnDeliveryOrders.DeliveryProofOfDelivery"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.OnDeliveryOrders.DeliveryOnDeliveryOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.DeliverySuccessScreen"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.WaitingOrders.DeliveryWaitingOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
             android:name=".activity.newPass"
             android:exported="false" />
         <activity

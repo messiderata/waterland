@@ -238,71 +238,73 @@ public class DashboardSalesReport extends AppCompatActivity {
                 int totalItemPrice = 0;
 
                 for (DocumentSnapshot orderDoc : task.getResult().getDocuments()) {
-                    Timestamp timestamp = orderDoc.getTimestamp("date_delivered");
+                    if (!orderDoc.getId().equals("test_id")){
+                        Timestamp timestamp = orderDoc.getTimestamp("date_delivered");
 
-                    if (timestamp != null){
-                        List<Map<String, Object>> orderItems = (List<Map<String, Object>>) orderDoc.get("order_items");
-                        Calendar docCalendar = Calendar.getInstance();
-                        docCalendar.setTime(timestamp.toDate());
+                        if (timestamp != null){
+                            List<Map<String, Object>> orderItems = (List<Map<String, Object>>) orderDoc.get("order_items");
+                            Calendar docCalendar = Calendar.getInstance();
+                            docCalendar.setTime(timestamp.toDate());
 
-                        int docDay = docCalendar.get(Calendar.DAY_OF_MONTH);
-                        int docMonth = docCalendar.get(Calendar.MONTH) + 1;
-                        int docYear = docCalendar.get(Calendar.YEAR);
+                            int docDay = docCalendar.get(Calendar.DAY_OF_MONTH);
+                            int docMonth = docCalendar.get(Calendar.MONTH) + 1;
+                            int docYear = docCalendar.get(Calendar.YEAR);
 
-                        switch (mode){
-                            case "ANNUAL":
-                                if (docYear == currentYear) {
-                                    if (orderItems != null) {
-                                        for (Map<String, Object> itemData : orderItems) {
-                                            // Check if the current map entry has the target itemId
-                                            if (itemData.containsKey("item_id") && itemData.get("item_id").equals(itemId)) {
-                                                totalSold += ((Number) itemData.get("item_order_quantity")).intValue();
+                            switch (mode){
+                                case "ANNUAL":
+                                    if (docYear == currentYear) {
+                                        if (orderItems != null) {
+                                            for (Map<String, Object> itemData : orderItems) {
+                                                // Check if the current map entry has the target itemId
+                                                if (itemData.containsKey("item_id") && itemData.get("item_id").equals(itemId)) {
+                                                    totalSold += ((Number) itemData.get("item_order_quantity")).intValue();
 
-                                                // Calculate the total price for the current item
-                                                if (itemData.containsKey("item_total_price")) {
-                                                    totalItemPrice += ((Number) itemData.get("item_total_price")).intValue();
+                                                    // Calculate the total price for the current item
+                                                    if (itemData.containsKey("item_total_price")) {
+                                                        totalItemPrice += ((Number) itemData.get("item_total_price")).intValue();
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                                break;
-                            case "MONTHLY":
-                                if (docMonth == currentMonth) {
-                                    if (orderItems != null) {
-                                        for (Map<String, Object> itemData : orderItems) {
-                                            // Check if the current map entry has the target itemId
-                                            if (itemData.containsKey("item_id") && itemData.get("item_id").equals(itemId)) {
-                                                totalSold += ((Number) itemData.get("item_order_quantity")).intValue();
+                                    break;
+                                case "MONTHLY":
+                                    if (docMonth == currentMonth) {
+                                        if (orderItems != null) {
+                                            for (Map<String, Object> itemData : orderItems) {
+                                                // Check if the current map entry has the target itemId
+                                                if (itemData.containsKey("item_id") && itemData.get("item_id").equals(itemId)) {
+                                                    totalSold += ((Number) itemData.get("item_order_quantity")).intValue();
 
-                                                // Calculate the total price for the current item
-                                                if (itemData.containsKey("item_total_price")) {
-                                                    totalItemPrice += ((Number) itemData.get("item_total_price")).intValue();
+                                                    // Calculate the total price for the current item
+                                                    if (itemData.containsKey("item_total_price")) {
+                                                        totalItemPrice += ((Number) itemData.get("item_total_price")).intValue();
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                                break;
-                            case "DAY":
-                                if (docDay == currentDay) {
-                                    if (orderItems != null) {
-                                        for (Map<String, Object> itemData : orderItems) {
-                                            // Check if the current map entry has the target itemId
-                                            if (itemData.containsKey("item_id") && itemData.get("item_id").equals(itemId)) {
-                                                totalSold += ((Number) itemData.get("item_order_quantity")).intValue();
+                                    break;
+                                case "DAY":
+                                    if (docDay == currentDay) {
+                                        if (orderItems != null) {
+                                            for (Map<String, Object> itemData : orderItems) {
+                                                // Check if the current map entry has the target itemId
+                                                if (itemData.containsKey("item_id") && itemData.get("item_id").equals(itemId)) {
+                                                    totalSold += ((Number) itemData.get("item_order_quantity")).intValue();
 
-                                                // Calculate the total price for the current item
-                                                if (itemData.containsKey("item_total_price")) {
-                                                    totalItemPrice += ((Number) itemData.get("item_total_price")).intValue();
+                                                    // Calculate the total price for the current item
+                                                    if (itemData.containsKey("item_total_price")) {
+                                                        totalItemPrice += ((Number) itemData.get("item_total_price")).intValue();
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                                break;
-                            default:
-                                break;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                 }
