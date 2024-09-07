@@ -23,6 +23,21 @@
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
         <activity
+            android:name="UserHomePageDirectory.OrderTrackingUtils.Completed.UserCompletedOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="UserHomePageDirectory.OrderTrackingUtils.ConfirmOrders.UserConfirmOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="UserHomePageDirectory.OrderTrackingUtils.DeliveryOrders.UserDeliveryOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="UserHomePageDirectory.OrderTrackingUtils.PendingOrders.UserPendingOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="UserHomePageDirectory.OrderTrackingPending"
+            android:exported="false" />
+        <activity
             android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.DeliveredOrders.DeliveryDeliveredOrdersCurrentOrdersDetails"
             android:exported="false" />
         <activity

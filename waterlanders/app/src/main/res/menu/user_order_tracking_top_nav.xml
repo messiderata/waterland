@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Pending"
+        android:icon="@drawable/dashboard_icon"
+        android:id="@+id/pending" />
+    <item android:title="Confirm"
+        android:icon="@drawable/products_icon"
+        android:id="@+id/confirm" />
+    <item android:title="Delivery"
+        android:icon="@drawable/admin_orders_icon"
+        android:id="@+id/delivery" />
+    <item android:title="Completed"
+        android:icon="@drawable/admin_account_icon"
+        android:id="@+id/completed" />
+</menu>

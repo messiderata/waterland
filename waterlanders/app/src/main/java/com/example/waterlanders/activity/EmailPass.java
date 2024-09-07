@@ -40,8 +40,6 @@ public class EmailPass extends AppCompatActivity {
             startActivity(backIntent);
         });
 
-//        hi
-
         backIcon.setOnClickListener(view -> {
             finish();
         });
