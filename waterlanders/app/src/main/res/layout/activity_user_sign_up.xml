@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_bg"
     android:orientation="vertical"
-    tools:context=".activity.signUp2"
+    tools:context="SignUpDirectory.UserSignUp"
     android:padding="16dp">
 
     <ImageView
@@ -21,52 +21,79 @@
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/emailField"
         android:hint="Email"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/white"
         android:textColor="@color/black"
+        android:textColorHint="#757575"
         android:padding="20dp"
         android:minHeight="48dp"/>
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/passField"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
-        android:inputType="textEmailAddress"
-        android:background="@drawable/rounded_corners"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/black"
-        android:minHeight="48dp"
-        android:hint="Password"
-        android:padding="20dp"/>
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:counterEnabled="false"
+        app:boxBackgroundMode="outline"
+        app:passwordToggleEnabled="true"
+        app:boxStrokeWidthFocused="2dp"
+        app:passwordToggleTint="@color/gray"
+        app:hintEnabled="false">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/confirmField"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/white"
+            android:hint="@string/hintLoginPass"
+            android:inputType="textPassword"
+            android:padding="20dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="#757575"
+            android:textCursorDrawable="@null"
+            tools:ignore="TextContrastCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:inputType="textPassword"
-        android:background="@drawable/rounded_corners"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/black"
-        android:minHeight="48dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
-        android:hint="Confirm Password"
-        android:padding="20dp"/>
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:counterEnabled="false"
+        app:boxBackgroundMode="outline"
+        app:passwordToggleEnabled="true"
+        app:boxStrokeWidthFocused="2dp"
+        app:passwordToggleTint="@color/gray"
+        app:hintEnabled="false">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/confirmField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/white"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:padding="20dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="#757575"
+            android:textCursorDrawable="@null"
+            tools:ignore="TextContrastCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/registerbtn"
-        android:layout_width="320dp"
+        android:id="@+id/registerButton"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginBottom="50dp"
         android:clickable="true"
@@ -77,6 +104,8 @@
         android:enabled="true"
         app:cardCornerRadius="15dp"
         android:layout_marginTop="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         app:cardElevation="0dp"
         android:layout_gravity="center">
 

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="LoginDirectory.LoginWithProviderAdditionalInfo"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/gradient_bg">
+
+    <!-- Back Button -->
+    <LinearLayout
+        android:id="@+id/header_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Personal Information"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:textSize="34sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+
+    <!-- Scroll view if ever content is out of height -->
+    <ScrollView
+        android:id="@+id/scroll_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_container"
+        android:layout_above="@+id/register_button">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <!-- full name -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/full_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/black"
+                android:layout_marginTop="15dp"
+                android:minHeight="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:hint="Full Name"
+                android:textColorHint="#757575"
+                android:padding="20dp"/>
+
+            <!-- username -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/black"
+                android:minHeight="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp"
+                android:hint="Username"
+                android:textColorHint="#757575"
+                android:padding="20dp"/>
+
+            <!-- address -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fix_address_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:counterEnabled="false"
+                app:boxBackgroundMode="outline"
+                app:boxStrokeWidthFocused="2dp"
+                app:counterMaxLength="30"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                app:hintEnabled="false"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/address_input"
+                    android:hint="@string/fix_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:background="@drawable/rounded_corners"
+                    android:backgroundTint="@color/white"
+                    android:inputType="none"
+                    android:textColor="@color/black"
+                    android:textColorHint="#757575"
+                    tools:ignore="VisualLintTextFieldSize" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- postal code -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/postal_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:counterEnabled="false"
+                app:boxBackgroundMode="outline"
+                app:boxStrokeWidthFocused="2dp"
+                app:counterMaxLength="30"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                app:hintEnabled="false"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/postal_input"
+                    android:hint="@string/postal_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:background="@drawable/rounded_corners"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    android:textColorHint="#757575"
+                    android:inputType="none"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- street name -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/street_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/black"
+                android:minHeight="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp"
+                android:hint="Street Name, Building, House"
+                android:textColorHint="#757575"
+                android:padding="20dp"/>
+
+            <!-- contact number -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/contact_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/black"
+                android:minHeight="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp"
+                android:hint="Contact Number"
+                android:textColorHint="#757575"
+                android:padding="20dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Input 10 digit number after '+63'"
+                android:textColor="@color/white"
+                android:layout_marginStart="20dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/register_button"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/button_bg"
+        android:background="@drawable/button_bg_color"
+        android:enabled="true"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="0dp"
+        android:layout_gravity="center"
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                android:indeterminateTint="@color/white"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:enabled="true"
+                android:fontFamily="@font/robotolack"
+                android:text="Continue"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

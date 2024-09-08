@@ -9,12 +9,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.waterlanders.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -33,8 +28,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+
+import AdminHomePageDirectory.AdminHomePage;
+import DeliveryHomePageDirectory.DeliveryHomePage;
+import UserHomePageDirectory.MainDashboardUser;
 
 public class LoginWithFacebook extends Login {
 
@@ -118,10 +115,14 @@ public class LoginWithFacebook extends Login {
                     if (document != null && document.exists()) {
                         // User already exists, no need to create a new document
                         Log.d(TAG, "User already exists: " + user.getUid());
-                        updateUI(user);
+                        redirectUser(user);
                     } else {
                         // User is new, create a new document in Firestore
-                        saveNewUser(user);
+                        // saveNewUser(user);
+                        Intent showAdditionalInfoIntent = new Intent(LoginWithFacebook.this, LoginWithProviderAdditionalInfo.class);
+                        showAdditionalInfoIntent.putExtra("user_email", user.getEmail());
+                        showAdditionalInfoIntent.putExtra("user_fullName", user.getDisplayName());
+                        startActivity(showAdditionalInfoIntent);
                     }
                 } else {
                     Log.d(TAG, "Failed to check if user is new: ", task.getException());
@@ -130,27 +131,36 @@ public class LoginWithFacebook extends Login {
         });
     }
 
-    private void saveNewUser(FirebaseUser user) {
-        // Create a new user with the provided information
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("email", user.getEmail());
-        userData.put("username", user.getDisplayName());
-        userData.put("fullName", user.getDisplayName());
-        userData.put("role", "customer");
-
-        db.collection("users").document(user.getUid())
-                .set(userData)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "New user added successfully");
-                    updateUI(user);
-                })
-                .addOnFailureListener(e -> {
-                    Log.w(TAG, "Error adding new user", e);
-                });
-    }
-
-    private void updateUI(FirebaseUser user){
-        Intent intent = new Intent(LoginWithFacebook.this, Login.class);
-        startActivity(intent);
+    private void redirectUser(FirebaseUser firebaseUser) {
+        db.collection("users").document(firebaseUser.getUid()).get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    DocumentSnapshot document = task.getResult();
+                    String role = document.getString("role");
+                    Intent intent;
+                    if (role != null) {
+                        switch (role) {
+                            case "ADMIN":
+                                intent = new Intent(this, AdminHomePage.class);
+                                break;
+                            case "DELIVERY":
+                                intent = new Intent(this, DeliveryHomePage.class);
+                                break;
+                            case "customer":
+                                intent = new Intent(this, MainDashboardUser.class);
+                                break;
+                            default:
+                                Toast.makeText(this, "LOGIN SUCCESSFUL. Unknown role.", Toast.LENGTH_SHORT).show();
+                                return;
+                        }
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(this, "LOGIN SUCCESSFUL. Role is null.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "LOGIN SUCCESSFUL. Failed to retrieve role.", Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 }
