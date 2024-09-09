@@ -3,10 +3,10 @@ import java.io.Serializable;
 
 public class ItemsConstructor implements Serializable {
 
-    String item_id;
-    String item_img;
-    String item_name;
-    int item_price;
+    private String item_id;
+    private String item_img;
+    private String item_name;
+    private int item_price;
 
     public ItemsConstructor() {
     }

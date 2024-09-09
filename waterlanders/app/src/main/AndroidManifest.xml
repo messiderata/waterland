@@ -23,6 +23,81 @@
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
         <activity
+            android:name="ForgotPasswordDirectory.ForgotPasswordSuccess"
+            android:exported="false" />
+        <activity
+            android:name="LoginDirectory.LoginWithProviderAdditionalInfo"
+            android:exported="false" />
+        <activity
+            android:name="UserHomePageDirectory.OrderTrackingUtils.Completed.UserCompletedOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="UserHomePageDirectory.OrderTrackingUtils.ConfirmOrders.UserConfirmOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="UserHomePageDirectory.OrderTrackingUtils.DeliveryOrders.UserDeliveryOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="UserHomePageDirectory.OrderTrackingUtils.PendingOrders.UserPendingOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.DeliveredOrders.DeliveryDeliveredOrdersCurrentOrdersDetails"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.OnDeliveryOrders.DeliveryProofOfDelivery"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.OnDeliveryOrders.DeliveryOnDeliveryOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.DeliverySuccessScreen"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.WaitingOrders.DeliveryWaitingOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="ForgotPasswordDirectory.ForgotPasswordPhoneNewPassword"
+            android:exported="false" />
+        <activity
+            android:name="SignUpDirectory.UserSignUpSuccess"
+            android:exported="false" />
+        <activity
+            android:name="ForgotPasswordDirectory.ForgotPasswordPhoneOTP"
+            android:exported="false" />
+        <activity
+            android:name="SignUpDirectory.UserSignUpAdditionalInfo"
+            android:exported="false" />
+        <activity
+            android:name="SignUpDirectory.UserSignUp"
+            android:exported="false" />
+        <activity
+            android:name="ForgotPasswordDirectory.ForgotPasswordHome"
+            android:exported="false" />
+        <activity
+            android:name="ForgotPasswordDirectory.ForgotPasswordPhone"
+            android:exported="true" />
+        <activity
+            android:name="ForgotPasswordDirectory.ForgotPasswordEmail"
+            android:exported="true" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersProofOfDelivery"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.DeliveredOrders.DeliveredOrdersCurrentOrdersDetails"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOrdersCurrentOrdersDetails"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.WaitingOrders.WaitingOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.GCashPaymentDetails"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
             android:name="AdminHomePageDirectory.Products.DeleteItem"
             android:exported="false" />
         <activity
@@ -80,15 +155,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="DeliveryHomePageDirectory.deliveredOrders.DetailsDeliveredOrders"
-            android:exported="false" />
-        <activity
-            android:name="DeliveryHomePageDirectory.onDelivery.DetailsOnDeliveryOrders"
-            android:exported="false" />
-        <activity
-            android:name="DeliveryHomePageDirectory.PendingOrders.DetailsPendingOrders"
-            android:exported="false" />
-        <activity
             android:name="UserHomePageDirectory.OrderReceipt"
             android:exported="false" />
         <activity
@@ -102,24 +168,6 @@
             android:exported="false" />
         <activity
             android:name="AdminHomePageDirectory.AdminHomePage"
-            android:exported="false" />
-        <activity
-            android:name=".activity.activity_reset_password"
-            android:exported="false" />
-        <activity
-            android:name=".activity.Signup"
-            android:exported="false" />
-        <activity
-            android:name=".activity.UpdatePassSuccess"
-            android:exported="false" />
-        <activity
-            android:name=".activity.update_password"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ValidateOTP"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ForgotPassword"
             android:exported="false" />
         <activity
             android:name="LoginDirectory.Login"

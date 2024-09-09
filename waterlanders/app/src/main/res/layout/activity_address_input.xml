@@ -120,14 +120,14 @@
             app:boxBackgroundMode="outline"
             app:helperTextTextColor="@android:color/holo_red_dark"
             app:boxStrokeWidthFocused="2dp"
-            app:counterMaxLength="11"
+            app:counterMaxLength="10"
             app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/phone_number_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone number"
+                android:hint="Phone number: Input 10 digit number after '+63'"
                 android:background="@color/white"
                 android:paddingStart="16dp"
                 android:paddingTop="14dp"
@@ -140,6 +140,7 @@
                 android:textColorHint="#757575"
                 android:textCursorDrawable="@null"
                 tools:ignore="TextContrastCheck" />
+
 
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
@@ -202,6 +203,7 @@
                 android:paddingBottom="14dp"
                 android:background="@color/white"
                 android:inputType="none"
+                android:textColor="@color/black"
                 tools:ignore="VisualLintTextFieldSize" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -235,6 +237,7 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="14dp"
                 android:background="@color/white"
+                android:textColor="@color/black"
                 android:inputType="none"/>
         </com.google.android.material.textfield.TextInputLayout>
 

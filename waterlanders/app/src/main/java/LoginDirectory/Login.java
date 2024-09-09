@@ -1,7 +1,5 @@
 package LoginDirectory;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,38 +10,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import UserHomePageDirectory.DeliveryDetails;
 import UserHomePageDirectory.MainDashboardUser;
 import com.example.waterlanders.R;
-import com.example.waterlanders.activity.ForgotPassword;
-import com.example.waterlanders.activity.Signup;
-import com.facebook.CallbackManager;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import ForgotPasswordDirectory.ForgotPasswordHome;
+import SignUpDirectory.UserSignUp;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import AdminHomePageDirectory.AdminHomePage;
@@ -52,37 +31,46 @@ import Handler.ShowToast;
 
 public class Login extends AppCompatActivity {
 
-    private TextInputEditText editLoginAcc, editLoginPass;
+    private TextInputEditText loginAccount;
+    private TextInputEditText loginPassword;
     private ProgressBar progressBar;
+
+    private TextView forgotPassword;
+    private TextView createAccount;
+    private TextView loginText;
+    private ImageView facebookLogin;
+    private ImageView googleLogin;
+
+
+    private LoginWithGoogle loginWithGoogle;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private TextView txtForgotPass, txtCreateAcc, loginText;
-    private ImageView img_facebook_login, img_google_login;
-
-    private static final int RC_SIGN_IN = 9001;
-    private GoogleSignInClient mGoogleSignInClient;
-
     private static final int timeDelayInMillis = 1;
+    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Use a lightweight view to avoid unnecessary delays
-        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_login);
+        initializeObjects();
+        performFirebaseQuery();
 
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.client_id))
-                .requestEmail()
-                .build();
+    }
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    private void initializeObjects(){
+        loginWithGoogle = new LoginWithGoogle(this, this);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Perform Firebase query on a background thread
-        performFirebaseQuery();
-
+        // login screen objects
+        loginAccount = findViewById(R.id.login_account);
+        loginPassword = findViewById(R.id.login_password);
+        forgotPassword = findViewById(R.id.forgot_password);
+        createAccount = findViewById(R.id.create_account);
+        loginText = findViewById(R.id.log_text);
+        progressBar = findViewById(R.id.progress_bar);
+        facebookLogin = findViewById(R.id.facebook_login);
+        googleLogin = findViewById(R.id.google_login);
     }
 
     private void performFirebaseQuery() {
@@ -100,24 +88,12 @@ public class Login extends AppCompatActivity {
     }
 
     private void initializeLoginScreen() {
-        setContentView(R.layout.activity_login);
-
-        // Initialize views
-        editLoginAcc = findViewById(R.id.login_account);
-        editLoginPass = findViewById(R.id.login_password);
-        txtForgotPass = findViewById(R.id.forgot_password);
-        txtCreateAcc = findViewById(R.id.create_account);
-        loginText = findViewById(R.id.log_text);
-        progressBar = findViewById(R.id.progress_bar);
-        img_facebook_login = findViewById(R.id.facebookLogin);
-        img_google_login = findViewById(R.id.googleLogin);
-
         // Set up login button click listener
         CardView btn_login = findViewById(R.id.login_button);
         btn_login.setOnClickListener(view -> {
             ShowToast.unshowProgressBar(progressBar, loginText, timeDelayInMillis);
-            String usernameOrEmail = Objects.requireNonNull(editLoginAcc.getText()).toString().trim();
-            String password = Objects.requireNonNull(editLoginPass.getText()).toString().trim();
+            String usernameOrEmail = Objects.requireNonNull(loginAccount.getText()).toString().trim();
+            String password = Objects.requireNonNull(loginPassword.getText()).toString().trim();
             hideKeyboard(this);
 
             // Check if username/email and password are empty
@@ -133,74 +109,79 @@ public class Login extends AppCompatActivity {
             // Check if input is an email or username
             if (usernameOrEmail.contains("@")) {
                 // Input is an email
-                LoginWithEmail loginWithEmail = new LoginWithEmail(this, editLoginAcc, editLoginPass, progressBar, loginText);
+                LoginWithEmail loginWithEmail = new LoginWithEmail(this, loginAccount, loginPassword, progressBar, loginText);
                 loginWithEmail.loginWithEmail(usernameOrEmail, password);
             } else {
                 // Input is a username
-                GetEmailFromUsername getEmailFromUsername = new GetEmailFromUsername(this, editLoginAcc, editLoginPass, progressBar, loginText);
+                GetEmailFromUsername getEmailFromUsername = new GetEmailFromUsername(this, loginAccount, loginPassword, progressBar, loginText);
                 getEmailFromUsername.getEmailFromUsernameAndLogin(usernameOrEmail, password);
             }
         });
 
         // Set up clickable text for forgot password and create account
-        txtForgotPass.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), ForgotPassword.class);
+        forgotPassword.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), ForgotPasswordHome.class);
             startActivity(intent);
-            finish();
         });
 
-        txtCreateAcc.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), Signup.class);
+        createAccount.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), UserSignUp.class);
             startActivity(intent);
-            finish();
         });
 
-        img_facebook_login.setOnClickListener(view -> {
+        facebookLogin.setOnClickListener(view -> {
             Intent intent = new Intent(Login.this, LoginWithFacebook.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         });
 
-        img_google_login.setOnClickListener(view -> {
-            signInWithGoogle();
+        googleLogin.setOnClickListener(view -> {
+            loginWithGoogle.signIn();
         });
     }
 
-    private void redirectUser(FirebaseUser firebaseUser) {
-        setContentView(R.layout.activity_login);
-        progressBar = findViewById(R.id.progress_bar);
-        loginText = findViewById(R.id.log_text);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        // Check if the result is from the Google sign-in activity
+        if (requestCode == RC_SIGN_IN) {
+            Log.d("IS THIS WORKING?", "Handling Google sign-in result");
+            loginWithGoogle.handleSignInResult(data);
+        }
+    }
+
+    private void redirectUser(FirebaseUser firebaseUser) {
         db.collection("users").document(firebaseUser.getUid()).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        DocumentSnapshot document = task.getResult();
-                        String role = document.getString("role");
-                        Intent intent;
-                        if (role != null) {
-                            switch (role) {
-                                case "ADMIN":
-                                    intent = new Intent(Login.this, AdminHomePage.class);
-                                    break;
-                                case "DELIVERY":
-                                    intent = new Intent(Login.this, DeliveryHomePage.class);
-                                    break;
-                                case "customer":
-                                    intent = new Intent(Login.this, MainDashboardUser.class);
-                                    break;
-                                default:
-                                    ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Unknown role.", timeDelayInMillis);
-                                    return;
-                            }
-                            startActivity(intent);
-                            finish(); // Close the login activity
-                        } else {
-                            ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Role is null.", timeDelayInMillis);
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    DocumentSnapshot document = task.getResult();
+                    String role = document.getString("role");
+                    Intent intent;
+                    if (role != null) {
+                        switch (role) {
+                            case "ADMIN":
+                                intent = new Intent(Login.this, AdminHomePage.class);
+                                break;
+                            case "DELIVERY":
+                                intent = new Intent(Login.this, DeliveryHomePage.class);
+                                break;
+                            case "customer":
+                                intent = new Intent(Login.this, MainDashboardUser.class);
+                                break;
+                            default:
+                                ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Unknown role.", timeDelayInMillis);
+                                return;
                         }
+                        startActivity(intent);
+                        finish(); // Close the login activity
                     } else {
-                        ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Failed to retrieve role.", timeDelayInMillis);
+                        ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Role is null.", timeDelayInMillis);
                     }
-                });
+                } else {
+                    ShowToast.showDelayedToast(Login.this, progressBar, loginText, "LOGIN SUCCESSFUL. Failed to retrieve role.", timeDelayInMillis);
+                }
+            });
         initializeLoginScreen();
     }
 
@@ -209,98 +190,5 @@ public class Login extends AppCompatActivity {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
         }
-    }
-
-    public void signInWithGoogle() {
-        mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                if (account != null) {
-                    firebaseAuthWithGoogle(account.getIdToken());
-                }
-            } catch (ApiException e) {
-                Log.w(TAG, "Google sign in failed", e);
-            }
-        }
-    }
-
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                checkIfUserIsNew(user);
-                            }
-                        } else {
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        }
-                    }
-                });
-    }
-
-    private void checkIfUserIsNew(FirebaseUser user) {
-        DocumentReference userRef = db.collection("users").document(user.getUid());
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null && document.exists()) {
-                        // User already exists, no need to create a new document
-                        Log.d(TAG, "User already exists: " + user.getUid());
-                        updateUI(user);
-                    } else {
-                        // User is new, create a new document in Firestore
-                        saveNewUser(user);
-                    }
-                } else {
-                    Log.d(TAG, "Failed to check if user is new: ", task.getException());
-                }
-            }
-        });
-    }
-
-    private void saveNewUser(FirebaseUser user) {
-        // Create a new user with the provided information
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("email", user.getEmail());
-        userData.put("username", user.getDisplayName());
-        userData.put("fullName", user.getDisplayName());
-        userData.put("role", "customer");
-
-        // initialize the delivery details and put it on userData
-        List<DeliveryDetails> deliveryDetails = new ArrayList<>();
-        deliveryDetails.add(new DeliveryDetails(user.getDisplayName(), "+63", "none", 1));
-        userData.put("deliveryDetails", deliveryDetails);
-
-        db.collection("users").document(user.getUid())
-                .set(userData)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "New user added successfully");
-                    updateUI(user);
-                })
-                .addOnFailureListener(e -> {
-                    Log.w(TAG, "Error adding new user", e);
-                });
-    }
-
-    private void updateUI(FirebaseUser user) {
-        // Redirect user based on their role or proceed with the app flow
-        redirectUser(user);
     }
 }

@@ -3,11 +3,6 @@
   <component name="WizardSettings">
     <option name="children">
       <map>
-        <entry key="imageWizard">
-          <value>
-            <PersistentState />
-          </value>
-        </entry>
         <entry key="vectorWizard">
           <value>
             <PersistentState>
@@ -23,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:$USER_HOME$/Android/Sdk/icons/material/materialicons/camera_alt/baseline_camera_alt_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../../../Sophia%20Mer/AppData/Local/Android/Sdk/icons/material/materialicons/mark_unread_chat_alt/baseline_mark_unread_chat_alt_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -33,7 +28,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_camera" />
+                            <entry key="color" value="2c64c6" />
+                            <entry key="outputName" value="baseline_mark_unread_chat_alt_24" />
+                            <entry key="sourceFile" value="C:\Users\Sophia Mer\Desktop\waterland" />
                           </map>
                         </option>
                       </PersistentState>

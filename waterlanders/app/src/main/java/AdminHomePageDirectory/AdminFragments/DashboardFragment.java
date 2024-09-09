@@ -159,27 +159,29 @@ public class DashboardFragment extends Fragment {
                 int annualTotal = 0;
 
                 for (DocumentSnapshot document : documents) {
-                    // Get the date and check if it matches the current day
-                    Timestamp timestamp = document.getTimestamp("date_delivered");
-                    if (timestamp != null) {
-                        Calendar docCalendar = Calendar.getInstance();
-                        docCalendar.setTime(timestamp.toDate());
+                    if (!document.getId().equals("test_id")) {
+                        // Get the date and check if it matches the current day
+                        Timestamp timestamp = document.getTimestamp("date_delivered");
+                        if (timestamp != null) {
+                            Calendar docCalendar = Calendar.getInstance();
+                            docCalendar.setTime(timestamp.toDate());
 
-                        int docDay = docCalendar.get(Calendar.DAY_OF_MONTH);
-                        int docMonth = docCalendar.get(Calendar.MONTH) + 1;
-                        int docYear = docCalendar.get(Calendar.YEAR);
+                            int docDay = docCalendar.get(Calendar.DAY_OF_MONTH);
+                            int docMonth = docCalendar.get(Calendar.MONTH) + 1;
+                            int docYear = docCalendar.get(Calendar.YEAR);
 
-                        Long totalAmount = document.getLong("total_amount");
+                            Long totalAmount = document.getLong("total_amount");
 
-                        if (totalAmount != null) {
-                            if (docYear == currentYear) {
-                                annualTotal += totalAmount;
+                            if (totalAmount != null) {
+                                if (docYear == currentYear) {
+                                    annualTotal += totalAmount;
 
-                                if (docMonth == currentMonth) {
-                                    monthlyTotal += totalAmount;
+                                    if (docMonth == currentMonth) {
+                                        monthlyTotal += totalAmount;
 
-                                    if (docDay == currentDay) {
-                                        dailyTotal += totalAmount;
+                                        if (docDay == currentDay) {
+                                            dailyTotal += totalAmount;
+                                        }
                                     }
                                 }
                             }
@@ -202,7 +204,12 @@ public class DashboardFragment extends Fragment {
         // pending orders
         db.collection("pendingOrders").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                int totalOrdersCount = task.getResult().size();
+                int totalOrdersCount = 0;
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (!document.getId().equals("test_id")) {
+                        totalOrdersCount++;
+                    }
+                }
                 totalPendingOrders.setText(String.valueOf(totalOrdersCount));
             } else {
                 Toast.makeText(getContext(), "Failed to retrieve pending orders count", Toast.LENGTH_SHORT).show();
@@ -213,7 +220,12 @@ public class DashboardFragment extends Fragment {
         // waiting for courier orders
         db.collection("waitingForCourier").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                int totalOrdersCount = task.getResult().size();
+                int totalOrdersCount = 0;
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (!document.getId().equals("test_id")) {
+                        totalOrdersCount++;
+                    }
+                }
                 totalWaitingOrders.setText(String.valueOf(totalOrdersCount));
             } else {
                 Toast.makeText(getContext(), "Failed to retrieve waiting for courier orders count", Toast.LENGTH_SHORT).show();
@@ -223,7 +235,12 @@ public class DashboardFragment extends Fragment {
         // on delivery orders
         db.collection("onDelivery").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                int totalOrdersCount = task.getResult().size();
+                int totalOrdersCount = 0;
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (!document.getId().equals("test_id")) {
+                        totalOrdersCount++;
+                    }
+                }
                 totalOnDeliveryOrders.setText(String.valueOf(totalOrdersCount));
             } else {
                 Toast.makeText(getContext(), "Failed to retrieve on delivery orders count", Toast.LENGTH_SHORT).show();
@@ -233,7 +250,12 @@ public class DashboardFragment extends Fragment {
         // delivered orders
         db.collection("deliveredOrders").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                int totalOrdersCount = task.getResult().size();
+                int totalOrdersCount = 0;
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (!document.getId().equals("test_id")) {
+                        totalOrdersCount++;
+                    }
+                }
                 totalDeliveredOrders.setText(String.valueOf(totalOrdersCount));
             } else {
                 Toast.makeText(getContext(), "Failed to retrieve delivered orders count", Toast.LENGTH_SHORT).show();
@@ -244,7 +266,13 @@ public class DashboardFragment extends Fragment {
     public void setTotalUsers(){
         db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                int totalUsersCount = task.getResult().size();
+                int totalUsersCount = 0;
+                for (DocumentSnapshot document : task.getResult()) {
+                    // prevent from counting the the admin account as user
+                    if (!document.getId().equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2")) {
+                        totalUsersCount++;
+                    }
+                }
                 totalAppUsers.setText(String.valueOf(totalUsersCount));
             } else {
                 Toast.makeText(getContext(), "Failed to retrieve users count", Toast.LENGTH_SHORT).show();

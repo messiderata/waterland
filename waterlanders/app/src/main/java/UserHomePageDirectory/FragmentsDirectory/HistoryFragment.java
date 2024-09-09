@@ -9,15 +9,63 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.waterlanders.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import AdminHomePageDirectory.Orders.Fragments.AdminDeliveredFragment;
+import AdminHomePageDirectory.Orders.Fragments.AdminOnDeliveryFragment;
+import AdminHomePageDirectory.Orders.Fragments.AdminPendingOrdersFragment;
+import AdminHomePageDirectory.Orders.Fragments.AdminWaitingForCourierFragment;
+import UserHomePageDirectory.OrderTrackingFragments.UserCompletedOrdersFragment;
+import UserHomePageDirectory.OrderTrackingFragments.UserConfirmOrdersFragment;
+import UserHomePageDirectory.OrderTrackingFragments.UserDeliveryOrdersFragment;
+import UserHomePageDirectory.OrderTrackingFragments.UserPendingOrdersFragment;
 
 
 public class HistoryFragment extends Fragment {
 
+    private BottomNavigationView topNavigationView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
+        initializeObjects(view);
+        initializeFirstFragment(savedInstanceState);
+
+        // Set up BottomNavigationView item selection
+        // this handles the fragment state which fragment is active
+        topNavigationView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int itemId = item.getItemId();
+            if (itemId == R.id.pending) {
+                selectedFragment = new UserPendingOrdersFragment();
+            } else if (itemId == R.id.confirm) {
+                selectedFragment = new UserConfirmOrdersFragment();
+            } else if (itemId == R.id.delivery) {
+                selectedFragment = new UserDeliveryOrdersFragment();
+            } else if (itemId == R.id.completed) {
+                selectedFragment = new UserCompletedOrdersFragment();
+            }
+            if (selectedFragment != null) {
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.user_history_fragment_container, selectedFragment)
+                        .commit();
+            }
+            return true;
+        });
+
+        return view;
+    }
+
+    private void initializeObjects(View view){
+        topNavigationView = view.findViewById(R.id.top_navigation);
+    }
+
+    private void initializeFirstFragment(Bundle savedInstanceState){
+        if (savedInstanceState == null) {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.user_history_fragment_container, new UserPendingOrdersFragment())
+                    .commit();
+        }
     }
 }

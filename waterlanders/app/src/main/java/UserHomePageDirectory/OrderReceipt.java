@@ -53,14 +53,34 @@ public class OrderReceipt extends AppCompatActivity {
 
     // flow
     // this first generate a random id from 'pendingOrders' collection
-    // then it will check if that id is already existed in 'onDelivery' collection
+    // then it will check if that id is already existed in
+    // 'waitingForCourier', 'onDelivery', 'deliveredOrders' collections
     // this way we can pass the the id from a collection to another without conflict
     // this way as well we can track the order properly without being confused because of changing the id
     // then if the ids are existed then generate again
     // else save the order details to the firebase firestore
     private void generateUniqueDocumentId() {
         String documentId = db.collection("pendingOrders").document().getId();
-        checkDocumentInOnDelivery(documentId);
+        checkDocumentInWaitingOrdersCollection(documentId);
+    }
+
+    private void checkDocumentInWaitingOrdersCollection(String documentId) {
+        db.collection("waitingForCourier")
+                .document(documentId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        if (task.getResult().exists()) {
+                            // Document ID already exists in 'waitingForCourier', generate a new one
+                            generateUniqueDocumentId();
+                        } else {
+                            // Proceed to check the next collection
+                            checkDocumentInOnDelivery(documentId);
+                        }
+                    } else {
+                        Toast.makeText(OrderReceipt.this, "Failed to check waitingForCourier collection.", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void checkDocumentInOnDelivery(String documentId) {
@@ -70,14 +90,33 @@ public class OrderReceipt extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         if (task.getResult().exists()) {
-                            // Document ID already exists, generate a new one
+                            // Document ID already exists in 'onDelivery', generate a new one
                             generateUniqueDocumentId();
                         } else {
-                            // Document ID is unique, retrieve item details and save the order
-                            saveOrderWithUniqueDocumentId(documentId);
+                            // Proceed to check the next collection
+                            checkDocumentInDeliveredOrders(documentId);
                         }
                     } else {
                         Toast.makeText(OrderReceipt.this, "Failed to check onDelivery collection.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void checkDocumentInDeliveredOrders(String documentId) {
+        db.collection("deliveredOrders")
+                .document(documentId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        if (task.getResult().exists()) {
+                            // Document ID already exists in 'deliveredOrders', generate a new one
+                            generateUniqueDocumentId();
+                        } else {
+                            // Document ID is unique across all collections
+                            saveOrderWithUniqueDocumentId(documentId);
+                        }
+                    } else {
+                        Toast.makeText(OrderReceipt.this, "Failed to check deliveredOrders collection.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

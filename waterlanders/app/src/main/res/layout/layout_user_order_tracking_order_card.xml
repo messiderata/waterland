@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/button_bg"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <!-- Water Bottle Icon -->
+        <ImageView
+            android:id="@+id/water_bottle_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/gallon"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true" />
+
+        <!-- Order ID Text -->
+        <TextView
+            android:id="@+id/order_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Order ID: 77777"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_toEndOf="@id/water_bottle_icon"
+            android:layout_marginStart="10dp"
+            android:layout_alignParentTop="true" />
+
+        <!-- Total Text -->
+        <TextView
+            android:id="@+id/total_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total:"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_below="@id/order_id"
+            android:layout_toEndOf="@id/water_bottle_icon"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"/>
+
+        <!-- Total Amount -->
+        <TextView
+            android:id="@+id/total_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$25"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_toEndOf="@id/total_text"
+            android:layout_alignBottom="@id/total_text"
+            android:layout_marginStart="5dp" />
+
+        <!-- See Details Button -->
+        <TextView
+            android:id="@+id/see_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="300dp"
+            android:text="See Details"
+            android:layout_marginTop="40dp"
+            android:textColor="#AF1020"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
