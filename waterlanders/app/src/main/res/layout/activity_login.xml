@@ -110,11 +110,10 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            >
+            android:gravity="center">
 
             <ProgressBar
-                android:id="@id/progress_bar"
+                android:id="@+id/progress_bar"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:visibility="gone"
@@ -129,7 +128,6 @@
                 android:enabled="true"
                 android:fontFamily="@font/robotolack"
                 android:text="@string/logInText"
-
                 android:textColor="@color/white" />
 
         </RelativeLayout>
@@ -230,7 +228,7 @@
             tools:ignore="HardcodedText,SpeakableTextPresentCheck">
 
             <ImageView
-                android:id="@+id/facebookLogin"
+                android:id="@+id/facebook_login"
                 android:layout_width="49dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center"
@@ -254,7 +252,7 @@
             tools:ignore="SpeakableTextPresentCheck">
 
             <ImageView
-                android:id="@+id/googleLogin"
+                android:id="@+id/google_login"
                 android:layout_width="43dp"
                 android:layout_height="43dp"
                 android:layout_gravity="center"

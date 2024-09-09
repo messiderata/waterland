@@ -1,11 +1,11 @@
-package com.example.waterlanders.activity;
+package SignUpDirectory;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler; // Import Handler class
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.waterlanders.R;
@@ -16,10 +16,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import AdminHomePageDirectory.AdminHomePage;
 import DeliveryHomePageDirectory.DeliveryHomePage;
+import Handler.ShowToast;
 import LoginDirectory.Login;
 import UserHomePageDirectory.MainDashboardUser;
 
-public class MainActivity extends AppCompatActivity {
+public class UserSignUpSuccess extends AppCompatActivity {
+
+    private TextView successMessage;
+    private TextView successDescription;
+    private Button continueButton;
+
+    private String successMessageIntent;
+    private String successDescriptionIntent;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -27,29 +35,39 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-        performFirebaseQuery();
-    }
 
-    private void performFirebaseQuery() {
-        // Check if the user is already logged in
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        runOnUiThread(() -> {
-            if (firebaseUser != null) {
-                // If the user is logged in, redirect them based on their role
-                redirectUser(firebaseUser);
-            } else {
-                // If the user is not logged in, show the login screen
-                Intent intent = new Intent(MainActivity.this, Login.class);
-                startActivity(intent);
-                finish();
-            }
+        setContentView(R.layout.activity_user_sign_up_success);
+        initializeObjects();
+        getIntents();
+        setMessageInputs();
+
+        continueButton.setOnClickListener(v -> {
+            redirectCurrentUser();
         });
     }
 
-    private void redirectUser(FirebaseUser firebaseUser) {
+    private void initializeObjects(){
+        successMessage = findViewById(R.id.success_message);
+        successDescription = findViewById(R.id.success_description);
+        continueButton = findViewById(R.id.continue_button);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+    }
+
+    private void getIntents(){
+        Intent getIntentValues = getIntent();
+        successMessageIntent = (String) getIntentValues.getSerializableExtra("success_message");
+        successDescriptionIntent = (String) getIntentValues.getSerializableExtra("success_description");
+    }
+
+    private void setMessageInputs(){
+        successMessage.setText(String.valueOf(successMessageIntent));
+        successDescription.setText(String.valueOf(successDescriptionIntent));
+    }
+
+    private void redirectCurrentUser(){
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
         db.collection("users").document(firebaseUser.getUid()).get()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful() && task.getResult() != null) {

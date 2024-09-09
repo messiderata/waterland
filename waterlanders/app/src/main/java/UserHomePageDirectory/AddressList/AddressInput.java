@@ -82,7 +82,7 @@ public class AddressInput extends AppCompatActivity {
         TextInputEditText phoneNumberInput = findViewById(R.id.phone_number_input);
 
         // Set input filter to limit length to 11
-        phoneNumberInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
+        phoneNumberInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
     }
 
     private void validateInput() {
@@ -116,9 +116,9 @@ public class AddressInput extends AppCompatActivity {
             phoneNumberLayout.setHelperText(null); // Clear any previous helper text
             phoneNumberLayout.setError("Phone number is required"); // Show error
             isValid = false;
-        } else if (!phoneNumber.matches("^09\\d{9}$")) {
+        } else if (!phoneNumber.matches("^\\d{10}$")) {
             phoneNumberLayout.setHelperText(null); // Clear any previous helper text
-            phoneNumberLayout.setError("Phone number must start with '09' and be exactly 11 digits"); // Show error
+            phoneNumberLayout.setError("Phone number must be exactly 10 digits. +63 is already given."); // Show error
             isValid = false;
         } else {
             phoneNumberLayout.setError(null); // Clear the error
@@ -156,6 +156,7 @@ public class AddressInput extends AppCompatActivity {
             Toast.makeText(this, "Please fix the errors", Toast.LENGTH_SHORT).show();
         } else {
             String fullAddress = fixStreetInput + ", " + fixAddressInput + ", " + fixPostalCodeInput;
+            String formattedPhoneNumber = String.format("+63"+phoneNumber);
 
             // Get the current user data from the database
             FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -181,7 +182,7 @@ public class AddressInput extends AppCompatActivity {
                                     }
 
                                     // Add the new address with isDefaultAddress set to 1
-                                    Map<String, Object> newDetail = new DeliveryDetails(fullName, phoneNumber, fullAddress, 1).toMap();
+                                    Map<String, Object> newDetail = new DeliveryDetails(fullName, formattedPhoneNumber, fullAddress, 1).toMap();
 
                                     if (foundDefault) {
                                         deliveryDetailsList.add(newDetail);

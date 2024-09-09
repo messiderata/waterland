@@ -1,22 +1,17 @@
-package com.example.waterlanders.activity;
+package ForgotPasswordDirectory;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.waterlanders.R;
 
-import AdminHomePageDirectory.AdminFragments.ProductsFragment;
 import LoginDirectory.Login;
 
-public class success extends AppCompatActivity {
+public class ForgotPasswordSuccess extends AppCompatActivity {
 
     private TextView successMessage;
     private TextView successDescription;
@@ -28,16 +23,14 @@ public class success extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_success);
+        setContentView(R.layout.activity_forgot_password_success);
         initializeObjects();
         getIntents();
         setMessageInputs();
 
         continueButton.setOnClickListener(v -> {
-            Intent showUpdatedProductsIntent = new Intent(this, Login.class);
-
-            startActivity(showUpdatedProductsIntent);
+            Intent backToLoginIntent = new Intent(this, Login.class);
+            startActivity(backToLoginIntent);
             finish();
         });
     }
