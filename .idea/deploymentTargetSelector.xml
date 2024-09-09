@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="waterlanders.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-09-01T03:53:04.319270657Z">
+        <DropdownSelection timestamp="2024-09-06T02:37:08.350567893Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/home/messi/.android/avd/Pixel_3_XL_API_27.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=6124ab87" />
             </handle>
           </Target>
         </DropdownSelection>

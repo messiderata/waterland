@@ -35,6 +35,12 @@
             android:name="AdminHomePageDirectory.Products.AddNewItem"
             android:exported="false" />
         <activity
+            android:name="UserHomePageDirectory.Settings.ChangePassword"
+            android:exported="false" />
+        <activity
+            android:name="UserHomePageDirectory.Settings.EditProfile"
+            android:exported="false" />
+        <activity
             android:name="AdminHomePageDirectory.SalesReport.DashboardSalesReport"
             android:exported="false" />
         <activity

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:background="@color/screen_bg"
+    android:layout_height="match_parent"
+    tools:context="UserHomePageDirectory.Settings.EditProfile">
+
+    <!-- Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/button_bg"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="30dp"
+            android:clickable="true"
+            android:padding="0dp"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/baseline_arrow_back_24"
+            app:tint="@color/white"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <!-- Title Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:fontFamily="@font/robotoregular"
+            android:text="Edit Profile"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nav_bar"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <RelativeLayout
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/admin_account_content_icon"
+                android:scaleType="centerCrop"
+                android:background="@drawable/image_circle" />
+
+            <!-- Camera icon on profile image -->
+            <ImageView
+                android:id="@+id/camera_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_camera"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:padding="6dp"
+            android:contentDescription="Edit Profile Picture"
+            android:elevation="4dp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="wrap_content">
+
+            <!-- Name Input -->
+            <EditText
+                android:id="@+id/name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name"
+                android:layout_marginTop="24dp"
+                android:textColor="@color/black"
+                android:background="@drawable/edittext_bg"
+                android:padding="16dp"
+                android:textSize="16sp"
+                android:inputType="textPersonName" />
+
+            <!-- Nickname Input -->
+            <EditText
+                android:id="@+id/nickname_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="User name"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/edittext_bg"
+                android:padding="16dp"
+                android:textSize="16sp"
+                android:inputType="textPersonName" />
+
+            <!-- Phone Number Input -->
+            <EditText
+                android:id="@+id/phone_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Phone Number"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/edittext_bg"
+                android:padding="16dp"
+                android:textSize="16sp"
+                android:inputType="phone" />
+
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_marginTop="30dp"
+            android:id="@+id/save_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/button_bg"
+            android:enabled="true"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:layout_gravity="center"
+                android:textSize="16sp"
+                android:fontFamily="@font/robotomedium"
+                android:text="Save"
+                android:textColor="@color/white" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</RelativeLayout>

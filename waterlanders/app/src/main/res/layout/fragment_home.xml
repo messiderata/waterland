@@ -26,8 +26,8 @@
     <RelativeLayout
         android:id="@+id/bottom_view"
         android:layout_width="match_parent"
-        android:backgroundTint="@color/home_bg_color"
         android:layout_alignParentBottom="true"
+        android:elevation="5dp"
         android:layout_height="wrap_content" > <!-- Fixed height for bottom_view -->
 
         <TextView

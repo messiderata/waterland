@@ -1,119 +1,203 @@
 package UserHomePageDirectory.FragmentsDirectory;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.waterlanders.R;
 
+import java.util.Objects;
+
+import LoginDirectory.Login;
+import UserHomePageDirectory.Settings.EditProfile;
+
 public class SettingsFragment extends Fragment {
 
-    CardView profileBtn, nameBtn, userNameBtn, phoneBtn, emailBtn, changePassBtn, addressBtn;
+    CardView profileBtn, logOutButton, deleteAccountButton;
     TextView nameText, userNameText, phoneText, emailText;
-    private FirebaseFirestore db;
-    private FirebaseAuth auth;
-    private FirebaseUser user;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        // Initialize your CardView buttons here
-        profileBtn = view.findViewById(R.id.My_profile_button);
-        nameBtn = view.findViewById(R.id.name_button);
-        userNameBtn = view.findViewById(R.id.username_button);
-        phoneBtn = view.findViewById(R.id.phone_button);
-        emailBtn = view.findViewById(R.id.email_button);
-        changePassBtn = view.findViewById(R.id.change_pass_button);
-        addressBtn = view.findViewById(R.id.address_button);
+        // Initialize buttons and text views
+        initUI(view);
 
-        // Initialize your text views here
+        // Set up listeners for buttons
+        setupProfileButton();
+        setLogOutButton();
+        setDeleteAccountButton();  // Ensure this method is called to set up the delete account button
+
+
+        // Fetch and display user data from Firestore
+        fetchUserData();
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Reload the user data when returning to this fragment
+        fetchUserData();
+    }
+
+    private void initUI(View view) {
+        profileBtn = view.findViewById(R.id.My_profile_button);
+        logOutButton = view.findViewById(R.id.logout_button_settings);
+        deleteAccountButton = view.findViewById(R.id.delete_button_settings);  // Ensure this ID is correct
+
         nameText = view.findViewById(R.id.name_text);
         userNameText = view.findViewById(R.id.username_text);
         phoneText = view.findViewById(R.id.phone_text);
         emailText = view.findViewById(R.id.email_text);
+    }
 
-        // Initialize Firestore and FirebaseAuth
-        db = FirebaseFirestore.getInstance();
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
+    private void setupProfileButton() {
+        profileBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), EditProfile.class);
+            startActivity(intent);
+        });
+    }
 
-        if (user != null) {
-            String userId = user.getUid();
-            Log.d("HomePage", "userId: " + userId);
-            DocumentReference docRef = db.collection("users").document(userId);
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            // Retrieve and display user details
-                            displayCurrentUser(document);
-                        }
-                    }
-                }
-            });
-        }
+    private void setLogOutButton() {
+        logOutButton.setOnClickListener(view -> {
+            showLogoutDialog();
+        });
+    }
 
-        return view;
+    private void setDeleteAccountButton() {
+        deleteAccountButton.setOnClickListener(view -> {
+            showDeleteAccountDialog();
+        });
+    }
+
+    private void fetchUserData() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference userDoc = firestore.collection("users").document(userId);
+
+        userDoc.get().addOnSuccessListener(document -> {
+            if (document.exists()) {
+                displayCurrentUser(document);
+            } else {
+                Toast.makeText(getContext(), "Document is null", Toast.LENGTH_LONG).show();
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), "Failed to fetch user data", Toast.LENGTH_LONG).show();
+        });
     }
 
     private void displayCurrentUser(DocumentSnapshot document) {
         String email = document.getString("email");
         String fullName = document.getString("fullName");
         String username = document.getString("username");
-        String phoneNumber = document.getString("phone"); // Assuming this field exists in your Firestore
+        String phoneNumber = document.getString("phone");
 
-        String maskedEmail = maskEmail(email);
-        String maskedPhoneNumber = maskPhoneNumber(phoneNumber);
+        nameText.setText(fullName != null ? fullName : "N/A");
+        emailText.setText(maskEmail(email));
+        userNameText.setText(username != null ? username : "N/A");
 
-        nameText.setText(fullName);
-        emailText.setText(maskedEmail);
-        userNameText.setText(username);
-        phoneText.setText(maskedPhoneNumber);
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            phoneText.setText("Add mobile number");
+        } else {
+            phoneText.setText(maskPhoneNumber(phoneNumber));
+        }
     }
 
     private String maskEmail(String email) {
         if (email != null && email.contains("@")) {
             int atIndex = email.indexOf("@");
-
-            // Get the first character before the @ symbol
             String firstLetter = email.substring(0, 1);
-
-            // Create a string of asterisks with the same length as the rest of the part before "@"
             String maskedPart = new String(new char[atIndex - 1]).replace('\0', '*');
-
-            // Combine the first letter, masked part, and the domain
             return firstLetter + maskedPart + email.substring(atIndex);
         }
-        return email;
+        return "N/A";
     }
 
     private String maskPhoneNumber(String phoneNumber) {
-        if (phoneNumber != null && phoneNumber.length() > 2) {
+        if (phoneNumber != null && phoneNumber.length() > 4) {
             String firstTwo = phoneNumber.substring(0, 2);
-            String maskedPart = phoneNumber.substring(2).replaceAll(".", "*");
-            return firstTwo + maskedPart;
+            String lastTwo = phoneNumber.substring(phoneNumber.length() - 2);
+            String middlePart = phoneNumber.substring(2, phoneNumber.length() - 2).replaceAll(".", "*");
+            return firstTwo + middlePart + lastTwo;
         }
-        return phoneNumber;
+        return "N/A";
+    }
+
+    private void showLogoutDialog() {
+        Dialog dialog = new Dialog(requireActivity());
+        dialog.setContentView(R.layout.logout_dialog);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_bg);
+
+        MaterialButton btnCancel = dialog.findViewById(R.id.button_cancel);
+        MaterialButton btnOk = dialog.findViewById(R.id.button_ok);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnOk.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(requireActivity(), Login.class);
+            startActivity(intent);
+            requireActivity().finish();
+        });
+
+        dialog.show();
+    }
+
+    private void showDeleteAccountDialog() {
+        Dialog dialog = new Dialog(requireActivity());
+        dialog.setContentView(R.layout.deleteaccount_dialog);  // Make sure to create this layout file
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_bg);
+
+        MaterialButton btnCancel = dialog.findViewById(R.id.button_cancel);
+        MaterialButton btnDelete = dialog.findViewById(R.id.button_delete);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnDelete.setOnClickListener(v -> {
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            deleteAccount(firestore);
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
+    private void deleteAccount(FirebaseFirestore firestore) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userId = auth.getCurrentUser().getUid();
+
+        DocumentReference userDoc = firestore.collection("users").document(userId);
+        userDoc.delete().addOnSuccessListener(aVoid -> {
+            auth.getCurrentUser().delete().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(requireActivity(), Login.class);
+                    startActivity(intent);
+                    requireActivity().finish();
+                } else {
+                    Toast.makeText(getContext(), "Failed to delete account", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), "Failed to delete user data", Toast.LENGTH_SHORT).show();
+        });
     }
 }

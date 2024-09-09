@@ -28,6 +28,7 @@
         android:layout_marginTop="-200dp"
         android:layout_marginBottom="15dp"
         app:counterEnabled="false"
+        app:cardBackgroundColor="@color/white"
         app:boxBackgroundMode="outline"
         app:boxStrokeWidthFocused="2dp"
         app:counterMaxLength="30"

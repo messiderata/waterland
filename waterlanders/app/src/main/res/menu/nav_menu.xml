@@ -21,13 +21,5 @@
                     android:id="@+id/help_nav"
                     android:title="@string/nav_help"/>
         </group>
-        <item
-            android:title="">
-                <menu>
-                        <item
-                            android:icon="@drawable/baseline_logout_24"
-                            android:id="@+id/logout_nav"
-                            android:title="@string/logoutText"/>
-                </menu>
-        </item>
+
 </menu>

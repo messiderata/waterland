@@ -29,6 +29,7 @@ import UserHomePageDirectory.FragmentsDirectory.AboutUsFragment;
 import UserHomePageDirectory.FragmentsDirectory.HelpUsFragment;
 import UserHomePageDirectory.FragmentsDirectory.HistoryFragment;
 import UserHomePageDirectory.FragmentsDirectory.HomeFragment;
+import UserHomePageDirectory.FragmentsDirectory.ProfileFragment;
 import UserHomePageDirectory.FragmentsDirectory.SettingsFragment;
 
 public class MainDashboardUser extends AppCompatActivity {
@@ -36,10 +37,11 @@ public class MainDashboardUser extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private BottomNavigationView bottomNavigationView;
     private TextView editText;
-    private static final String TitleTextHome = "Home";
+    private static final String TitleTextHome = "Dashboard";
     private static final String TitleTextSettings = "Settings";
     private static final String TITLE_TEXT_AboutUs = "About Us";
-    private static final String TitleTextHelp = "Help";
+    private static final String titleTextHelp = "Help";
+    private static final  String titleMeText = "Me";
 
 
     @Override
@@ -109,10 +111,8 @@ public class MainDashboardUser extends AppCompatActivity {
                 bottomNavigationView.setVisibility(View.GONE);
             } else if (itemId == R.id.help_nav) {
                 selectedFragment = new HelpUsFragment();
-                editText.setText(TitleTextHelp);
+                editText.setText(titleTextHelp);
                 bottomNavigationView.setVisibility(View.GONE);
-            }else if (itemId == R.id.logout_nav) {
-                showLogoutDialog();
             }
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
@@ -129,10 +129,14 @@ public class MainDashboardUser extends AppCompatActivity {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_order) {
                 selectedFragment = new HomeFragment();
+                editText.setText(TitleTextHome);
+
             } else if (itemId == R.id.nav_history) {
+                editText.setText(TitleTextHome);
                 selectedFragment = new HistoryFragment();
             } else if (itemId == R.id.nav_profile) {
-                selectedFragment = new HistoryFragment();
+                editText.setText(TitleTextHome);
+                selectedFragment = new ProfileFragment();
             }
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
@@ -146,31 +150,6 @@ public class MainDashboardUser extends AppCompatActivity {
         new BackPressHandler(this, drawerLayout);
     }
 
-    // Call this method to show the dialog when needed
-    private void showLogoutDialog() {
-        // Initialize and configure dialog
-        Dialog dialog = new Dialog(MainDashboardUser.this);
-        dialog.setContentView(R.layout.logout_dialog);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_bg);
-
-        // Find views in the dialog
-        MaterialButton btnCancel = dialog.findViewById(R.id.button_cancel);
-        MaterialButton btnOk = dialog.findViewById(R.id.button_ok);
-
-        // Set click listeners for buttons
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        btnOk.setOnClickListener(v -> {
-            // Perform logout action
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(MainDashboardUser.this, Login.class);
-            startActivity(intent);
-            finish();
-        });
-
-        // Show the dialog
-        dialog.show();
-    }
 }
 
 
