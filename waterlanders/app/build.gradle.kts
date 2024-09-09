@@ -7,13 +7,28 @@ android {
     namespace = "com.example.waterlanders"
     compileSdk = 34
 
-    buildFeatures{
-        dataBinding =true
+    signingConfigs {
+        // Define your release signing config
+        create("release") {
+            storeFile = file("/home/messi/Desktop/test2/tesres/test.jks")
+            storePassword = "philip123"
+            keyAlias = "tcc"
+            keyPassword = "philip123"
+        }
+
+        getByName("release") {
+            // Keep the default debug signing config or specify your own debug signing config here if needed
+        }
+    }
+
+    buildFeatures {
+        dataBinding = true
         viewBinding = true
     }
+
     defaultConfig {
         applicationId = "com.example.waterlanders"
-        minSdk = 23
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -22,15 +37,15 @@ android {
     }
 
     buildTypes {
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+        getByName("release") {
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
+
     }
 
     compileOptions {
@@ -57,13 +72,9 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.firebase.storage)
     implementation(libs.glide)
-    implementation(libs.appcompat)
-    implementation(libs.material)
-    implementation(libs.activity)
-    implementation(libs.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation (libs.lottie)
+    implementation(libs.lottie)
     androidTestImplementation(libs.startup)
 }
