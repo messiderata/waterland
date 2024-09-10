@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -16,6 +15,7 @@ import androidx.cardview.widget.CardView;
 import com.example.waterlanders.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import Handler.PassUtils;
 
 public class UserSignUpAdditionalInfo extends AppCompatActivity {
 
@@ -51,13 +53,9 @@ public class UserSignUpAdditionalInfo extends AppCompatActivity {
         getIntentData();
         setFixAddress();
 
-        registerButton.setOnClickListener(view -> {
-            checkInputDetails();
-        });
+        registerButton.setOnClickListener(view -> checkInputDetails());
 
-        backIcon.setOnClickListener(view -> {
-            finish();
-        });
+        backIcon.setOnClickListener(view -> finish());
 
     }
 
@@ -117,9 +115,47 @@ public class UserSignUpAdditionalInfo extends AppCompatActivity {
             Toast.makeText(this, "Phone number must be exactly 10 digits. +63 is already given.", Toast.LENGTH_SHORT).show();
         }
 
-        if (isComplete){
-            isUsernameUnique(String.valueOf(userName.getText()));
+        if (isComplete) {
+            isContactNumberUnique(contactNumber.getText().toString(), unique -> {
+                if (unique) {
+                    isUsernameUnique(userName.getText().toString());
+                } else {
+                    Toast.makeText(this, "Phone number already registered.", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
+    }
+
+    private void isContactNumberUnique(String phoneNumber, OnContactNumberChecked callback) {
+        db.collection("users").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                List<DocumentSnapshot> usersList = task.getResult().getDocuments();
+                boolean isUnique = true;
+
+                for (DocumentSnapshot user : usersList) {
+                    String userRole = (String) user.get("role");
+                    if (userRole != null && userRole.equals("customer")) {
+                        List<Map<String, Object>> deliveryDetailsList = (List<Map<String, Object>>) user.get("deliveryDetails");
+                        for (Map<String, Object> details : deliveryDetailsList) {
+                            String existingPhoneNumber = String.valueOf(details.get("phoneNumber"));
+                            if (phoneNumber.equals(existingPhoneNumber)) {
+                                isUnique = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (!isUnique) break;
+                }
+                callback.onResult(isUnique);
+            } else {
+                Toast.makeText(this, "Failed to retrieve users data", Toast.LENGTH_SHORT).show();
+                callback.onResult(false);
+            }
+        });
+    }
+
+    interface OnContactNumberChecked {
+        void onResult(boolean isUnique);
     }
 
     private void isUsernameUnique(String username){
@@ -159,7 +195,10 @@ public class UserSignUpAdditionalInfo extends AppCompatActivity {
 
         newUser.put("deliveryDetails", deliveryDetailsList);
 
-        mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
+        String hashedPassword = PassUtils.hashPassword(userPassword);
+        newUser.put("password", hashedPassword);
+
+        mAuth.createUserWithEmailAndPassword(userEmail, hashedPassword)
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     // Get the user ID of the newly created user

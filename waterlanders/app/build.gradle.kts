@@ -77,4 +77,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(libs.lottie)
     androidTestImplementation(libs.startup)
+    implementation (libs.jbcrypt)
 }

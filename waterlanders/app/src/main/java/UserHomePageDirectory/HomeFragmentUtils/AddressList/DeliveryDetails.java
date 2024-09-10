@@ -1,4 +1,4 @@
-package UserHomePageDirectory;
+package UserHomePageDirectory.HomeFragmentUtils.AddressList;
 
 import java.util.HashMap;
 import java.util.Map;

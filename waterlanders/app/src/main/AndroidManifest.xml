@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission
         android:name="android.permission.INTERNET"
         tools:ignore="ManifestOrder" />
@@ -11,6 +15,8 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -119,13 +125,13 @@
             android:name="AdminHomePageDirectory.SalesReport.DashboardSalesReport"
             android:exported="false" />
         <activity
-            android:name="UserHomePageDirectory.GcashConfirmation"
+            android:name="UserHomePageDirectory.HomeFragmentUtils.GcashConfirmation"
             android:exported="false" />
         <activity
-            android:name="UserHomePageDirectory.AddressList.AddressInput"
+            android:name="UserHomePageDirectory.HomeFragmentUtils.AddressList.AddressInput"
             android:exported="false" />
         <activity
-            android:name="UserHomePageDirectory.AddressList.AddressSelection"
+            android:name="UserHomePageDirectory.HomeFragmentUtils.AddressList.AddressSelection"
             android:exported="false" />
         <activity
             android:name="LoginDirectory.LoginWithFacebook"
@@ -158,13 +164,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="UserHomePageDirectory.OrderReceipt"
+            android:name="UserHomePageDirectory.HomeFragmentUtils.OrderReceipt"
             android:exported="false" />
         <activity
             android:name="UserHomePageDirectory.MainDashboardUser"
             android:exported="false" />
         <activity
-            android:name="UserHomePageDirectory.OrderConfirmation"
+            android:name="UserHomePageDirectory.HomeFragmentUtils.OrderConfirmation"
             android:exported="false" />
         <activity
             android:name="DeliveryHomePageDirectory.DeliveryHomePage"

@@ -1,4 +1,4 @@
-package UserHomePageDirectory.AddressList;
+package UserHomePageDirectory.HomeFragmentUtils.AddressList;
 
 public class Contact {
     private String fullName;

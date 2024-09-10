@@ -1,4 +1,4 @@
-package UserHomePageDirectory;
+package UserHomePageDirectory.HomeFragmentUtils;
 
 import android.util.Log;
 
@@ -44,6 +44,7 @@ public class AddedItems implements Serializable {
         return cartItems;
     }
 
+    // this method will just check if the item is already in the cart or not
     public boolean isItemInCart(String itemID) {
         for (Map<String, Object> item : cartItems) {
             if (itemID.equals(item.get("item_id"))) {
@@ -53,6 +54,8 @@ public class AddedItems implements Serializable {
         return false;
     }
 
+    // this method will store the necessary fields for the items
+    // id the customer add them
     public void addItem(GetItems items, int totalPrice, int itemQuantity) {
         Map<String, Object> added_item = new HashMap<>();
         added_item.put("item_id", items.getItem_id());
@@ -116,6 +119,7 @@ public class AddedItems implements Serializable {
         return orderIcon;
     }
 
+    // will just log every item that the customer added
     public void logCartItems() {
         for (Map<String, Object> item : cartItems) {
             Log.d("CartManager", "Item: " +

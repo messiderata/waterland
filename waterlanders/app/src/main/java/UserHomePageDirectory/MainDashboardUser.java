@@ -1,6 +1,5 @@
 package UserHomePageDirectory;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,14 +13,11 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.waterlanders.R;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.Objects;
 
 import Handler.StatusBarUtil;
 import LoginDirectory.Login;
@@ -50,7 +46,6 @@ public class MainDashboardUser extends AppCompatActivity {
         setContentView(R.layout.activity_main_dasboard_user);
         StatusBarUtil.setStatusBarColor(this, R.color.button_bg);
 
-
         // Initialize Firebase Auth
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null) {
@@ -66,9 +61,6 @@ public class MainDashboardUser extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.nav_view);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         ImageView menuItem = findViewById(R.id.menu_icon);
-
-
-        // Initialize and configure dialog
 
 
         // Set default item checked in NavigationView
@@ -149,7 +141,6 @@ public class MainDashboardUser extends AppCompatActivity {
         // Handle back press with BackPressHandler
         new BackPressHandler(this, drawerLayout);
     }
-
 }
 
 

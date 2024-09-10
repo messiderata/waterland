@@ -1,4 +1,4 @@
-package UserHomePageDirectory;
+package UserHomePageDirectory.HomeFragmentUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,31 +14,22 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import UserHomePageDirectory.MainDashboardUser;
+
 public class OrderReceipt extends AppCompatActivity {
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
     private AddedItems addedItems;
     private Map<String, Object> currentDefaultAddress;
     private Map<String, Object> GCashPaymentDetails;
     private String modeOfPayment, additionalMessage;
+    private CardView button_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_receipt);
-        CardView button_btn = findViewById(R.id.button_ok);
-
-        db = FirebaseFirestore.getInstance();
-
-        // Retrieve intent data
-        Intent intent = getIntent();
-        addedItems = (AddedItems) intent.getSerializableExtra("addedItems");
-        currentDefaultAddress = (Map<String, Object>) intent.getSerializableExtra("deliveryAddress");
-        modeOfPayment = (String) intent.getSerializableExtra("modeOfPayment");
-        additionalMessage = (String) intent.getSerializableExtra("additionalMessage");
-
-        if (modeOfPayment.equals("GCash")){
-            GCashPaymentDetails = (Map<String, Object>) intent.getSerializableExtra("GCashPaymentDetails");
-        }
+        initializeObject();
+        getIntentData();
 
         // Save order to Firebase
         generateUniqueDocumentId();
@@ -49,6 +40,24 @@ public class OrderReceipt extends AppCompatActivity {
             startActivity(backToHome);
             finish();
         });
+    }
+
+    private void initializeObject(){
+        button_btn = findViewById(R.id.button_ok);
+        db = FirebaseFirestore.getInstance();
+    }
+
+    private void getIntentData(){
+        // Retrieve intent data
+        Intent intent = getIntent();
+        addedItems = (AddedItems) intent.getSerializableExtra("addedItems");
+        currentDefaultAddress = (Map<String, Object>) intent.getSerializableExtra("deliveryAddress");
+        modeOfPayment = (String) intent.getSerializableExtra("modeOfPayment");
+        additionalMessage = (String) intent.getSerializableExtra("additionalMessage");
+
+        if (modeOfPayment.equals("GCash")){
+            GCashPaymentDetails = (Map<String, Object>) intent.getSerializableExtra("GCashPaymentDetails");
+        }
     }
 
     // flow
@@ -66,59 +75,59 @@ public class OrderReceipt extends AppCompatActivity {
 
     private void checkDocumentInWaitingOrdersCollection(String documentId) {
         db.collection("waitingForCourier")
-                .document(documentId)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        if (task.getResult().exists()) {
-                            // Document ID already exists in 'waitingForCourier', generate a new one
-                            generateUniqueDocumentId();
-                        } else {
-                            // Proceed to check the next collection
-                            checkDocumentInOnDelivery(documentId);
-                        }
+            .document(documentId)
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    if (task.getResult().exists()) {
+                        // Document ID already exists in 'waitingForCourier', generate a new one
+                        generateUniqueDocumentId();
                     } else {
-                        Toast.makeText(OrderReceipt.this, "Failed to check waitingForCourier collection.", Toast.LENGTH_SHORT).show();
+                        // Proceed to check the next collection
+                        checkDocumentInOnDelivery(documentId);
                     }
-                });
+                } else {
+                    Toast.makeText(OrderReceipt.this, "Failed to check waitingForCourier collection.", Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     private void checkDocumentInOnDelivery(String documentId) {
         db.collection("onDelivery")
-                .document(documentId)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        if (task.getResult().exists()) {
-                            // Document ID already exists in 'onDelivery', generate a new one
-                            generateUniqueDocumentId();
-                        } else {
-                            // Proceed to check the next collection
-                            checkDocumentInDeliveredOrders(documentId);
-                        }
+            .document(documentId)
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    if (task.getResult().exists()) {
+                        // Document ID already exists in 'onDelivery', generate a new one
+                        generateUniqueDocumentId();
                     } else {
-                        Toast.makeText(OrderReceipt.this, "Failed to check onDelivery collection.", Toast.LENGTH_SHORT).show();
+                        // Proceed to check the next collection
+                        checkDocumentInDeliveredOrders(documentId);
                     }
-                });
+                } else {
+                    Toast.makeText(OrderReceipt.this, "Failed to check onDelivery collection.", Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     private void checkDocumentInDeliveredOrders(String documentId) {
         db.collection("deliveredOrders")
-                .document(documentId)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        if (task.getResult().exists()) {
-                            // Document ID already exists in 'deliveredOrders', generate a new one
-                            generateUniqueDocumentId();
-                        } else {
-                            // Document ID is unique across all collections
-                            saveOrderWithUniqueDocumentId(documentId);
-                        }
+            .document(documentId)
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    if (task.getResult().exists()) {
+                        // Document ID already exists in 'deliveredOrders', generate a new one
+                        generateUniqueDocumentId();
                     } else {
-                        Toast.makeText(OrderReceipt.this, "Failed to check deliveredOrders collection.", Toast.LENGTH_SHORT).show();
+                        // Document ID is unique across all collections
+                        saveOrderWithUniqueDocumentId(documentId);
                     }
-                });
+                } else {
+                    Toast.makeText(OrderReceipt.this, "Failed to check deliveredOrders collection.", Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     private void saveOrderWithUniqueDocumentId(String documentId) {
@@ -139,12 +148,12 @@ public class OrderReceipt extends AppCompatActivity {
         }
 
         db.collection("pendingOrders")
-                .document(documentId)
-                .set(orderData)
-                .addOnSuccessListener(aVoid -> {
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(OrderReceipt.this, "Failed to save order", Toast.LENGTH_SHORT).show();
-                });
+            .document(documentId)
+            .set(orderData)
+            .addOnSuccessListener(aVoid -> {
+            })
+            .addOnFailureListener(e -> {
+                Toast.makeText(OrderReceipt.this, "Failed to save order", Toast.LENGTH_SHORT).show();
+            });
     }
 }

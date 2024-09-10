@@ -81,9 +81,9 @@
 
     <string name="client_id">636704588651-tg0qt3valnsghtksvgh59fnc2mjc9e4t.apps.googleusercontent.com</string>
 
-    <string name="facebook_app_id">821390136766844</string>
+    <string name="facebook_app_id">395617553555184</string>
     <string name="fb_login_protocol_scheme">fb1234</string>
-    <string name="facebook_client_token">34d2142ee3750a3479f67016ab8c7a63</string>
+    <string name="facebook_client_token">84e39f609ec8bff2e547d2c75e619e68</string>
     <string name="app_name">Waterland</string>
     <string name="payment_method">PAYMENT METHOD</string>
     <string name="cash">Cash on Delivery</string>

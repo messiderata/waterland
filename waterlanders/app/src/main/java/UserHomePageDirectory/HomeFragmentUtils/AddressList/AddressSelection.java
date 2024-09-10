@@ -1,9 +1,8 @@
-package UserHomePageDirectory.AddressList;
+package UserHomePageDirectory.HomeFragmentUtils.AddressList;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.waterlanders.R;
-import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,10 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import Handler.StatusBarUtil;
-import UserHomePageDirectory.AddedItems;
-import UserHomePageDirectory.DeliveryDetails;
-import UserHomePageDirectory.MainDashboardUser;
-import UserHomePageDirectory.OrderConfirmation;
+import UserHomePageDirectory.HomeFragmentUtils.AddedItems;
+import UserHomePageDirectory.HomeFragmentUtils.OrderConfirmation;
 
 public class AddressSelection extends AppCompatActivity {
 

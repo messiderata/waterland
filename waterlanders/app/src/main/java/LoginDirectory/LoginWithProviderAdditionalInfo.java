@@ -35,6 +35,7 @@ public class LoginWithProviderAdditionalInfo extends AppCompatActivity {
 
     private String userEmail;
     private String userFullName;
+    private String hashedPassword;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
@@ -74,6 +75,7 @@ public class LoginWithProviderAdditionalInfo extends AppCompatActivity {
         Intent intent = getIntent();
         userEmail = (String) intent.getSerializableExtra("user_email");
         userFullName = (String) intent.getSerializableExtra("user_fullName");
+        hashedPassword = (String) intent.getSerializableExtra("hashedPassword");
 
         // initially set the text of fullName and username of the user base on the retrieve
         // data from the login provider
@@ -155,6 +157,7 @@ public class LoginWithProviderAdditionalInfo extends AppCompatActivity {
         deliveryDetailsList.add(deliveryDetails);
 
         newUser.put("deliveryDetails", deliveryDetailsList);
+        newUser.put("password", hashedPassword);
 
         String userId = mAuth.getCurrentUser().getUid();
 

@@ -1,4 +1,4 @@
-package UserHomePageDirectory;
+package UserHomePageDirectory.HomeFragmentUtils;
 
 import android.content.Context;
 import android.util.Log;
@@ -26,16 +26,40 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     private OnTotalAmountChangeListener onTotalAmountChangeListener;
     private final AddedItems addedItems;
 
+    // constructor to initialize items from the retrieve and display items
+    // from the 'HomeFragment' base on the items in the database
     public ItemAdapter(List<GetItems> itemsList, Context context, String userId) {
         this.itemsList = itemsList;
         this.context = context;
         this.addedItems = new AddedItems(userId);
     }
 
-    public void setOnTotalAmountChangeListener(OnTotalAmountChangeListener listener) {
-        this.onTotalAmountChangeListener = listener;
+    // initialize objects base on the 'layout_user_item' to
+    // display and manipulate their value later on
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
+        TextView itemName;
+        TextView itemPrice;
+        TextView itemQuantity;
+        TextView itemQuantityPrice;
+        ImageView itemIMG;
+        Button increaseButton;
+        Button decreaseButton;
+
+        public ItemViewHolder(@NonNull View itemView) {
+            super(itemView);
+            itemName = itemView.findViewById(R.id.item_name);
+            itemPrice = itemView.findViewById(R.id.item_price);
+            itemIMG = itemView.findViewById(R.id.item_img);
+
+            itemQuantity = itemView.findViewById(R.id.item_quantity);
+            itemQuantityPrice = itemView.findViewById(R.id.item_quantity_price);
+            increaseButton = itemView.findViewById(R.id.item_btn_increase);
+            decreaseButton = itemView.findViewById(R.id.item_btn_decrease);
+        }
     }
 
+    // this method is responsible from connecting the 'itemAdapter' java file
+    // to 'layout_user_item' layout
     @NonNull
     @Override
     public ItemAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,14 +68,19 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     }
 
     @Override
+    public int getItemCount() {
+        return itemsList.size();
+    }
+
+    // this method where all the manipulation and displaying of values are made
+    @Override
     public void onBindViewHolder(@NonNull ItemAdapter.ItemViewHolder holder, int position) {
         GetItems items = itemsList.get(position);
-        holder.txt_item_name.setText(items.getItem_name());
 
-        // Format price with peso sign
-        String priceWithCurrency = "₱" + items.getItem_price();
-        holder.txt_item_price.setText(priceWithCurrency);
-
+        // display the item icon
+        // this first convert the firebase storage link to
+        // downloadable link to display properly the icon of the item
+        // using Glide library
         String gsUrl = items.getItem_img();
         if (gsUrl != null && !gsUrl.isEmpty()) {
             // Convert gs:// URL to https:// URL
@@ -63,33 +92,38 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                         .override(60, 60)
                         .placeholder(R.drawable.ic_launcher_background) // Placeholder image
                         .error(R.drawable.ic_launcher_background) // Error image
-                        .into(holder.imv_item_img);
+                        .into(holder.itemIMG);
             }).addOnFailureListener(exception -> {
                 // Handle any errors
                 Log.e("GLIDE", "Error getting download URL", exception);
-                holder.imv_item_img.setImageResource(R.drawable.ic_launcher_background);
+                holder.itemIMG.setImageResource(R.drawable.ic_launcher_background);
             });
         } else {
             // Handle case where item_img is null or empty
-            holder.imv_item_img.setImageResource(R.drawable.ic_launcher_background);
+            holder.itemIMG.setImageResource(R.drawable.ic_launcher_background);
         }
 
+        // set text values base on the data in items in itemList
+        holder.itemName.setText(items.getItem_name());
+        holder.itemPrice.setText(String.format("₱" + items.getItem_price()));
         // Set up initial quantity and total price
-        holder.txt_item_quantity.setText(String.valueOf(0));
-        holder.txt_item_quantity_price.setText("₱0");
+        holder.itemQuantity.setText(String.valueOf(0));
+        holder.itemQuantityPrice.setText("₱0");
 
-        // Set up click listeners for buttons
-        holder.btn_increase.setOnClickListener(v -> {
-            int currentQuantity = Integer.parseInt(holder.txt_item_quantity.getText().toString());
+        // click listener for '+' button
+        // if the button is clicked
+        // the 'itemPrice', 'itemQuantity', and 'itemQuantityPrice' will be updated
+        holder.increaseButton.setOnClickListener(v -> {
+            int currentQuantity = Integer.parseInt(holder.itemQuantity.getText().toString());
             currentQuantity++;
-            holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
+            holder.itemQuantity.setText(String.valueOf(currentQuantity));
 
             int[] prices = updateTotalPrice(holder, items, currentQuantity, "btn_increase");
             int totalItemPrice = prices[0];
 
-
             // check the item is already in the cartItems
-            // if item is already in the cart then update the 'item_order_quantity' and 'item_total_price'
+            // if item is already in the cart then
+            // update the 'item_order_quantity' and 'item_total_price'
             // else add the item to the cart
             if (addedItems.isItemInCart(items.getItem_id())){
                 addedItems.updateItemQuantity(items.getItem_id(), totalItemPrice, currentQuantity);
@@ -101,11 +135,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             addedItems.logCartItems();
         });
 
-        holder.btn_decrease.setOnClickListener(v -> {
-            int currentQuantity = Integer.parseInt(holder.txt_item_quantity.getText().toString());
+        // click listener for '-' button
+        // same flow in the previous button but this time values are decrease
+        holder.decreaseButton.setOnClickListener(v -> {
+            int currentQuantity = Integer.parseInt(holder.itemQuantity.getText().toString());
             if (currentQuantity > 0) {
                 currentQuantity--;
-                holder.txt_item_quantity.setText(String.valueOf(currentQuantity));
+                holder.itemQuantity.setText(String.valueOf(currentQuantity));
 
                 int[] prices = updateTotalPrice(holder, items, currentQuantity, "btn_decrease");
                 int itemPrice = prices[1];
@@ -118,23 +154,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return itemsList.size();
-    }
-
+    // this method will compute for the total price for each item
+    // some items has 'discount' on them and this method
+    // is also the one who is responsible for computing the item price
+    // to have correct total amount
     private int[] updateTotalPrice(ItemViewHolder holder, GetItems items, int quantity, String mode) {
         int itemPrice = items.getItem_price();
         int totalPrice = itemPrice * quantity;
         String priceWithCurrency = "₱" + totalPrice;
-        holder.txt_item_quantity_price.setText(priceWithCurrency);
+        holder.itemQuantityPrice.setText(priceWithCurrency);
 
         String currItemID = items.getItem_id();
         if (currItemID.equals("Pp4FPWv56jS2cJcWOLlE")){
             int totalDiscount = (quantity / 3) * 5;
             totalPrice -= totalDiscount;
             priceWithCurrency = "₱" + totalPrice;
-            holder.txt_item_quantity_price.setText(priceWithCurrency);
+            holder.itemQuantityPrice.setText(priceWithCurrency);
 
             if (mode.equals("btn_decrease")){
                 int previousQuantity = quantity + 1;
@@ -147,27 +182,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         return new int[]{totalPrice, itemPrice};
     }
 
+    // helper constructor to display the updated price
+    // whenever there are changes in the item price
+    public void setOnTotalAmountChangeListener(OnTotalAmountChangeListener listener) {
+        this.onTotalAmountChangeListener = listener;
+    }
+
     private void notifyTotalAmountChange() {
         if (onTotalAmountChangeListener != null) {
             onTotalAmountChangeListener.onTotalAmountChange(addedItems.getTotalAmount(), addedItems);
-        }
-    }
-
-    public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView txt_item_name, txt_item_price, txt_item_quantity, txt_item_quantity_price;
-        ImageView imv_item_img;
-        Button btn_increase, btn_decrease;
-
-        public ItemViewHolder(@NonNull View itemView) {
-            super(itemView);
-            txt_item_name = itemView.findViewById(R.id.item_name);
-            txt_item_price = itemView.findViewById(R.id.item_price);
-            imv_item_img = itemView.findViewById(R.id.item_img);
-
-            txt_item_quantity = itemView.findViewById(R.id.item_quantity);
-            txt_item_quantity_price = itemView.findViewById(R.id.item_quantity_price);
-            btn_increase = itemView.findViewById(R.id.item_btn_increase);
-            btn_decrease = itemView.findViewById(R.id.item_btn_decrease);
         }
     }
 

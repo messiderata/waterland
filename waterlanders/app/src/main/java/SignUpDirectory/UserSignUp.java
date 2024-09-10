@@ -12,7 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.example.waterlanders.R;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
 
 public class UserSignUp extends AppCompatActivity {
 
@@ -54,7 +57,7 @@ public class UserSignUp extends AppCompatActivity {
             Toast.makeText(this, "Input your Email first.", Toast.LENGTH_SHORT).show();
         } else if (!isEmailValid(String.valueOf(emailField.getText()))) {
             isValid = false;
-            Toast.makeText(this, "Invalid email format.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid Email format.", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(passField.getText())){
             isValid = false;
             Toast.makeText(this, "Input your Password first.", Toast.LENGTH_SHORT).show();
@@ -69,7 +72,9 @@ public class UserSignUp extends AppCompatActivity {
             Toast.makeText(this, "Password not match.", Toast.LENGTH_SHORT).show();
         }
 
-        // check if the email is unique
+        // check if user want to sign up with email or contact number
+
+
         if (isValid){
             isEmailUnique(String.valueOf(emailField.getText()));
         }

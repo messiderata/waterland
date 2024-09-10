@@ -1,35 +1,41 @@
 package ForgotPasswordDirectory;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import android.Manifest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import android.content.pm.PackageManager;
 
 import com.example.waterlanders.R;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
-import com.google.firebase.auth.PhoneAuthProvider;
-
-import java.util.concurrent.TimeUnit;
 
 public class ForgotPasswordPhoneOTP extends AppCompatActivity {
 
     private ImageView backIcon;
     private EditText OTPString;
     private Button confirm;
+    private TextView timerTextView;
 
     private FirebaseAuth mAuth;
     private String phoneNumber;
     private String userEmail;
-    private String verificationId;
+    private String userPassword;
+    private int OTP;
+    private CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +43,14 @@ public class ForgotPasswordPhoneOTP extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_password_phone_otp);
         initializeObjects();
         getIntentData();
-        sendVerificationCode(phoneNumber);
+        // sendVerificationCode(phoneNumber);
+
+        // Check for SMS permissions
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 1);
+        } else {
+            sendVerificationCode(phoneNumber);
+        }
 
         confirm.setOnClickListener(view -> verifyCode(String.valueOf(OTPString.getText())));
 
@@ -48,6 +61,7 @@ public class ForgotPasswordPhoneOTP extends AppCompatActivity {
         backIcon = findViewById(R.id.backIcon);
         OTPString = findViewById(R.id.OTP_string);
         confirm = findViewById(R.id.confirm);
+        timerTextView = findViewById(R.id.timerTextView);
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -56,62 +70,56 @@ public class ForgotPasswordPhoneOTP extends AppCompatActivity {
         Intent intent = getIntent();
         phoneNumber = (String) intent.getSerializableExtra("phone_number");
         userEmail = (String) intent.getSerializableExtra("user_email");
+        userPassword = (String) intent.getSerializableExtra("user_pass");
+    }
+
+    // Handle the permission result locally
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                sendVerificationCode(phoneNumber);
+            } else {
+                Toast.makeText(this, "Permission denied to send SMS", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void sendVerificationCode(String phoneNumber) {
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(phoneNumber)
-                        .setTimeout(60L, TimeUnit.SECONDS)
-                        .setActivity(this)
-                        .setCallbacks(mCallbacks)
-                        .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-    }
+        OTP = ForgotPasswordLocalSmsService.generateFourDigitNumber();
+        ForgotPasswordLocalSmsService.sendSMS(this, phoneNumber, "Your OTP is: "+OTP);
 
-    private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        @Override
-        public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-            String code = credential.getSmsCode();
-            if (code != null) {
-                OTPString.setText(code);  // Auto-fill the code
-                verifyCode(code);
+        // Start a 1-minute countdown timer
+        countDownTimer = new CountDownTimer(60000, 1000) { // 60000 milliseconds = 1 minute, 1000 milliseconds = 1 second interval
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // Update the TextView with the remaining time
+                timerTextView.setText("Time remaining: " + millisUntilFinished / 1000 + " seconds");
             }
-        }
 
-        @Override
-        public void onVerificationFailed(@NonNull FirebaseException e) {
-            Toast.makeText(ForgotPasswordPhoneOTP.this, "Verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e("ForgotPasswordPhone", "Verification failed", e);
-        }
-
-        @Override
-        public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken token) {
-            super.onCodeSent(s, token);
-            verificationId = s;
-            Toast.makeText(ForgotPasswordPhoneOTP.this, "OTP sent to your phone", Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    private void verifyCode(String code) {
-        if (verificationId == null) {
-            Toast.makeText(this, "Please request a new verification code", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        signInWithCredential(credential);
+            @Override
+            public void onFinish() {
+                // Finish the current activity after 1 minute
+                Toast.makeText(ForgotPasswordPhoneOTP.this, "Time expired. Please try again.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }.start();
     }
 
-    private void signInWithCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Intent setNewPasswordIntent = new Intent(this, ForgotPasswordPhoneNewPassword.class);
-                    startActivity(setNewPasswordIntent);
-                    finish();
-                } else {
-                    Toast.makeText(ForgotPasswordPhoneOTP.this, "Verification failed", Toast.LENGTH_SHORT).show();
-                }
-            });
+    private void verifyCode(String code){
+        if (code.equals(String.valueOf(OTP))){
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+            }
+
+            Intent setNewPasswordIntent = new Intent(this, ForgotPasswordPhoneNewPassword.class);
+            setNewPasswordIntent.putExtra("user_email", userEmail);
+            setNewPasswordIntent.putExtra("user_pass", userPassword);
+            startActivity(setNewPasswordIntent);
+            finish();
+        } else {
+            Toast.makeText(ForgotPasswordPhoneOTP.this, "Verification failed", Toast.LENGTH_SHORT).show();
+        }
     }
 }

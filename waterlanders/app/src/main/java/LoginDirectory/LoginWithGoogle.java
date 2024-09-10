@@ -30,6 +30,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import AdminHomePageDirectory.AdminHomePage;
 import DeliveryHomePageDirectory.DeliveryHomePage;
+import Handler.InitStrings;
+import Handler.PassUtils;
 import UserHomePageDirectory.MainDashboardUser;
 
 public class LoginWithGoogle {
@@ -45,7 +47,6 @@ public class LoginWithGoogle {
         this.activity = activity;
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        Log.d("IS THIS WORKING?", "1a");
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -57,7 +58,6 @@ public class LoginWithGoogle {
     }
 
     public void signIn() {
-        Log.d("IS THIS WORKING?", "sign in 2222");
         mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             activity.startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -69,7 +69,6 @@ public class LoginWithGoogle {
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             if (account != null) {
-                Log.d("IS THIS WORKING?", "fab aut");
                 firebaseAuthWithGoogle(account.getIdToken());
             }
         } catch (ApiException e) {
@@ -78,7 +77,6 @@ public class LoginWithGoogle {
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-        Log.d("IS THIS WORKING?", "idToken: "+idToken);
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
             .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -87,7 +85,6 @@ public class LoginWithGoogle {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            Log.d("IS THIS WORKING?", "checking");
                             checkIfUserIsNew(user);
                         }
                     } else {
@@ -106,15 +103,17 @@ public class LoginWithGoogle {
                     DocumentSnapshot document = task.getResult();
                     if (document != null && document.exists()) {
                         // User already exists, no need to create a new document
-                        Log.d("IS THIS WORKING?", "User already exists: " + user.getUid());
                         redirectUser(user);
                     } else {
                         // User is new, create a new document in Firestore
                         // saveNewUser(user);
-                        Log.d("IS THIS WORKING?", "intenting");
+                        String initString = InitStrings.generateRandomString(10);
+                        String hashedPassword = PassUtils.hashPassword(initString);
+                        user.updatePassword(hashedPassword);
                         Intent showAdditionalInfoIntent = new Intent(context, LoginWithProviderAdditionalInfo.class);
                         showAdditionalInfoIntent.putExtra("user_email", user.getEmail());
                         showAdditionalInfoIntent.putExtra("user_fullName", user.getDisplayName());
+                        showAdditionalInfoIntent.putExtra("hashedPassword", hashedPassword);
                         context.startActivity(showAdditionalInfoIntent);
                     }
                 } else {

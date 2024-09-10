@@ -1,6 +1,4 @@
-package UserHomePageDirectory;
-
-import android.util.Log;
+package UserHomePageDirectory.HomeFragmentUtils;
 
 public class GetItems {
 

@@ -1,4 +1,4 @@
-package UserHomePageDirectory;
+package UserHomePageDirectory.HomeFragmentUtils;
 
 import android.Manifest;
 import android.content.Intent;
@@ -22,7 +22,6 @@ import com.example.waterlanders.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -47,15 +46,8 @@ public class GcashConfirmation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gcash_confirmation);
-
-        uploadText = findViewById(R.id.upload_text);
-        submitButton = findViewById(R.id.submit_button);
-
-        // receive the data pass from the OrderConfirmation.java
-        Intent receiveIntent = getIntent();
-        addedItems = (AddedItems) receiveIntent.getSerializableExtra("addedItems");
-        currentDefaultAddress = (Map<String, Object>) receiveIntent.getSerializableExtra("deliveryAddress");
-        additionalMessage = (String) receiveIntent.getSerializableExtra("additionalMessage");
+        initializeObject();
+        getIntentData();
 
         // handle image upload if the 'browse your image' layout is clicked
         findViewById(R.id.upload_image).setOnClickListener(v -> handleImageSelection());
@@ -79,6 +71,18 @@ public class GcashConfirmation extends AppCompatActivity {
                 Toast.makeText(this, "Please select an image first", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void initializeObject(){
+        uploadText = findViewById(R.id.upload_text);
+        submitButton = findViewById(R.id.submit_button);
+    }
+
+    private void getIntentData(){
+        Intent receiveIntent = getIntent();
+        addedItems = (AddedItems) receiveIntent.getSerializableExtra("addedItems");
+        currentDefaultAddress = (Map<String, Object>) receiveIntent.getSerializableExtra("deliveryAddress");
+        additionalMessage = (String) receiveIntent.getSerializableExtra("additionalMessage");
     }
 
     private void handleImageSelection() {
@@ -149,32 +153,32 @@ public class GcashConfirmation extends AppCompatActivity {
         StorageReference fileRef = storageReference.child(getFileName(imageUri));
 
         fileRef.putFile(uri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    fileRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
-                        String storageLocation = fileRef.toString();
+            .addOnSuccessListener(taskSnapshot -> {
+                fileRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                    String storageLocation = fileRef.toString();
 
-                        // Create a Map to store image URL and reference number
-                        Map<String, Object> GcashPaymentDetailsMap = new HashMap<>();
-                        GcashPaymentDetailsMap.put("imageLink", storageLocation);
-                        GcashPaymentDetailsMap.put("referenceNumber", referenceNumberInput);
+                    // Create a Map to store image URL and reference number
+                    Map<String, Object> GcashPaymentDetailsMap = new HashMap<>();
+                    GcashPaymentDetailsMap.put("imageLink", storageLocation);
+                    GcashPaymentDetailsMap.put("referenceNumber", referenceNumberInput);
 
-                        // pass the value to the OrderReceipt.java to save to the firestore
-                        Intent orderReceiptIntent = new Intent(this, OrderReceipt.class);
-                        orderReceiptIntent.putExtra("addedItems", addedItems);
-                        orderReceiptIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
-                        orderReceiptIntent.putExtra("additionalMessage", additionalMessage);
-                        orderReceiptIntent.putExtra("modeOfPayment", "GCash");
-                        orderReceiptIntent.putExtra("GCashPaymentDetails", (Serializable) GcashPaymentDetailsMap);
-                        startActivity(orderReceiptIntent);
-                        finish();
+                    // pass the value to the OrderReceipt.java to save to the firestore
+                    Intent orderReceiptIntent = new Intent(this, OrderReceipt.class);
+                    orderReceiptIntent.putExtra("addedItems", addedItems);
+                    orderReceiptIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
+                    orderReceiptIntent.putExtra("additionalMessage", additionalMessage);
+                    orderReceiptIntent.putExtra("modeOfPayment", "GCash");
+                    orderReceiptIntent.putExtra("GCashPaymentDetails", (Serializable) GcashPaymentDetailsMap);
+                    startActivity(orderReceiptIntent);
+                    finish();
 
-                    }).addOnFailureListener(e -> {
-                        Toast.makeText(GcashConfirmation.this, "Failed to get download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(GcashConfirmation.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(GcashConfirmation.this, "Failed to get download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+            })
+            .addOnFailureListener(e -> {
+                Toast.makeText(GcashConfirmation.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
     }
 
     private String getFileName(Uri uri) {
