@@ -1,4 +1,4 @@
-package UserHomePageDirectory.AddressList;
+package UserHomePageDirectory.HomeFragmentUtils.AddressList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,9 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import UserHomePageDirectory.AddedItems;
-import UserHomePageDirectory.DeliveryDetails;
-import UserHomePageDirectory.OrderConfirmation;
+import UserHomePageDirectory.HomeFragmentUtils.AddedItems;
+import UserHomePageDirectory.HomeFragmentUtils.OrderConfirmation;
 
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ContactViewHolder> {
     private List<DeliveryDetails> deliveryDetails;
@@ -80,7 +79,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ContactV
             }
 
             // Save the updated list to Firestore
-            saveUpdatedAddressesToFirestore();
+            saveUpdatedAddressesToFireStore();
 
             // Start the next activity (OrderConfirmation)
             Intent intent = new Intent(context, OrderConfirmation.class);
@@ -94,24 +93,24 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ContactV
         return deliveryDetails.size();
     }
 
-    private void saveUpdatedAddressesToFirestore() {
+    private void saveUpdatedAddressesToFireStore() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
         if (firebaseUser != null) {
             String userId = firebaseUser.getUid();
 
             db.collection("users").document(userId)
-                    .update("deliveryDetails", deliveryDetails)
-                    .addOnSuccessListener(aVoid -> {
-                        // Log success or show a message
-                        Log.d("AddressSelection", "Default address updated successfully.");
-                        Toast.makeText(context, "Default address updated successfully.", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        // Handle the error
-                        Log.d("AddressSelection", "Error: ", e);
-                        Toast.makeText(context, "There was an error updating your address. Error: "+ e, Toast.LENGTH_SHORT).show();
-                    });
+                .update("deliveryDetails", deliveryDetails)
+                .addOnSuccessListener(aVoid -> {
+                    // Log success or show a message
+                    Log.d("AddressSelection", "Default address updated successfully.");
+                    Toast.makeText(context, "Default address updated successfully.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle the error
+                    Log.d("AddressSelection", "Error: ", e);
+                    Toast.makeText(context, "There was an error updating your address. Error: "+ e, Toast.LENGTH_SHORT).show();
+                });
         }
     }
 }

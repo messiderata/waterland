@@ -16,6 +16,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.FacebookSdk;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -31,6 +32,8 @@ import java.util.Arrays;
 
 import AdminHomePageDirectory.AdminHomePage;
 import DeliveryHomePageDirectory.DeliveryHomePage;
+import Handler.InitStrings;
+import Handler.PassUtils;
 import UserHomePageDirectory.MainDashboardUser;
 
 public class LoginWithFacebook extends Login {
@@ -119,9 +122,13 @@ public class LoginWithFacebook extends Login {
                     } else {
                         // User is new, create a new document in Firestore
                         // saveNewUser(user);
+                        String initString = InitStrings.generateRandomString(10);
+                        String hashedPassword = PassUtils.hashPassword(initString);
+                        user.updatePassword(hashedPassword);
                         Intent showAdditionalInfoIntent = new Intent(LoginWithFacebook.this, LoginWithProviderAdditionalInfo.class);
                         showAdditionalInfoIntent.putExtra("user_email", user.getEmail());
                         showAdditionalInfoIntent.putExtra("user_fullName", user.getDisplayName());
+                        showAdditionalInfoIntent.putExtra("hashedPassword", hashedPassword);
                         startActivity(showAdditionalInfoIntent);
                     }
                 } else {

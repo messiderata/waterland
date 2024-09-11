@@ -22,22 +22,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.waterlanders.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import AdminHomePageDirectory.SuccessScreen;
-import UserHomePageDirectory.GcashConfirmation;
-import UserHomePageDirectory.OrderReceipt;
 
 public class AddNewItem extends AppCompatActivity {
 

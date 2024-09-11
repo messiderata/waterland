@@ -17,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 import java.util.Map;
 
+import SignUpDirectory.UserSignUpAdditionalInfo;
+
 
 public class ForgotPasswordPhone extends AppCompatActivity {
 
@@ -60,6 +62,16 @@ public class ForgotPasswordPhone extends AppCompatActivity {
         }
     }
 
+    // flow
+    // 1. retrieve the 'users' collection
+    // 2. for every user in 'users' we will check only the account that has 'customer' role
+    //      to prevent manipulating other accounts such as ADMIN and DELIVERY
+    //      because that should be handle by the devs only
+    // 3. we will check for the user's 'deliveryDetails' field to check which
+    //      default address where the primary contact number is
+    // 4. if the primary contact number is the same as user's inputed mobile number
+    //      then send the otp to the mobile number
+    //      else display 'Phone number is not registered'
     private void isPhoneNumberExist(String phoneNumber){
         db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null){
@@ -84,9 +96,11 @@ public class ForgotPasswordPhone extends AppCompatActivity {
                                     if (retrievedPhoneNumber != null && retrievedPhoneNumber.equals(phoneNumber)) {
                                         // Phone number exists
                                         String userEmail = (String) user.get("email");
+                                        String userPassword = (String) user.get("password");
                                         Intent verifyOTPIntent = new Intent(ForgotPasswordPhone.this, ForgotPasswordPhoneOTP.class);
                                         verifyOTPIntent.putExtra("phone_number", phoneNumber);
                                         verifyOTPIntent.putExtra("user_email", userEmail);
+                                        verifyOTPIntent.putExtra("user_pass", userPassword);
                                         startActivity(verifyOTPIntent);
                                         phoneNumberFound = true;
                                         break;

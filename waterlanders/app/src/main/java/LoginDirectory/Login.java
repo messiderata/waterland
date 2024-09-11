@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import Handler.PassUtils;
 import UserHomePageDirectory.MainDashboardUser;
 import com.example.waterlanders.R;
 import ForgotPasswordDirectory.ForgotPasswordHome;
@@ -40,6 +41,7 @@ public class Login extends AppCompatActivity {
     private TextView loginText;
     private ImageView facebookLogin;
     private ImageView googleLogin;
+    private CardView loginButton;
 
 
     private LoginWithGoogle loginWithGoogle;
@@ -69,6 +71,7 @@ public class Login extends AppCompatActivity {
         createAccount = findViewById(R.id.create_account);
         loginText = findViewById(R.id.log_text);
         progressBar = findViewById(R.id.progress_bar);
+        loginButton = findViewById(R.id.login_button);
         facebookLogin = findViewById(R.id.facebook_login);
         googleLogin = findViewById(R.id.google_login);
     }
@@ -89,8 +92,8 @@ public class Login extends AppCompatActivity {
 
     private void initializeLoginScreen() {
         // Set up login button click listener
-        CardView btn_login = findViewById(R.id.login_button);
-        btn_login.setOnClickListener(view -> {
+        loginButton = findViewById(R.id.login_button);
+        loginButton.setOnClickListener(view -> {
             ShowToast.unshowProgressBar(progressBar, loginText, timeDelayInMillis);
             String usernameOrEmail = Objects.requireNonNull(loginAccount.getText()).toString().trim();
             String password = Objects.requireNonNull(loginPassword.getText()).toString().trim();

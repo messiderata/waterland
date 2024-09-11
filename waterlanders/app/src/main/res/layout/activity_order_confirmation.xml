@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/home_bg_color"
-    tools:context="UserHomePageDirectory.OrderConfirmation">
+    tools:context="UserHomePageDirectory.HomeFragmentUtils.OrderConfirmation">
 
     <!-- Navigation Bar -->
     <LinearLayout
