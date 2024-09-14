@@ -16,6 +16,13 @@ import com.example.waterlanders.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.List;
+
+import Handler.PassUtils;
 
 public class ForgotPasswordEmail extends AppCompatActivity {
 
@@ -24,6 +31,7 @@ public class ForgotPasswordEmail extends AppCompatActivity {
     private Button sendButton;
 
     private FirebaseAuth auth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,7 @@ public class ForgotPasswordEmail extends AppCompatActivity {
         sendButton = findViewById(R.id.sendButton);
 
         auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
     private void checkInputData(){
@@ -61,12 +70,54 @@ public class ForgotPasswordEmail extends AppCompatActivity {
 
         // if email is valid then send the reset link tru email
         if (isValid){
-            sendPasswordResetEmail(String.valueOf(emailField.getText()));
+            isEmailExist(String.valueOf(emailField.getText()));
         }
     }
 
     private boolean isEmailValid(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void isEmailExist(String email){
+        // check the 'users' collection
+        // if the 'email' field is the same as String email
+        // if same update that user's 'isResetPassTruEmail' field to 1
+        // then call sendPasswordResetEmail method
+        db.collection("users")
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                    List<DocumentSnapshot> usersList = task.getResult().getDocuments();
+                    boolean isEmailFound = false;
+
+                    for (DocumentSnapshot user : usersList){
+                        if (isEmailFound) break;
+
+                        String userEmail = (String) user.get("email");
+                        String userID = user.getId();
+
+                        if (userEmail.equals(email)){
+                            isEmailFound = true;
+                            db.collection("users")
+                                .document(userID)
+                                .update("isResetPassTruEmail", 1)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Successfully updated, now send password reset email
+                                    sendPasswordResetEmail(email);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(ForgotPasswordEmail.this, "Failed to update user info.", Toast.LENGTH_SHORT).show();
+                                });
+                        }
+                    }
+                } else {
+                    // Email does not exist
+                    Toast.makeText(ForgotPasswordEmail.this, "Email not found.", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .addOnFailureListener(e -> {
+                Toast.makeText(ForgotPasswordEmail.this, "Error checking email existence: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
     }
 
     private void sendPasswordResetEmail(String email){
