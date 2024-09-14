@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.example.waterlanders.R;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,7 +25,7 @@ public class EditProfile extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
-    private EditText nameInput, nicknameInput, phoneInput;
+    private TextInputEditText nameInput, nicknameInput, phoneInput;
     private CardView saveButton;
     private ImageView backButton;
     // Fields to hold current user data
@@ -46,42 +47,11 @@ public class EditProfile extends AppCompatActivity {
         saveButton = findViewById(R.id.save_button);
         backButton = findViewById(R.id.btn_back);
 
-        // Fetch and display current profile data
-        loadUserProfileData();
 
         // Set up the listener for the save button
         saveButton.setOnClickListener(view -> validateAndSaveUserProfile());
         backButton.setOnClickListener(view -> finish());
-
     }
-
-    private void loadUserProfileData() {
-        String userId = mAuth.getCurrentUser().getUid();
-        DocumentReference userRef = db.collection("users").document(userId);
-
-        userRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                // Fetch current data from Firestore
-                currentFullName = documentSnapshot.getString("fullName");
-                currentUsername = documentSnapshot.getString("username");
-                currentPhone = documentSnapshot.getString("phone");
-
-                // Set the current data as hints
-                nameInput.setHint(currentFullName != null ? currentFullName : "Enter your name");
-                nicknameInput.setHint(currentUsername != null ? currentUsername : "Enter your username");
-
-                // Mask the phone number and display it as a hint
-                if (currentPhone != null && currentPhone.length() == 11) {
-                    phoneInput.setHint(maskPhoneNumber(currentPhone));
-                } else {
-                    phoneInput.setHint("Enter your phone number");
-                }
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(EditProfile.this, "Failed to load profile data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
-    }
-
     // Method to mask phone number (show first 2 and last 2 digits, mask the rest)
     private String maskPhoneNumber(String phoneNumber) {
         if (phoneNumber.length() >= 4) {

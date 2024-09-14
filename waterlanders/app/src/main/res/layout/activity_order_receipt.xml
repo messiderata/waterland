@@ -97,9 +97,10 @@ android:background="@color/screen_bg">
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.494"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.793"
+                app:layout_constraintVertical_bias="0.842"
                 app:strokeWidth="0dp">
 
                 <TextView
@@ -109,37 +110,6 @@ android:background="@color/screen_bg">
                     android:fontFamily="@font/robotoregular"
                     android:text="@string/continue_shopping"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/materialCardView"
-                style="@style/OrderTrackingButton"
-                android:layout_width="320dp"
-                android:layout_height="60dp"
-                android:clickable="true"
-                android:enabled="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/screen_bg"
-                app:cardCornerRadius="30dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.9"
-                app:strokeColor="@color/button_bg"
-                app:strokeWidth="1dp">
-                <!-- Card content goes here -->
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/robotoregular"
-                    android:text="@string/order_tracking"
-                    android:textColor="@color/button_bg"
                     android:textSize="16sp" />
             </com.google.android.material.card.MaterialCardView>
 

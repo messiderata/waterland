@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 
 import com.example.waterlanders.R;
 import com.google.firebase.Timestamp;
@@ -14,7 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import UserHomePageDirectory.FragmentsDirectory.HistoryFragment;
 import UserHomePageDirectory.MainDashboardUser;
+import UserHomePageDirectory.OrderTrackingFragments.UserPendingOrdersFragment;
 
 public class OrderReceipt extends AppCompatActivity {
     private FirebaseFirestore db;
@@ -40,6 +43,8 @@ public class OrderReceipt extends AppCompatActivity {
             startActivity(backToHome);
             finish();
         });
+
+
     }
 
     private void initializeObject(){

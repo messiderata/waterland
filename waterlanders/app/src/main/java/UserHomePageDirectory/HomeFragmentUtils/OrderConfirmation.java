@@ -49,6 +49,8 @@ public class OrderConfirmation extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private MaterialCardView pickDateButton;
+    private MaterialCardView orderTrackingButton;
+
     private TextView selectedDate;
     private long minDateInMillis;
     private long maxDateInMillis;
@@ -89,10 +91,10 @@ public class OrderConfirmation extends AppCompatActivity {
         });
 
         addressSelectorLayout.setOnClickListener(view -> {
-            Intent backintent = new Intent(OrderConfirmation.this, AddressSelection.class);
-            backintent.putExtra("addedItems", addedItems);
-            backintent.putExtra("fromOrderConfirmation", true);
-            startActivity(backintent);
+            Intent intent = new Intent(OrderConfirmation.this, AddressSelection.class);
+            intent.putExtra("source", "order_confirmation");
+            intent.putExtra("addedItems", addedItems);  // Pass added items as usual
+            startActivity(intent);
         });
 
         pickDateButton.setOnClickListener(view -> showDatePickerDialog());

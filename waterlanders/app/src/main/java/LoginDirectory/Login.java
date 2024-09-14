@@ -10,14 +10,18 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import Handler.PassUtils;
+import Handler.StatusBarUtil;
 import UserHomePageDirectory.MainDashboardUser;
 import com.example.waterlanders.R;
 import ForgotPasswordDirectory.ForgotPasswordHome;
 import SignUpDirectory.UserSignUp;
+
+import com.example.waterlanders.activity.BaseActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,7 +34,7 @@ import AdminHomePageDirectory.AdminHomePage;
 import DeliveryHomePageDirectory.DeliveryHomePage;
 import Handler.ShowToast;
 
-public class Login extends AppCompatActivity {
+public class Login extends BaseActivity {
 
     private TextInputEditText loginAccount;
     private TextInputEditText loginPassword;
@@ -53,6 +57,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
         initializeObjects();
         performFirebaseQuery();

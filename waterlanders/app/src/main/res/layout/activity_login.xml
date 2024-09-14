@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:fitsSystemWindows="true"
     android:background="@drawable/gradient_bg"
     tools:context="LoginDirectory.Login">
 
@@ -82,24 +83,32 @@
             tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/forgot_password"
+    <!-- Forgot Password Text -->
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/forgotPasswordText"
-        android:layout_gravity="end"
-        android:textColor="@drawable/text_state_click"
-        tools:ignore="TextSizeCheck,TextContrastCheck" />
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/forgot_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="8pt"
+            android:text="@string/forgotPasswordText"
+            android:textColor="@drawable/text_state_click" />
+    </LinearLayout>
+
 
     <androidx.cardview.widget.CardView
+
         android:id="@+id/login_button"
         android:layout_width="320dp"
         android:layout_height="48dp"
         android:layout_marginBottom="30dp"
         android:clickable="true"
+        android:layout_marginTop="10dp"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         app:cardBackgroundColor="@color/button_bg"

@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +26,14 @@ import com.example.waterlanders.R;
 import java.util.Objects;
 
 import LoginDirectory.Login;
+import UserHomePageDirectory.HomeFragmentUtils.AddressList.AddressInput;
+import UserHomePageDirectory.HomeFragmentUtils.AddressList.AddressSelection;
+import UserHomePageDirectory.Settings.ChangePassword;
 import UserHomePageDirectory.Settings.EditProfile;
 
 public class SettingsFragment extends Fragment {
 
-    CardView profileBtn, logOutButton, deleteAccountButton;
+    CardView profileBtn, logOutButton, deleteAccountButton, changePassButton, addressButton;
     TextView nameText, userNameText, phoneText, emailText;
 
     @Override
@@ -42,8 +46,9 @@ public class SettingsFragment extends Fragment {
         // Set up listeners for buttons
         setupProfileButton();
         setLogOutButton();
+        ChangePass();
         setDeleteAccountButton();  // Ensure this method is called to set up the delete account button
-
+        addressScreen();
 
         // Fetch and display user data from Firestore
         fetchUserData();
@@ -67,6 +72,8 @@ public class SettingsFragment extends Fragment {
         userNameText = view.findViewById(R.id.username_text);
         phoneText = view.findViewById(R.id.phone_text);
         emailText = view.findViewById(R.id.email_text);
+        changePassButton = view.findViewById(R.id.change_pass_button);
+        addressButton = view.findViewById(R.id.address_button);
     }
 
     private void setupProfileButton() {
@@ -75,6 +82,23 @@ public class SettingsFragment extends Fragment {
             startActivity(intent);
         });
     }
+
+
+    private void ChangePass() {
+        changePassButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), ChangePassword.class);
+            startActivity(intent);
+        });
+    }
+
+    private void addressScreen() {
+        addressButton.setOnClickListener(view -> {
+            Intent intent = new Intent(SettingsFragment.this.getContext(), AddressSelection.class);
+            intent.putExtra("source", "settings");
+            startActivity(intent);
+        });
+    }
+
 
     private void setLogOutButton() {
         logOutButton.setOnClickListener(view -> {

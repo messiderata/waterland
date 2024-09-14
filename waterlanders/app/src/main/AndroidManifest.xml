@@ -6,6 +6,7 @@
         android:name="android.hardware.telephony"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission
         android:name="android.permission.INTERNET"
         tools:ignore="ManifestOrder" />
@@ -16,7 +17,7 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="true"
@@ -28,6 +29,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
+        <activity
+            android:name=".PassswordResetConfirm"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.ChangePassword.ChangePassword"
+            android:exported="false" />
         <activity
             android:name="ForgotPasswordDirectory.ForgotPasswordSuccess"
             android:exported="false" />

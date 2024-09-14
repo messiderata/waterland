@@ -49,13 +49,9 @@ public class AddressSelection extends AppCompatActivity {
         CardView continueButton = findViewById(R.id.continue_button);
         LinearLayout newAddressButton = findViewById(R.id.add_new_address_button);
 
-        // added intents to buttons to refresh the data retrieval in the database
-        backImage.setOnClickListener(view -> {
-            Intent backIntent = new Intent(AddressSelection.this, OrderConfirmation.class);
-            backIntent.putExtra("addedItems", addedItems);
-            startActivity(backIntent);
-            finish();
-        });
+
+        backImage.setOnClickListener(view -> finish());
+
         continueButton.setOnClickListener(view -> {
             Intent backIntent = new Intent(AddressSelection.this, OrderConfirmation.class);
             backIntent.putExtra("addedItems", addedItems);

@@ -10,7 +10,7 @@ android {
     signingConfigs {
         // Define your release signing config
         create("release") {
-            storeFile = file("D:\\Documents\\waterland\\waterlanders\\aly.jks")
+            storeFile = file("/home/messi/Desktop/Water/waterland/waterlanders/aly.jks")
             storePassword = "alyInWaterland.123"
             keyAlias = "Aly"
             keyPassword = "alyInWaterland.123"

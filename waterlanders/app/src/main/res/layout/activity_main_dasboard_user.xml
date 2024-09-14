@@ -52,7 +52,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/robotomedium"
                     android:gravity="center"
-                    android:text="@string/home"
+                    android:text="Dashboard"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
