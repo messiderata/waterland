@@ -10,7 +10,8 @@ android {
     signingConfigs {
         // Define your release signing config
         create("release") {
-            storeFile = file("/home/messi/Desktop/Water/waterland/waterlanders/aly.jks")
+            // storeFile = file("/home/messi/Desktop/Water/waterland/waterlanders/aly.jks")
+            storeFile = file("D:\\Documents\\waterland\\waterlanders\\aly.jks")
             storePassword = "alyInWaterland.123"
             keyAlias = "Aly"
             keyPassword = "alyInWaterland.123"
@@ -72,6 +73,7 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.firebase.storage)
     implementation(libs.glide)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

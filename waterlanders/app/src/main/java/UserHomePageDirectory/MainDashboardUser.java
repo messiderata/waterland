@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import AdminHomePageDirectory.AdminFragments.ProductsFragment;
 import Handler.StatusBarUtil;
 import LoginDirectory.Login;
 import UserHomePageDirectory.FragmentsDirectory.AboutUsFragment;
@@ -77,13 +78,7 @@ public class MainDashboardUser extends AppCompatActivity {
             }
         });
 
-        // Set initial fragment
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new HomeFragment())
-                    .commit();
-            bottomNavigationView.setSelectedItemId(R.id.nav_home);
-        }
+        initializeFragment(savedInstanceState);
 
         // Set up NavigationView item selection
         navigationView.setNavigationItemSelectedListener(item -> {
@@ -140,6 +135,24 @@ public class MainDashboardUser extends AppCompatActivity {
 
         // Handle back press with BackPressHandler
         new BackPressHandler(this, drawerLayout);
+    }
+
+    private void initializeFragment(Bundle savedInstanceState){
+        Intent intent = getIntent();
+        String fragmentToOpen = intent.getStringExtra("open_fragment");
+
+        if (fragmentToOpen != null && fragmentToOpen.equals("history")){
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HistoryFragment())
+                    .commit();
+        } else {
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new HomeFragment())
+                        .commit();
+                bottomNavigationView.setSelectedItemId(R.id.nav_home);
+            }
+        }
     }
 }
 

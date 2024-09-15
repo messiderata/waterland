@@ -2,6 +2,7 @@ package UserHomePageDirectory.OrderTrackingUtils.Completed;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,6 +60,7 @@ public class UserCompletedOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private TextView userConfirmation;
     private TextView customerFeedback;
+    private TextView editFeedback;
 
     private Button backButton2;
 
@@ -89,10 +91,18 @@ public class UserCompletedOrdersCurrentOrderDetails extends AppCompatActivity {
         // set onclick listener to proof of delivery
         // to check the delivery picture
         proofOfDeliveryContainer.setOnClickListener(view -> {
+            Log.d("HEYYY", "HAAAY");
             String proofOfDeliveryLink = deliveredOrdersConstructor.getProof_of_delivery();
             Intent showproofOfDeliveryIntent = new Intent(this, DeliveredOrdersProofOfDelivery.class);
             showproofOfDeliveryIntent.putExtra("proof_of_delivery_link", proofOfDeliveryLink);
             startActivity(showproofOfDeliveryIntent);
+        });
+
+        editFeedback.setOnClickListener(view -> {
+            Intent editReviewIntent = new Intent(this, UserCompletedOrdersEditReview.class);
+            editReviewIntent.putExtra("order_status", deliveredOrdersConstructor.getOrder_status());
+            editReviewIntent.putExtra("customer_feedback", deliveredOrdersConstructor.getCustomer_feedback());
+            startActivity(editReviewIntent);
         });
 
         // other buttons
@@ -132,6 +142,7 @@ public class UserCompletedOrdersCurrentOrderDetails extends AppCompatActivity {
 
         userConfirmation = findViewById(R.id.user_confirmation);
         customerFeedback = findViewById(R.id.customer_feedback);
+        editFeedback = findViewById(R.id.edit_review);
 
         backButton2 = findViewById(R.id.back_button_2);
 
