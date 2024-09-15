@@ -103,8 +103,10 @@ public class SettingsFragment extends Fragment {
             AddedItems addedItems = new AddedItems();
             Intent intent = new Intent(getActivity(), AddressSelection.class);
             intent.putExtra("addedItems", addedItems);
+            startActivityForResult(intent, REQUEST_CODE_ADDRESS_SELECTION);  // Start the activity with the intent
         });
     }
+
 
 
 

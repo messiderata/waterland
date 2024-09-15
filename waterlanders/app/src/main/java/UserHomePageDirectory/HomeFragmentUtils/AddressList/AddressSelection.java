@@ -63,7 +63,7 @@ public class AddressSelection extends AppCompatActivity {
             Intent backIntent = new Intent(AddressSelection.this, AddressInput.class);
             backIntent.putExtra("addedItems", addedItems);
             startActivity(backIntent);
-            // finish();
+             finish();
         });
 
 
