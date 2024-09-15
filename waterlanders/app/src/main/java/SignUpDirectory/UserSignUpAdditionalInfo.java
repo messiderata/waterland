@@ -180,6 +180,7 @@ public class UserSignUpAdditionalInfo extends AppCompatActivity {
         newUser.put("fullName", String.valueOf(fullName.getText()));
         newUser.put("username", String.valueOf(userName.getText()));
         newUser.put("role", "customer");
+        newUser.put("isResetPassTruEmail", 0);
 
         List<Map<String, Object>> deliveryDetailsList = new ArrayList<>();
 

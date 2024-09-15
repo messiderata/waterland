@@ -1,5 +1,6 @@
 package UserHomePageDirectory.Settings;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import androidx.cardview.widget.CardView;
 import com.example.waterlanders.R;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,11 +21,13 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import ForgotPasswordDirectory.ForgotPasswordPhoneNewPassword;
 import ForgotPasswordDirectory.ForgotPasswordSuccess;
 import Handler.PassUtils;
+import Handler.ShowToast;
 
 import java.util.regex.Pattern;
 
@@ -32,12 +36,11 @@ public class ChangePassword extends AppCompatActivity {
     private TextInputEditText currentPassword, newPassword, confirmPassword;
     private TextInputLayout currentPasswordLayout, newPasswordLayout, confirmPasswordLayout;
     private CardView updatePasswordButton;
+    private ImageView backButton;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser user;
-    private String userEmail;
-    private String userPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +48,9 @@ public class ChangePassword extends AppCompatActivity {
         setContentView(R.layout.activity_change_password);
 
         initializeObjects();
-        getIntentData();
-
 
         updatePasswordButton.setOnClickListener(view -> checkInputData());
+        backButton.setOnClickListener(view -> finish());
     }
 
     private void initializeObjects() {
@@ -59,6 +61,7 @@ public class ChangePassword extends AppCompatActivity {
         newPasswordLayout = findViewById(R.id.newPasswordLayout);
         confirmPasswordLayout = findViewById(R.id.confirmPasswordLayout);
         updatePasswordButton = findViewById(R.id.updatePasswordButton);
+        backButton = findViewById(R.id.btn_back);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -94,13 +97,40 @@ public class ChangePassword extends AppCompatActivity {
             return;
         }
 
-        reauthenticateAndChangePassword(currentPass, newPass);
+        // this will ensure that the 'currentPass' string is converted
+        // base on our encryption then start re-authenticate
+        compareHashPasswords(currentPass, newPass);
     }
 
     private boolean hasNumberAndSymbol(String password) {
         Pattern numberPattern = Pattern.compile("[0-9]");
         Pattern symbolPattern = Pattern.compile("[^a-zA-Z0-9]");
         return numberPattern.matcher(password).find() && symbolPattern.matcher(password).find();
+    }
+
+    private void compareHashPasswords(String currentPassword, String newPass){
+        if (user != null){
+            db.collection("users")
+                .document(user.getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    DocumentSnapshot userDoc = task.getResult();
+
+                    if (userDoc.exists()){
+                        String savePassword = userDoc.getString("password");
+                        boolean isPasswordCorrect = PassUtils.checkPassword(currentPassword, savePassword);
+
+                        if (isPasswordCorrect){
+                            reauthenticateAndChangePassword(savePassword, newPass);
+                        } else {
+                            Toast.makeText(ChangePassword.this, "Current password is incorrect.", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(ChangePassword.this, "Error retrieving user data.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        }
     }
 
     private void reauthenticateAndChangePassword(String currentPassword, String newPassword) {
@@ -118,51 +148,27 @@ public class ChangePassword extends AppCompatActivity {
         }
     }
 
-    private void getIntentData(){
-        Intent intent = getIntent();
-        userEmail = (String) intent.getSerializableExtra("user_email");
-        userPassword = (String) intent.getSerializableExtra("user_pass");
-    }
-
     private void updatePassword(String newPassword) {
-        // sign in the user base on the previous user credentials
-        mAuth.signInWithEmailAndPassword(userEmail, userPassword)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            String hashedPassword = PassUtils.hashPassword(newPassword);
-                            user.updatePassword(hashedPassword)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                // update the user pass in database
-                                                String userId = user.getUid();
-                                                db.collection("users").document(userId)
-                                                        .update("password", hashedPassword)
-                                                        .addOnSuccessListener(aVoid -> {
-                                                            Intent backIntent = new Intent(ChangePassword.this, ForgotPasswordSuccess.class);
-                                                            backIntent.putExtra("success_message","Password Reset Successfully");
-                                                            backIntent.putExtra("success_description","You successfully updated your password");
-                                                            startActivity(backIntent);
-                                                            finish();
-                                                        })
-                                                        .addOnFailureListener(e -> Toast.makeText(ChangePassword.this, "ERROR CREATING AN ACCOUNT.\n" + e,
-                                                                Toast.LENGTH_SHORT).show());
-                                            } else {
-                                                Toast.makeText(ChangePassword.this, "Failed to update password: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });
-                        } else {
-                            Toast.makeText(ChangePassword.this, "USER NOT FOUND IN DATABASE.", Toast.LENGTH_SHORT).show();
-                        }
+        String hashedPassword = PassUtils.hashPassword(newPassword);
+        user.updatePassword(hashedPassword)
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    // Update 'password' field to new password
+                    db.collection("users").document(user.getUid())
+                            .update("password", hashedPassword)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(ChangePassword.this, "Password updated successfully.", Toast.LENGTH_SHORT).show();
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d("CHANGE PASSWORD", "Error updating password in database: " + e.getMessage());
+                                Toast.makeText(ChangePassword.this, "Error updating password in database: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
 
-                    }else {
-                        Log.d("FORGOT PASSWORD PHONE NEW PASSWORD", "Failed to re-authenticate user: " + task.getException().getMessage());
-                        Toast.makeText(ChangePassword.this, "Failed to re-authenticate user: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                } else {
+                    Log.d("FORGOT PASSWORD PHONE NEW PASSWORD", "Failed to re-authenticate user: " + task.getException().getMessage());
+                    Toast.makeText(ChangePassword.this, "Failed to re-authenticate user: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 }
