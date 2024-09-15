@@ -24,6 +24,7 @@ glide = "5.0.0-rc01"
 compiler = "5.0.0-rc01"
 playServicesAuth = "21.2.0"
 startup = "1.1.1"
+firebaseMessaging = "24.0.1"
 
 [libraries]
 com-google-firebase-firebase-auth = { module = "com.google.firebase:firebase-auth" }
@@ -50,6 +51,7 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "gl
 compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "compiler" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 startup = { group = "androidx.startup", name = "startup-runtime", version.ref = "startup" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
