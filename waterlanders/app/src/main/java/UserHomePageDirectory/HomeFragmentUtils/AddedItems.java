@@ -16,7 +16,7 @@ public class AddedItems implements Serializable {
     private List<Map<String, Object>> cartItems;
     private Set<String> itemIds; // Declare itemIds here
 
-    public AddedItems(String userId) {
+    public AddedItems() {
         this.userId = userId;
         this.totalAmount = 0;
         this.cartItems = new ArrayList<>();

@@ -1,5 +1,7 @@
 package UserHomePageDirectory.FragmentsDirectory;
 
+import static android.content.Intent.getIntent;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,8 +29,10 @@ import com.example.waterlanders.R;
 import java.util.Objects;
 
 import LoginDirectory.Login;
+import UserHomePageDirectory.HomeFragmentUtils.AddedItems;
 import UserHomePageDirectory.HomeFragmentUtils.AddressList.AddressInput;
 import UserHomePageDirectory.HomeFragmentUtils.AddressList.AddressSelection;
+import UserHomePageDirectory.MainDashboardUser;
 import UserHomePageDirectory.Settings.ChangePassword;
 import UserHomePageDirectory.Settings.EditProfile;
 
@@ -35,10 +40,12 @@ public class SettingsFragment extends Fragment {
 
     CardView profileBtn, logOutButton, deleteAccountButton, changePassButton, addressButton;
     TextView nameText, userNameText, phoneText, emailText;
+    public static final int REQUEST_CODE_ADDRESS_SELECTION = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
 
         // Initialize buttons and text views
         initUI(view);
@@ -91,13 +98,16 @@ public class SettingsFragment extends Fragment {
         });
     }
 
+
     private void addressScreen() {
         addressButton.setOnClickListener(view -> {
-            Intent intent = new Intent(SettingsFragment.this.getContext(), AddressSelection.class);
-            intent.putExtra("source", "settings");
-            startActivity(intent);
+            AddedItems addedItems = new AddedItems();
+            Intent intent = new Intent(getActivity(), AddressSelection.class);
+            intent.putExtra("addedItems", addedItems);
+            startActivityForResult(intent, REQUEST_CODE_ADDRESS_SELECTION);
         });
     }
+
 
 
     private void setLogOutButton() {
@@ -111,6 +121,8 @@ public class SettingsFragment extends Fragment {
             showDeleteAccountDialog();
         });
     }
+
+
 
     private void fetchUserData() {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();

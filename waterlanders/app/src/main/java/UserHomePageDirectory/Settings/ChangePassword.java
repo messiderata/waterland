@@ -28,6 +28,7 @@ import ForgotPasswordDirectory.ForgotPasswordPhoneNewPassword;
 import ForgotPasswordDirectory.ForgotPasswordSuccess;
 import Handler.PassUtils;
 import Handler.ShowToast;
+import Handler.StatusBarUtil;
 
 import java.util.regex.Pattern;
 
@@ -46,6 +47,7 @@ public class ChangePassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+        StatusBarUtil.setStatusBarColor(this, R.color.button_bg);
 
         initializeObjects();
 

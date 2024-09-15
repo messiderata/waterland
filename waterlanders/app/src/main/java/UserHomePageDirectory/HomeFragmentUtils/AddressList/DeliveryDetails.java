@@ -1,9 +1,10 @@
 package UserHomePageDirectory.HomeFragmentUtils.AddressList;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeliveryDetails {
+public class DeliveryDetails implements Serializable {
     private String fullName;
     private String phoneNumber;
     private String deliveryAddress;

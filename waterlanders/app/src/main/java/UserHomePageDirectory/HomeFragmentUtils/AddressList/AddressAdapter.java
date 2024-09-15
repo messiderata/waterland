@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,12 +31,14 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ContactV
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
         public TextView fullName, mobileNumber, orderAddress;
+        public TextView defaultAddress;
 
         public ContactViewHolder(View view) {
             super(view);
             fullName = view.findViewById(R.id.Full_name);
             mobileNumber = view.findViewById(R.id.mobile_number);
             orderAddress = view.findViewById(R.id.order_address);
+            defaultAddress = view.findViewById(R.id.default_address);
         }
     }
 
@@ -61,11 +64,14 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ContactV
         holder.mobileNumber.setText(deliveryDetailsList.getPhoneNumber());
         holder.orderAddress.setText(deliveryDetailsList.getDeliveryAddress());
 
-        // if the item is clicked then
-        // set the setIsDefaultAddress of the item to 1 then
-        // set the other items isDefaultAddress to 0
-        // then save it to the database
-        // then get a new intent then proceed to the next page
+
+
+        // Set visibility of the ImageView based on whether the address is default
+        if (deliveryDetailsList.getIsDefaultAddress() == 1) {
+            holder.defaultAddress.setVisibility(View.VISIBLE);
+        } else {
+            holder.defaultAddress.setVisibility(View.GONE);
+        }
 
         // Set onClickListener for the itemView
         holder.itemView.setOnClickListener(view -> {
@@ -77,14 +83,12 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ContactV
                     deliveryDetails.get(i).setIsDefaultAddress(0);
                 }
             }
-
+            // Notify the adapter to refresh the UI
+            notifyDataSetChanged();
             // Save the updated list to Firestore
             saveUpdatedAddressesToFireStore();
 
-            // Start the next activity (OrderConfirmation)
-            Intent intent = new Intent(context, OrderConfirmation.class);
-            intent.putExtra("addedItems", addedItems);
-            context.startActivity(intent);
+
         });
     }
 
@@ -100,17 +104,17 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ContactV
             String userId = firebaseUser.getUid();
 
             db.collection("users").document(userId)
-                .update("deliveryDetails", deliveryDetails)
-                .addOnSuccessListener(aVoid -> {
-                    // Log success or show a message
-                    Log.d("AddressSelection", "Default address updated successfully.");
-                    Toast.makeText(context, "Default address updated successfully.", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    // Handle the error
-                    Log.d("AddressSelection", "Error: ", e);
-                    Toast.makeText(context, "There was an error updating your address. Error: "+ e, Toast.LENGTH_SHORT).show();
-                });
+                    .update("deliveryDetails", deliveryDetails)
+                    .addOnSuccessListener(aVoid -> {
+                        // Log success or show a message
+                        Log.d("AddressSelection", "Default address updated successfully.");
+                        Toast.makeText(context, "Default address updated successfully.", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle the error
+                        Log.d("AddressSelection", "Error: ", e);
+                        Toast.makeText(context, "There was an error updating your address. Error: "+ e, Toast.LENGTH_SHORT).show();
+                    });
         }
     }
 }

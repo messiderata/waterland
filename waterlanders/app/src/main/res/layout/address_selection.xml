@@ -29,16 +29,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"> <!-- Ensure vertical alignment -->
 
                     <TextView
                         android:id="@+id/Full_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="FullNane"
+                        android:text="Full Name"
                         android:textColor="@android:color/black"
                         android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_weight="1" /> <!-- Take up available space -->
+
+
+                    <TextView
+                        android:id="@+id/default_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Default"
+                        android:textColor="@color/button_bg"
+                        android:textSize="12sp"
+                        android:layout_gravity="end" /> <!-- Align to end -->
+
                 </LinearLayout>
 
                 <LinearLayout

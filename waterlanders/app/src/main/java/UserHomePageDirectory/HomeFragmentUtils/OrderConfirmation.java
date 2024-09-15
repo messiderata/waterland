@@ -286,40 +286,40 @@ public class OrderConfirmation extends AppCompatActivity {
             String userId = firebaseUser.getUid();
 
             db.collection("users").document(userId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        List<Map<String, Object>> deliveryDetailsList = (List<Map<String, Object>>) documentSnapshot.get("deliveryDetails");
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            List<Map<String, Object>> deliveryDetailsList = (List<Map<String, Object>>) documentSnapshot.get("deliveryDetails");
 
-                        if (deliveryDetailsList != null) {
-                            // Loop through the list to find the default address
-                            for (Map<String, Object> details : deliveryDetailsList) {
-                                int isDefaultAddress = ((Long) details.get("isDefaultAddress")).intValue();
+                            if (deliveryDetailsList != null) {
+                                // Loop through the list to find the default address
+                                for (Map<String, Object> details : deliveryDetailsList) {
+                                    int isDefaultAddress = ((Long) details.get("isDefaultAddress")).intValue();
 
-                                if (isDefaultAddress == 1) {
-                                    String fullName = (String) details.get("fullName");
-                                    String mobileNumber = (String) details.get("phoneNumber");
-                                    String orderAddress = (String) details.get("deliveryAddress");
+                                    if (isDefaultAddress == 1) {
+                                        String fullName = (String) details.get("fullName");
+                                        String mobileNumber = (String) details.get("phoneNumber");
+                                        String orderAddress = (String) details.get("deliveryAddress");
 
-                                    // Update the UI with the default address
-                                    this.fullName.setText(fullName);
-                                    this.mobileNumber.setText(mobileNumber);
-                                    this.orderAddress.setText(orderAddress);
-                                    currentDefaultAddress = details;
-                                    break;
+                                        // Update the UI with the default address
+                                        this.fullName.setText(fullName);
+                                        this.mobileNumber.setText(mobileNumber);
+                                        this.orderAddress.setText(orderAddress);
+                                        currentDefaultAddress = details;
+                                        break;
+                                    }
                                 }
                             }
+                        } else {
+                            // Handle the case where the user data doesn't exist
+                            Log.d("OrderConfirmation", "User data does not exist");
+                            Toast.makeText(this, "User data not found.", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        // Handle the case where the user data doesn't exist
-                        Log.d("OrderConfirmation", "User data does not exist");
-                        Toast.makeText(this, "User data not found.", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Handle any errors that occur while retrieving the data
-                    Log.e("OrderConfirmation", "Error fetching user data", e);
-                    Toast.makeText(this, "Failed to retrieve user data.", Toast.LENGTH_SHORT).show();
-                });
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle any errors that occur while retrieving the data
+                        Log.e("OrderConfirmation", "Error fetching user data", e);
+                        Toast.makeText(this, "Failed to retrieve user data.", Toast.LENGTH_SHORT).show();
+                    });
         } else {
             // Handle the case where the user is not authenticated
             Log.d("OrderConfirmation", "User not authenticated");

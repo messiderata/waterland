@@ -31,7 +31,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     public ItemAdapter(List<GetItems> itemsList, Context context, String userId) {
         this.itemsList = itemsList;
         this.context = context;
-        this.addedItems = new AddedItems(userId);
+        this.addedItems = new AddedItems();
     }
 
     // initialize objects base on the 'layout_user_item' to
