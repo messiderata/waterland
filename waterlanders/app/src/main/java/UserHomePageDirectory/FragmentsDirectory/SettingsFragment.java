@@ -49,7 +49,6 @@ public class SettingsFragment extends Fragment {
 
         // Initialize buttons and text views
         initUI(view);
-
         // Set up listeners for buttons
         setupProfileButton();
         setLogOutButton();
@@ -104,7 +103,6 @@ public class SettingsFragment extends Fragment {
             AddedItems addedItems = new AddedItems();
             Intent intent = new Intent(getActivity(), AddressSelection.class);
             intent.putExtra("addedItems", addedItems);
-            startActivityForResult(intent, REQUEST_CODE_ADDRESS_SELECTION);
         });
     }
 
