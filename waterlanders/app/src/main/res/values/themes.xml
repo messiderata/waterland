@@ -24,7 +24,6 @@
     </style>
 
 
-
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@color/button_bg</item>

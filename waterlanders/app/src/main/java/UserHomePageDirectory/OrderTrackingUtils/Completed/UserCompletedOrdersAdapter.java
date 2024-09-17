@@ -81,7 +81,7 @@ public class UserCompletedOrdersAdapter extends RecyclerView.Adapter<UserComplet
         holder.orderPrice.setText(String.format("₱" + orderCard.getTotal_amount()));
 
         holder.itemView.setOnClickListener(v -> {
-            Intent showCurrentOrderDetailsIntent = new Intent(context, DeliveredOrdersCurrentOrdersDetails.class);
+            Intent showCurrentOrderDetailsIntent = new Intent(context, UserCompletedOrdersCurrentOrderDetails.class);
             showCurrentOrderDetailsIntent.putExtra("current_order", orderCard);
             context.startActivity(showCurrentOrderDetailsIntent);
         });
