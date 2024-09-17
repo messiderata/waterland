@@ -37,7 +37,7 @@
             android:layout_marginStart="5dp"
             android:fontFamily="@font/robotoregular"
             android:gravity="center"
-            android:text="DELIVERED ORDERS"
+            android:text="DELIVERED ORDER"
             android:textColor="@color/white"
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
