@@ -11,19 +11,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class AddedItems implements Serializable {
-    private String userId;
     private int totalAmount;
     private List<Map<String, Object>> cartItems;
     private Set<String> itemIds; // Declare itemIds here
 
     public AddedItems() {
-        this.userId = userId;
         this.totalAmount = 0;
         this.cartItems = new ArrayList<>();
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public int getTotalAmount() {

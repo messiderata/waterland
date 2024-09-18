@@ -91,7 +91,6 @@ public class UserCompletedOrdersCurrentOrderDetails extends AppCompatActivity {
         // set onclick listener to proof of delivery
         // to check the delivery picture
         proofOfDeliveryContainer.setOnClickListener(view -> {
-            Log.d("HEYYY", "HAAAY");
             String proofOfDeliveryLink = deliveredOrdersConstructor.getProof_of_delivery();
             Intent showproofOfDeliveryIntent = new Intent(this, DeliveredOrdersProofOfDelivery.class);
             showproofOfDeliveryIntent.putExtra("proof_of_delivery_link", proofOfDeliveryLink);
@@ -101,6 +100,7 @@ public class UserCompletedOrdersCurrentOrderDetails extends AppCompatActivity {
         editFeedback.setOnClickListener(view -> {
             Intent editReviewIntent = new Intent(this, UserCompletedOrdersEditReview.class);
             editReviewIntent.putExtra("order_status", deliveredOrdersConstructor.getOrder_status());
+            editReviewIntent.putExtra("order_id", deliveredOrdersConstructor.getOrder_id());
             editReviewIntent.putExtra("customer_feedback", deliveredOrdersConstructor.getCustomer_feedback());
             startActivity(editReviewIntent);
         });
