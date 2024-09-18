@@ -1,7 +1,10 @@
 package UserHomePageDirectory.FragmentsDirectory;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -10,12 +13,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.waterlanders.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.Objects;
+
+import LoginDirectory.Login;
 
 
 public class ProfileFragment extends Fragment {
 
     TextView username;
+    CardView logOutButton;
 
 
     @Override
@@ -26,6 +36,10 @@ public class ProfileFragment extends Fragment {
 
         // Initialize your CardView buttons here
         username = view.findViewById(R.id.user_username);
+        logOutButton = view.findViewById(R.id.logout_button_settings);
+
+        setLogOutButton();
+
 
         // Retrieve and display user data
         FireStoreHelper firestoreHelper = new FireStoreHelper();
@@ -42,6 +56,8 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
+
         return view;
     }
 
@@ -49,5 +65,32 @@ public class ProfileFragment extends Fragment {
         String userUserName = document.getString("username");
 
         username.setText(userUserName);
+    }
+
+
+    private void showLogoutDialog() {
+        Dialog dialog = new Dialog(requireActivity());
+        dialog.setContentView(R.layout.logout_dialog);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_bg);
+
+        MaterialButton btnCancel = dialog.findViewById(R.id.button_cancel);
+        MaterialButton btnOk = dialog.findViewById(R.id.button_ok);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnOk.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(requireActivity(), Login.class);
+            startActivity(intent);
+            requireActivity().finish();
+        });
+
+        dialog.show();
+    }
+
+    private void setLogOutButton() {
+        logOutButton.setOnClickListener(view -> {
+            showLogoutDialog();
+        });
     }
 }

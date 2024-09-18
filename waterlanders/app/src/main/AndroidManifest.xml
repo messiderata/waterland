@@ -37,9 +37,6 @@
             android:name=".PassswordResetConfirm"
             android:exported="false" />
         <activity
-            android:name="AdminHomePageDirectory.ChangePassword.ChangePassword"
-            android:exported="false" />
-        <activity
             android:name="ForgotPasswordDirectory.ForgotPasswordSuccess"
             android:exported="false" />
         <activity

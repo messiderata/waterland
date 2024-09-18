@@ -51,7 +51,6 @@ public class SettingsFragment extends Fragment {
         initUI(view);
         // Set up listeners for buttons
         setupProfileButton();
-        setLogOutButton();
         ChangePass();
         setDeleteAccountButton();  // Ensure this method is called to set up the delete account button
         addressScreen();
@@ -71,7 +70,6 @@ public class SettingsFragment extends Fragment {
 
     private void initUI(View view) {
         profileBtn = view.findViewById(R.id.My_profile_button);
-        logOutButton = view.findViewById(R.id.logout_button_settings);
         deleteAccountButton = view.findViewById(R.id.delete_button_settings);  // Ensure this ID is correct
 
         nameText = view.findViewById(R.id.name_text);
@@ -108,13 +106,6 @@ public class SettingsFragment extends Fragment {
     }
 
 
-
-
-    private void setLogOutButton() {
-        logOutButton.setOnClickListener(view -> {
-            showLogoutDialog();
-        });
-    }
 
     private void setDeleteAccountButton() {
         deleteAccountButton.setOnClickListener(view -> {
@@ -177,25 +168,7 @@ public class SettingsFragment extends Fragment {
         return "N/A";
     }
 
-    private void showLogoutDialog() {
-        Dialog dialog = new Dialog(requireActivity());
-        dialog.setContentView(R.layout.logout_dialog);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_bg);
 
-        MaterialButton btnCancel = dialog.findViewById(R.id.button_cancel);
-        MaterialButton btnOk = dialog.findViewById(R.id.button_ok);
-
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-
-        btnOk.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(requireActivity(), Login.class);
-            startActivity(intent);
-            requireActivity().finish();
-        });
-
-        dialog.show();
-    }
 
     private void showDeleteAccountDialog() {
         Dialog dialog = new Dialog(requireActivity());
