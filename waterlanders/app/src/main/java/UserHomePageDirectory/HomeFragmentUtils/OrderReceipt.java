@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.waterlanders.R;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import UserHomePageDirectory.OrderTrackingFragments.UserPendingOrdersFragment;
 
 public class OrderReceipt extends AppCompatActivity {
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private AddedItems addedItems;
     private Map<String, Object> currentDefaultAddress;
     private Map<String, Object> GCashPaymentDetails;
@@ -50,6 +52,7 @@ public class OrderReceipt extends AppCompatActivity {
     private void initializeObject(){
         button_btn = findViewById(R.id.button_ok);
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void getIntentData(){
@@ -144,7 +147,7 @@ public class OrderReceipt extends AppCompatActivity {
         orderData.put("order_status", "ORDERED");
         orderData.put("total_amount", addedItems.getTotalAmount());
         orderData.put("delivery_address", currentDefaultAddress);
-        orderData.put("user_id", addedItems.getUserId());
+        orderData.put("user_id", mAuth.getCurrentUser().getUid());
         orderData.put("mode_of_payment", modeOfPayment);
         orderData.put("additional_message", additionalMessage);
 

@@ -80,9 +80,8 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
         //
         // these adapter is responsible to update the current price
         // of all items selected of the customer
-        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         itemsList = new ArrayList<>();
-        itemAdapter = new ItemAdapter(itemsList, getContext(), userId);
+        itemAdapter = new ItemAdapter(itemsList, getContext());
         itemAdapter.setOnTotalAmountChangeListener(this);
         recyclerView.setAdapter(itemAdapter);
 

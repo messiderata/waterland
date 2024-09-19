@@ -28,7 +28,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     // constructor to initialize items from the retrieve and display items
     // from the 'HomeFragment' base on the items in the database
-    public ItemAdapter(List<GetItems> itemsList, Context context, String userId) {
+    public ItemAdapter(List<GetItems> itemsList, Context context) {
         this.itemsList = itemsList;
         this.context = context;
         this.addedItems = new AddedItems();

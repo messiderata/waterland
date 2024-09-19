@@ -124,16 +124,33 @@
                     android:layout_marginEnd="20dp"
                     android:layout_gravity="center"/>
 
-
-                <MultiAutoCompleteTextView
-                    android:id="@+id/customer_confirmation"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/fix_address_input_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Select order confirmation"
-                    android:textColorHint="@color/secondary_color"
+                    android:layout_height="80dp"
+                    app:counterEnabled="false"
+                    app:boxBackgroundMode="outline"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:counterMaxLength="30"
                     android:layout_marginStart="20dp"
-                    android:textColor="@color/black"
-                    android:layout_marginEnd="20dp"/>
+                    android:layout_marginEnd="20dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    app:hintEnabled="false">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/customer_confirmation"
+                        android:text="Select order confirmation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingTop="14dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="14dp"
+                        android:background="@color/white"
+                        android:inputType="none"
+                        android:textColor="@color/black"
+                        tools:ignore="VisualLintTextFieldSize" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <EditText
                     android:id="@+id/review_text"
