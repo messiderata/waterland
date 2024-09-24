@@ -1,10 +1,17 @@
 package DeliveryHomePageDirectory;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.waterlanders.R;
@@ -26,6 +33,8 @@ public class DeliveryHomePage extends AppCompatActivity {
     private final String ORDERS_TITLE = "ORDERS";
     private final String ACCOUNT_TITLE = "ACCOUNT";
 
+    private static final int SMS_PERMISSION_REQUEST_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +42,7 @@ public class DeliveryHomePage extends AppCompatActivity {
         checkCurrentUserIfLogIn();
         checkIntentFragment(savedInstanceState);
         initializeObjects();
+        getPermission();
 
         // Set up BottomNavigationView item selection
         // this handles the fragment state which fragment is active
@@ -91,6 +101,34 @@ public class DeliveryHomePage extends AppCompatActivity {
     private void initializeObjects(){
         titleTextTop = findViewById(R.id.title_text_top);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+    }
+
+    private void getPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            // Request the permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_REQUEST_CODE);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                Toast.makeText(this, "SMS Permission granted.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "SMS Permission denied. The app will not be able to send OTP.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 }

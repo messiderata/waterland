@@ -60,24 +60,30 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.firebase.auth)
-    implementation(libs.google.firebase.auth)
+
     implementation(libs.play.services.auth)
-    implementation(libs.com.google.firebase.firebase.auth)
-    implementation(libs.facebook.android.sdk)
+
+    implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage)
+    implementation(libs.com.google.firebase.firebase.auth)
+
+    implementation(libs.facebook.android.sdk)
+
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    implementation(libs.firebase.storage)
+
     implementation(libs.glide)
-    implementation(libs.firebase.messaging)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.lottie)
     androidTestImplementation(libs.startup)
     implementation (libs.jbcrypt)
+
 }

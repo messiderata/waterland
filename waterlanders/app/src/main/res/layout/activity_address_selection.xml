@@ -40,103 +40,115 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <LinearLayout
-            android:id="@+id/recycle_view_holder"
-            android:layout_marginTop="50dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/address_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"/>
-        </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/nav_bar1"
+        android:layout_above="@+id/button_container">
 
         <LinearLayout
-            android:layout_below="@id/recycle_view_holder"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginTop="-5dp"
             android:layout_width="match_parent"
-            android:layout_height="120dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
             <LinearLayout
-                android:id="@+id/add_new_address_button"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:id="@+id/recycle_view_holder"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/layout_radius"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                android:foreground="?attr/selectableItemBackground"
-                android:layout_margin="10dp">
-                
-                <ImageView
-                    android:layout_marginTop="25dp"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/add_sign"/>
+                android:layout_height="wrap_content" >
 
-                <TextView
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_marginTop="5dp"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/address_list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="Add new address"/>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"/>
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="-5dp"
+                android:layout_width="match_parent"
+                android:layout_height="120dp">
+
+                <LinearLayout
+                    android:id="@+id/add_new_address_button"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/layout_radius"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:layout_margin="10dp">
+
+                    <ImageView
+                        android:layout_marginTop="25dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/add_sign"/>
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:text="Add new address"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="80dp"
-            tools:ignore="UselessParent">
+    </ScrollView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/continue_button"
-                android:layout_width="250dp"
-                android:layout_height="50dp"
-                android:background="@drawable/button_bg_color"
-                android:clickable="true"
-                android:enabled="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/button_bg"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.793"
-                app:strokeWidth="0dp">
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="80dp"
+        tools:ignore="UselessParent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/robotoregular"
-                    android:text="Continue"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-            </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/continue_button"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_bg_color"
+            android:clickable="true"
+            android:enabled="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/button_bg"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.793"
+            app:strokeWidth="0dp">
 
-        </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/robotoregular"
+                android:text="Continue"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </com.google.android.material.card.MaterialCardView>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>
