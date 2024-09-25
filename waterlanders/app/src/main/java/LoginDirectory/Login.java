@@ -24,6 +24,8 @@ import androidx.core.content.ContextCompat;
 import Handler.PassUtils;
 import Handler.StatusBarUtil;
 import UserHomePageDirectory.MainDashboardUser;
+
+import com.example.waterlanders.NotificationService;
 import com.example.waterlanders.R;
 import ForgotPasswordDirectory.ForgotPasswordHome;
 import SignUpDirectory.UserSignUp;
@@ -72,6 +74,7 @@ public class Login extends BaseActivity {
         performFirebaseQuery();
     }
 
+    // initialize objects
     private void initializeObjects(){
         loginWithGoogle = new LoginWithGoogle(this, this);
         mAuth = FirebaseAuth.getInstance();
@@ -89,23 +92,30 @@ public class Login extends BaseActivity {
         googleLogin = findViewById(R.id.google_login);
     }
 
+    // Check if the user is already logged in
+    // If the user is logged in, redirect them based on their role
+    // If the user is not logged in, show the login screen
     private void performFirebaseQuery() {
-        // Check if the user is already logged in
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         runOnUiThread(() -> {
             if (firebaseUser != null) {
-                // If the user is logged in, redirect them based on their role
                 redirectUser(firebaseUser);
             } else {
-                // If the user is not logged in, show the login screen
                 initializeLoginScreen();
             }
         });
     }
 
+    // Set up login button click listeners
+    // users may login using their existing account by
+    // logging in their email and password
+    // or using facebook or google
+    // if user login tru facebook or google
+    // a new account will automatically created
+    // users may create their account manually as well
+    // if the user forgot their password
+    // they may reset it as well
     private void initializeLoginScreen() {
-        // Set up login button click listener
-        loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener(view -> {
             ShowToast.unshowProgressBar(progressBar, loginText, timeDelayInMillis);
             String usernameOrEmail = Objects.requireNonNull(loginAccount.getText()).toString().trim();
@@ -156,17 +166,22 @@ public class Login extends BaseActivity {
         });
     }
 
+    // this method is to initialize the logging in tru google
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Check if the result is from the Google sign-in activity
         if (requestCode == RC_SIGN_IN) {
-            Log.d("IS THIS WORKING?", "Handling Google sign-in result");
             loginWithGoogle.handleSignInResult(data);
         }
     }
 
+    // this method is responsible to handle the redirection of pages
+    // base on the current user role
+    // if the current user is 'customer' then redirect to the MainDashboardUser
+    // if the current user is 'DELIVERY' then redirect to the DeliveryHomePage
+    // if the current user is 'ADMIN' then redirect to the AdminHomePage
     private void redirectUser(FirebaseUser firebaseUser) {
         db.collection("users").document(firebaseUser.getUid()).get()
             .addOnCompleteListener(task -> {
@@ -208,6 +223,8 @@ public class Login extends BaseActivity {
         }
     }
 
+    // this method is responsible to ask permission to the user
+    // for the app send sms to the device
     private void getPermission(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             // Request the permission
@@ -222,6 +239,9 @@ public class Login extends BaseActivity {
 
     }
 
+    // this method is just to show which action that the user take
+    // if user grant the permission or not
+    // it will display corresponding text response
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

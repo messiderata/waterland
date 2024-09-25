@@ -2,6 +2,7 @@ package DeliveryHomePageDirectory.DeliveryOrders.Utils.WaitingOrders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.waterlanders.R;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
@@ -67,6 +70,7 @@ public class DeliveryWaitingOrdersCurrentOrderDetails extends AppCompatActivity 
 
     private FirebaseAuth auth;
     private FirebaseFirestore db;
+    private FirebaseDatabase rdb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +142,7 @@ public class DeliveryWaitingOrdersCurrentOrderDetails extends AppCompatActivity 
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        rdb = FirebaseDatabase.getInstance();
     }
 
     private void getIntentData(){
@@ -226,22 +231,43 @@ public class DeliveryWaitingOrdersCurrentOrderDetails extends AppCompatActivity 
         }
 
         db.collection("waitingForCourier").document(orderId).delete()
-                .addOnSuccessListener(aVoid -> {
-                    db.collection("onDelivery").document(orderId).set(orderData)
-                            .addOnSuccessListener(aVoid1 -> {
-                                Intent showSucessScreenIntent = new Intent(this, DeliverySuccessScreen.class);
-                                showSucessScreenIntent.putExtra("success_message", "TAKE ORDER\n" + "SUCCESSFUL");
-                                showSucessScreenIntent.putExtra("success_description", "order has been moved to your \n" + "‘ON DELIVERY’ tab");
-                                showSucessScreenIntent.putExtra("fragment", "orders");
-                                startActivity(showSucessScreenIntent);
-                                finish();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(this, "Failed to move order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to delete order from waitingForCourier: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+            .addOnSuccessListener(aVoid -> {
+                db.collection("onDelivery").document(orderId).set(orderData)
+                    .addOnSuccessListener(aVoid1 -> {
+                        updateOrderStatusInRealtimeDatabase("ON DELIVERY");
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Failed to move order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+            })
+            .addOnFailureListener(e -> {
+                Toast.makeText(this, "Failed to delete order from waitingForCourier: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+    }
+
+    private void updateOrderStatusInRealtimeDatabase(String orderStatus){
+        String orderId = pendingOrdersConstructor.getOrder_id();
+        String userId = pendingOrdersConstructor.getUser_id();
+        DatabaseReference myRef = rdb.getReference(userId).child("orders").child(orderId);
+
+        // Create a map with the updated status
+        Map<String, Object> updateData = new HashMap<>();
+        updateData.put("orderStatus", orderStatus);
+
+        // Update the order data
+        myRef.updateChildren(updateData)
+            .addOnSuccessListener(aVoid -> {
+                // Order updated successfully
+                Intent showSucessScreenIntent = new Intent(this, DeliverySuccessScreen.class);
+                showSucessScreenIntent.putExtra("success_message", "TAKE ORDER\n" + "SUCCESSFUL");
+                showSucessScreenIntent.putExtra("success_description", "order has been moved to your \n" + "‘ON DELIVERY’ tab");
+                showSucessScreenIntent.putExtra("fragment", "orders");
+                startActivity(showSucessScreenIntent);
+                finish();
+            })
+            .addOnFailureListener(e -> {
+                // Failed to update order
+                Log.e("Order", "Failed to update order", e);
+            });
     }
 }

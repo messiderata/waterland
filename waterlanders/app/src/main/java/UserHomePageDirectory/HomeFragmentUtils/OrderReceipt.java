@@ -2,6 +2,7 @@ package UserHomePageDirectory.HomeFragmentUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import com.example.waterlanders.R;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -23,6 +26,7 @@ import UserHomePageDirectory.OrderTrackingFragments.UserPendingOrdersFragment;
 public class OrderReceipt extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private FirebaseDatabase rdb;
     private AddedItems addedItems;
     private Map<String, Object> currentDefaultAddress;
     private Map<String, Object> GCashPaymentDetails;
@@ -53,6 +57,7 @@ public class OrderReceipt extends AppCompatActivity {
         button_btn = findViewById(R.id.button_ok);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        rdb = FirebaseDatabase.getInstance();
     }
 
     private void getIntentData(){
@@ -159,9 +164,36 @@ public class OrderReceipt extends AppCompatActivity {
             .document(documentId)
             .set(orderData)
             .addOnSuccessListener(aVoid -> {
+                saveOrderInRealtimeDatabase(documentId);
             })
             .addOnFailureListener(e -> {
                 Toast.makeText(OrderReceipt.this, "Failed to save order", Toast.LENGTH_SHORT).show();
             });
+    }
+
+    // if user order something then
+    // save the orderID and order status to 'userUID'
+    // if userUID is already exist just append the new data
+    private void saveOrderInRealtimeDatabase(String documentId){
+        String userUID = mAuth.getCurrentUser().getUid();
+        DatabaseReference myRef = rdb.getReference(userUID);
+
+        // Create an order object
+        Map<String, Object> orderData = new HashMap<>();
+        orderData.put("orderId", documentId);
+        orderData.put("orderStatus", "ORDERED");
+
+        // Save the order data under 'orders' node
+        if (documentId != null) {
+            myRef.child("orders").child(documentId).setValue(orderData)
+                .addOnSuccessListener(aVoid -> {
+                    // Order saved successfully
+                    Log.d("Order", "Order saved successfully");
+                })
+                .addOnFailureListener(e -> {
+                    // Failed to save order
+                    Log.e("Order", "Failed to save order", e);
+                });
+        }
     }
 }

@@ -1,10 +1,13 @@
 package UserHomePageDirectory;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.waterlanders.NotificationService;
 import com.example.waterlanders.R;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +30,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import AdminHomePageDirectory.AdminFragments.ProductsFragment;
 import Handler.StatusBarUtil;
 import LoginDirectory.Login;
 import UserHomePageDirectory.FragmentsDirectory.AboutUsFragment;
@@ -49,7 +52,6 @@ public class MainDashboardUser extends AppCompatActivity {
 
     private static final int SMS_PERMISSION_REQUEST_CODE = 1;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +68,7 @@ public class MainDashboardUser extends AppCompatActivity {
         }
 
         getPermission();
+        initializeNotificationService();
 
         // Initialize Views
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -146,6 +149,29 @@ public class MainDashboardUser extends AppCompatActivity {
 
         // Handle back press with BackPressHandler
         new BackPressHandler(this, drawerLayout);
+    }
+
+    private void initializeNotificationService(){
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Intent serviceIntent = new Intent(this, NotificationService.class);
+        serviceIntent.putExtra("userId", userId);
+
+        // Check if the service is already running
+        if (!isServiceRunning(NotificationService.class)) {
+            startService(serviceIntent);
+        } else {
+            Log.d("Service Status", "NotificationService is already running.");
+        }
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void initializeFragment(Bundle savedInstanceState){

@@ -89,26 +89,23 @@ public class ForgotPasswordPhoneNewPassword extends AppCompatActivity {
                     if (user != null) {
                         String hashedPassword = PassUtils.hashPassword(newPassword);
                         user.updatePassword(hashedPassword)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        // update the user pass in database
-                                        String userId = user.getUid();
-                                        db.collection("users").document(userId)
-                                            .update("password", hashedPassword)
-                                            .addOnSuccessListener(aVoid -> {
-                                                Intent backIntent = new Intent(ForgotPasswordPhoneNewPassword.this, ForgotPasswordSuccess.class);
-                                                backIntent.putExtra("success_message","Password Reset Successfully");
-                                                backIntent.putExtra("success_description","You successfully updated your password");
-                                                startActivity(backIntent);
-                                                finish();
-                                            })
-                                            .addOnFailureListener(e -> Toast.makeText(ForgotPasswordPhoneNewPassword.this, "ERROR CREATING AN ACCOUNT.\n" + e,
-                                                    Toast.LENGTH_SHORT).show());
-                                    } else {
-                                        Toast.makeText(ForgotPasswordPhoneNewPassword.this, "Failed to update password: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
+                            .addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    // update the user pass in database
+                                    String userId = user.getUid();
+                                    db.collection("users").document(userId)
+                                        .update("password", hashedPassword)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Intent backIntent = new Intent(ForgotPasswordPhoneNewPassword.this, ForgotPasswordSuccess.class);
+                                            backIntent.putExtra("success_message","Password Reset Successfully");
+                                            backIntent.putExtra("success_description","You successfully updated your password");
+                                            startActivity(backIntent);
+                                            finish();
+                                        })
+                                        .addOnFailureListener(e -> Toast.makeText(ForgotPasswordPhoneNewPassword.this, "ERROR CREATING AN ACCOUNT.\n" + e,
+                                                Toast.LENGTH_SHORT).show());
+                                } else {
+                                    Toast.makeText(ForgotPasswordPhoneNewPassword.this, "Failed to update password: " + task1.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                     } else {

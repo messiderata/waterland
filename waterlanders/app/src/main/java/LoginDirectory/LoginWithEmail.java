@@ -11,6 +11,8 @@ import android.widget.Toast;
 import ForgotPasswordDirectory.ForgotPasswordEmail;
 import Handler.PassUtils;
 import UserHomePageDirectory.MainDashboardUser;
+
+import com.example.waterlanders.NotificationService;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -95,6 +97,14 @@ public class LoginWithEmail {
         });
     }
 
+    // flow
+    // 1. check the user's role then set the intent to redirect the current user
+    //      base on their role
+    // 2. if the current user's role is 'customer' and isResetPassTruEmail == 1 meaning
+    //      the user's current hash password is not save to the database yet
+    //      therefore we will save the new hash password to the database
+    //      then redirect the user to MainDashboardUser
+    // 3. else if current user's role is not 'customer' then redirect the user without extra steps
     private void loginUserWithEmail(String email, String password, int isResetPassTruEmail){
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(task -> {
@@ -135,28 +145,28 @@ public class LoginWithEmail {
                                             String hashedPassword = PassUtils.hashPassword(password);
 
                                             user.updatePassword(hashedPassword)
-                                                    .addOnCompleteListener(task1 -> {
-                                                       if (task1.isSuccessful()){
-                                                           // Update 'isResetPassTruEmail' field to 0 after login
-                                                           db.collection("users").document(user.getUid())
-                                                               .update(
-                                                                       "isResetPassTruEmail", 0,
-                                                                       "password", hashedPassword
-                                                               )
-                                                               .addOnSuccessListener(aVoid -> {
-                                                                   // Successfully updated 'isResetPassTruEmail'
-                                                                   context.startActivity(intent);
+                                                .addOnCompleteListener(task1 -> {
+                                                   if (task1.isSuccessful()){
+                                                       // Update 'isResetPassTruEmail' field to 0 after login
+                                                       db.collection("users").document(user.getUid())
+                                                           .update(
+                                                                   "isResetPassTruEmail", 0,
+                                                                   "password", hashedPassword
+                                                           )
+                                                           .addOnSuccessListener(aVoid -> {
+                                                               // Successfully updated 'isResetPassTruEmail'
+                                                               context.startActivity(intent);
 
-                                                                   // Finish the activity if context is an Activity
-                                                                   if (context instanceof Activity) {
-                                                                       ((Activity) context).finish();
-                                                                   }
-                                                               })
-                                                               .addOnFailureListener(e -> {
-                                                                   ShowToast.showDelayedToast(context, progressBar, loginText, "Failed to update reset status.", timeDelayInMillis);
-                                                               });
-                                                       }
-                                                    });
+                                                               // Finish the activity if context is an Activity
+                                                               if (context instanceof Activity) {
+                                                                   ((Activity) context).finish();
+                                                               }
+                                                           })
+                                                           .addOnFailureListener(e -> {
+                                                               ShowToast.showDelayedToast(context, progressBar, loginText, "Failed to update reset status.", timeDelayInMillis);
+                                                           });
+                                                   }
+                                                });
                                         } else {
                                             context.startActivity(intent);
 

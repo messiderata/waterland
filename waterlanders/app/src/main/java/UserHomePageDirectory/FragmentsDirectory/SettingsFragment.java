@@ -26,6 +26,8 @@ import android.widget.Toast;
 
 import com.example.waterlanders.R;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import LoginDirectory.Login;
@@ -101,7 +103,8 @@ public class SettingsFragment extends Fragment {
             AddedItems addedItems = new AddedItems();
             Intent intent = new Intent(getActivity(), AddressSelection.class);
             intent.putExtra("addedItems", addedItems);
-            startActivityForResult(intent, REQUEST_CODE_ADDRESS_SELECTION);  // Start the activity with the intent
+            intent.putExtra("intentFrom", "SettingsFragment");
+            startActivity(intent);
         });
     }
 
@@ -135,7 +138,22 @@ public class SettingsFragment extends Fragment {
         String email = document.getString("email");
         String fullName = document.getString("fullName");
         String username = document.getString("username");
-        String phoneNumber = document.getString("phone");
+        String phoneNumber = "";
+
+        List<Map<String, Object>> deliveryDetails = (List<Map<String, Object>>) document.get("deliveryDetails");
+        if (deliveryDetails != null) {
+            for (Map<String, Object> details : deliveryDetails) {
+                // Convert 'isDefaultAddress' to int
+                int defaultAddress = details.get("isDefaultAddress") instanceof Long
+                        ? ((Long) details.get("isDefaultAddress")).intValue()
+                        : (Integer) details.get("isDefaultAddress");
+
+                if (defaultAddress == 1) {
+                    phoneNumber = (String) details.get("phoneNumber");
+                    break;
+                }
+            }
+        }
 
         nameText.setText(fullName != null ? fullName : "N/A");
         emailText.setText(maskEmail(email));
@@ -160,15 +178,13 @@ public class SettingsFragment extends Fragment {
 
     private String maskPhoneNumber(String phoneNumber) {
         if (phoneNumber != null && phoneNumber.length() > 4) {
-            String firstTwo = phoneNumber.substring(0, 2);
+            String firstTwo = phoneNumber.substring(0, 5);
             String lastTwo = phoneNumber.substring(phoneNumber.length() - 2);
-            String middlePart = phoneNumber.substring(2, phoneNumber.length() - 2).replaceAll(".", "*");
+            String middlePart = phoneNumber.substring(5, phoneNumber.length() - 2).replaceAll(".", "*");
             return firstTwo + middlePart + lastTwo;
         }
         return "N/A";
     }
-
-
 
     private void showDeleteAccountDialog() {
         Dialog dialog = new Dialog(requireActivity());

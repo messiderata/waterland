@@ -22,6 +22,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
@@ -82,62 +83,7 @@ public class OrderConfirmation extends AppCompatActivity {
         updateDeliveryAddress();
         showCurrentOrders(addedItems);
         calculateDateRange();
-
-        // Set up button click listener
-        backButton.setOnClickListener(view -> {
-            Intent backIntent = new Intent(OrderConfirmation.this, MainDashboardUser.class);
-            startActivity(backIntent);
-            finish();
-        });
-
-        addressSelectorLayout.setOnClickListener(view -> {
-            Intent intent = new Intent(OrderConfirmation.this, AddressSelection.class);
-            intent.putExtra("source", "order_confirmation");
-            intent.putExtra("addedItems", addedItems);  // Pass added items as usual
-            startActivity(intent);
-        });
-
-        pickDateButton.setOnClickListener(view -> showDatePickerDialog());
-
-        GCashButton.setOnClickListener(view -> togglePaymentMethod(GCashButton, cashOnDelivery));
-        cashOnDelivery.setOnClickListener(view -> togglePaymentMethod(cashOnDelivery, GCashButton));
-
-        proceedButton.setOnClickListener(view -> {
-            if (!currentDefaultAddress.isEmpty()) {
-                if (!isDateSelected) {
-                    Toast.makeText(this, "Please select a delivery date.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (GCashButton.isChecked() || cashOnDelivery.isChecked()) {
-                    // get the additional message
-                    String additionalMessage = String.valueOf(messageInput.getText());
-
-                    Intent proceedIntent;
-                    if (isGCashSelected) {
-                        // Navigate to the GCash confirmation screen
-                        proceedIntent = new Intent(OrderConfirmation.this, GcashConfirmation.class);
-                        proceedIntent.putExtra("addedItems", addedItems);
-                        proceedIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
-                        proceedIntent.putExtra("additionalMessage", additionalMessage);
-                    } else {
-                        // Navigate to the Cash on Delivery confirmation screen
-                        proceedIntent = new Intent(OrderConfirmation.this, OrderReceipt.class);
-                        proceedIntent.putExtra("addedItems", addedItems);
-                        proceedIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
-                        proceedIntent.putExtra("additionalMessage", additionalMessage);
-                        proceedIntent.putExtra("modeOfPayment", "Cash on Delivery");
-                    }
-                    startActivity(proceedIntent);
-                    finish();
-                } else {
-                    Toast.makeText(this, "Please select a payment method.", Toast.LENGTH_SHORT).show();
-                }
-
-            } else {
-                Toast.makeText(OrderConfirmation.this, "Enter your delivery address.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        setOnClickListeners();
     }
 
     private void initializeObjects(){
@@ -191,6 +137,64 @@ public class OrderConfirmation extends AppCompatActivity {
         maxDate.set(Calendar.MILLISECOND, 999);
 
         maxDateInMillis = maxDate.getTimeInMillis();
+    }
+
+    private void setOnClickListeners(){
+        backButton.setOnClickListener(view -> {
+            Intent backIntent = new Intent(OrderConfirmation.this, MainDashboardUser.class);
+            startActivity(backIntent);
+            finish();
+        });
+
+        addressSelectorLayout.setOnClickListener(view -> {
+            Intent intent = new Intent(OrderConfirmation.this, AddressSelection.class);
+            intent.putExtra("source", "order_confirmation");
+            intent.putExtra("addedItems", addedItems);
+            intent.putExtra("intentFrom", "OrderConfirmation");
+            startActivity(intent);
+        });
+
+        pickDateButton.setOnClickListener(view -> showDatePickerDialog());
+
+        GCashButton.setOnClickListener(view -> togglePaymentMethod(GCashButton, cashOnDelivery));
+        cashOnDelivery.setOnClickListener(view -> togglePaymentMethod(cashOnDelivery, GCashButton));
+
+        proceedButton.setOnClickListener(view -> {
+            if (!currentDefaultAddress.isEmpty()) {
+                if (!isDateSelected) {
+                    Toast.makeText(this, "Please select a delivery date.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (GCashButton.isChecked() || cashOnDelivery.isChecked()) {
+                    // get the additional message
+                    String additionalMessage = String.valueOf(messageInput.getText());
+
+                    Intent proceedIntent;
+                    if (isGCashSelected) {
+                        // Navigate to the GCash confirmation screen
+                        proceedIntent = new Intent(OrderConfirmation.this, GcashConfirmation.class);
+                        proceedIntent.putExtra("addedItems", addedItems);
+                        proceedIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
+                        proceedIntent.putExtra("additionalMessage", additionalMessage);
+                    } else {
+                        // Navigate to the Cash on Delivery confirmation screen
+                        proceedIntent = new Intent(OrderConfirmation.this, OrderReceipt.class);
+                        proceedIntent.putExtra("addedItems", addedItems);
+                        proceedIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
+                        proceedIntent.putExtra("additionalMessage", additionalMessage);
+                        proceedIntent.putExtra("modeOfPayment", "Cash on Delivery");
+                    }
+                    startActivity(proceedIntent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "Please select a payment method.", Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(OrderConfirmation.this, "Enter your delivery address.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void togglePaymentMethod(MaterialCardView selectedCard, MaterialCardView otherCard) {

@@ -146,7 +146,7 @@
                         android:paddingTop="14dp"
                         android:paddingEnd="16dp"
                         android:paddingBottom="14dp"
-                        android:background="@color/white"
+                        android:background="@color/home_bg_color"
                         android:inputType="none"
                         android:textColor="@color/black"
                         tools:ignore="VisualLintTextFieldSize" />

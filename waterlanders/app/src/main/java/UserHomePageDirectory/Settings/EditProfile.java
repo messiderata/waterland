@@ -2,6 +2,8 @@ package UserHomePageDirectory.Settings;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -17,7 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import Handler.StatusBarUtil;
@@ -26,10 +30,12 @@ public class EditProfile extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private List<String> contactNumbers;
 
     private TextInputEditText nameInput, nicknameInput, phoneInput;
     private CardView saveButton;
     private ImageView backButton;
+
     // Fields to hold current user data
     private String currentFullName, currentUsername, currentPhone;
 
@@ -40,6 +46,8 @@ public class EditProfile extends AppCompatActivity {
         // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        contactNumbers = new ArrayList<>();
+        initializeCurrentUserData();
 
         // Initialize UI components
         nameInput = findViewById(R.id.name_input);
@@ -48,11 +56,14 @@ public class EditProfile extends AppCompatActivity {
         saveButton = findViewById(R.id.save_button);
         backButton = findViewById(R.id.btn_back);
 
+        // Set input filter to limit length to 10
+        phoneInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
 
         // Set up the listener for the save button
-        saveButton.setOnClickListener(view -> validateAndSaveUserProfile());
+        saveButton.setOnClickListener(view -> isContactNumberUnique(this::validateAndSaveUserProfile));
         backButton.setOnClickListener(view -> finish());
     }
+
     // Method to mask phone number (show first 2 and last 2 digits, mask the rest)
     private String maskPhoneNumber(String phoneNumber) {
         if (phoneNumber.length() >= 4) {
@@ -64,14 +75,76 @@ public class EditProfile extends AppCompatActivity {
         return phoneNumber; // Return original if too short to mask
     }
 
+    private void initializeCurrentUserData(){
+        String userID = mAuth.getCurrentUser().getUid();
+        db.collection("users")
+            .document(userID)
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null){
+                    currentFullName = task.getResult().getString("fullName");
+                    currentUsername = task.getResult().getString("username");
+
+                    List<Map<String, Object>> deliveryDetails = (List<Map<String, Object>>) task.getResult().get("deliveryDetails");
+                    if (deliveryDetails != null) {
+                        for (Map<String, Object> details : deliveryDetails) {
+                            // Convert 'isDefaultAddress' to int
+                            int defaultAddress = details.get("isDefaultAddress") instanceof Long
+                                    ? ((Long) details.get("isDefaultAddress")).intValue()
+                                    : (Integer) details.get("isDefaultAddress");
+
+                            if (defaultAddress == 1) {
+                                currentPhone = (String) details.get("phoneNumber");
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    Log.e("Edit Profile", task.toString());
+                }
+            })
+            .addOnFailureListener(task -> {
+                Log.e("Edit Profile", task.toString());
+            });
+    }
+
+    private void isContactNumberUnique(Runnable callback) {
+        contactNumbers.clear();
+        db.collection("users").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                List<DocumentSnapshot> usersList = task.getResult().getDocuments();
+                for (DocumentSnapshot user : usersList) {
+                    List<Map<String, Object>> deliveryDetailsList = (List<Map<String, Object>>) user.get("deliveryDetails");
+                    if (deliveryDetailsList != null) {
+                        for (Map<String, Object> details : deliveryDetailsList) {
+                            contactNumbers.add(String.valueOf(details.get("phoneNumber")));
+                        }
+                    }
+                }
+                callback.run(); // Proceed with validation after fetching all contact numbers
+            } else {
+                Toast.makeText(this, "Failed to retrieve users data", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void validateAndSaveUserProfile() {
         String name = nameInput.getText().toString().trim();
         String username = nicknameInput.getText().toString().trim();
         String phone = phoneInput.getText().toString().trim();
 
-        // Validate phone number (if entered, should start with "09" and be exactly 11 digits)
-        if (!phone.isEmpty() && (!phone.startsWith("09") || phone.length() != 11)) {
-            Toast.makeText(this, "Phone number must start with '09' and be 11 digits long", Toast.LENGTH_SHORT).show();
+        // validate phone number
+        // we introduce new phone number validation
+        // in new user registration for compatibility of
+        // sending code in phone number
+        // this way if client need to integrate into sms service
+        // the integration will be easy since the phone number
+        // is already formatted with country code
+        if (!phone.isEmpty() && !phone.matches("^\\d{10}$")) {
+            Toast.makeText(this, "Phone number must be exactly 10 digits. +63 is already given.", Toast.LENGTH_LONG).show();
+            return;
+        } else if (!phone.isEmpty() && contactNumbers.contains(String.format("+63" + phone))) {
+            Toast.makeText(this, "Phone number already registered.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -87,19 +160,19 @@ public class EditProfile extends AppCompatActivity {
     private void checkIfUsernameIsUnique(String username, String name, String phone) {
         // Query Firestore to check if the username already exists (but not for the current user)
         db.collection("users")
-                .whereEqualTo("username", username)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    if (!isUsernameUnique(querySnapshot)) {
-                        Toast.makeText(EditProfile.this, "Username is already taken, please choose another", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // Username is unique, proceed to update the profile
-                        saveUserProfile(name, username, phone);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(EditProfile.this, "Error checking username: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+            .whereEqualTo("username", username)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                if (!isUsernameUnique(querySnapshot)) {
+                    Toast.makeText(EditProfile.this, "Username is already taken, please choose another", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Username is unique, proceed to update the profile
+                    saveUserProfile(name, username, phone);
+                }
+            })
+            .addOnFailureListener(e -> {
+                Toast.makeText(EditProfile.this, "Error checking username: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
     }
 
     private boolean isUsernameUnique(QuerySnapshot querySnapshot) {
@@ -115,6 +188,7 @@ public class EditProfile extends AppCompatActivity {
     private void saveUserProfile(String name, String username, String phone) {
         // Get the user's UID
         String userId = mAuth.getCurrentUser().getUid();
+        String formattedPhoneNumber = "+63" + phone;
 
         // Create a map of the updated user data
         Map<String, Object> userData = new HashMap<>();
@@ -126,25 +200,75 @@ public class EditProfile extends AppCompatActivity {
         if (!username.isEmpty() && !username.equals(currentUsername)) {
             userData.put("username", username);
         }
-        if (!phone.isEmpty() && !phone.equals(currentPhone)) {
-            userData.put("phone", phone);
-        }
+
 
         // If no fields are updated, show a message and don't proceed with update
         if (userData.isEmpty()) {
-            Toast.makeText(this, "No changes to update", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Update Firestore document
-        DocumentReference userRef = db.collection("users").document(userId);
-        userRef.update(userData)
+            if (!phone.isEmpty() && !formattedPhoneNumber.equals(currentPhone)) {
+                savePhoneNumberAsPrimary(formattedPhoneNumber);
+            } else {
+                Toast.makeText(this, "No changes to update", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // Update Firestore document
+            DocumentReference userRef = db.collection("users").document(userId);
+            userRef.update(userData)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(EditProfile.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                    // Reload the activity to refresh the data
-                    reloadActivity();
+                    if (!phone.isEmpty() && !formattedPhoneNumber.equals(currentPhone)) {
+                        savePhoneNumberAsPrimary(formattedPhoneNumber);
+                    }
                 })
                 .addOnFailureListener(e -> Toast.makeText(EditProfile.this, "Failed to update profile: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        }
+    }
+
+    // since the user want to change their mobile number
+    // we save it on their 'deliveryDetails' field default address
+    // where in we change their last 'phoneNumber' to the new 'formattedPhoneNumber'
+    private void savePhoneNumberAsPrimary(String formattedPhoneNumber){
+        String userID = mAuth.getCurrentUser().getUid();
+        db.collection("users")
+            .document(userID)
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null){
+                    List<Map<String, Object>> deliveryDetails = (List<Map<String, Object>>) task.getResult().get("deliveryDetails");
+                    if (deliveryDetails != null){
+                        boolean isUpdated = false;
+
+                        for (Map<String, Object> details : deliveryDetails) {
+                            // Convert 'isDefaultAddress' to int
+                            int defaultAddress = details.get("isDefaultAddress") instanceof Long
+                                    ? ((Long) details.get("isDefaultAddress")).intValue()
+                                    : (Integer) details.get("isDefaultAddress");
+
+                            if (defaultAddress == 1) {
+                                // Update the phone number
+                                details.put("phoneNumber", formattedPhoneNumber);
+                                isUpdated = true;
+                            }
+                        }
+
+                        if (isUpdated) {
+                            // Save the updated list back to Firestore
+                            db.collection("users")
+                                    .document(userID)
+                                    .update("deliveryDetails", deliveryDetails)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(EditProfile.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                                        // Reload the activity to refresh the data
+                                        reloadActivity();
+                                    })
+                                    .addOnFailureListener(e -> Log.e("Edit Profile", "Error updating phone number: " + e.getMessage()));
+                        } else {
+                            Log.d("Edit Profile", "No default address found");
+                        }
+                    }
+
+                } else {
+                    Log.e("Edit Profile", task.toString());
+                }
+            });
     }
 
     // Method to reload the current activity
