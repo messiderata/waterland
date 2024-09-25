@@ -81,6 +81,7 @@
                         android:src="@drawable/box_delivered_icon"/>
 
                     <TextView
+                        android:id="@+id/total_delivered_orders"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
@@ -121,6 +122,7 @@
                         android:src="@drawable/box_pending_icon"/>
 
                     <TextView
+                        android:id="@+id/total_pending_orders"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"

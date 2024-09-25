@@ -70,11 +70,11 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_camera"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:padding="6dp"
-            android:contentDescription="Edit Profile Picture"
-            android:elevation="4dp" />
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:padding="6dp"
+                android:contentDescription="Edit Profile Picture"
+                android:elevation="4dp" />
         </RelativeLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -85,9 +85,10 @@
             android:layout_marginStart="30dp"
             app:cursorColor="@color/black"
             app:errorEnabled="true"
-            app:hintTextColor="@color/button_bg"
             android:layout_marginEnd="30dp"
             android:hint="Fullname"
+            android:textColorHint="@color/secondary_color"
+            app:hintTextColor="@color/button_bg"
             app:boxStrokeColor="@color/button_bg"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -108,9 +109,10 @@
             android:layout_marginStart="30dp"
             app:cursorColor="@color/black"
             app:errorEnabled="true"
-            app:hintTextColor="@color/button_bg"
             android:layout_marginEnd="30dp"
             android:hint="Username"
+            android:textColorHint="@color/secondary_color"
+            app:hintTextColor="@color/button_bg"
             app:boxStrokeColor="@color/button_bg"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -118,7 +120,7 @@
                 android:id="@+id/nickname_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
+                android:inputType="text"
                 android:textColor="@color/black"
                 android:minHeight="48dp" />
 
@@ -126,29 +128,37 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:layout_marginStart="30dp"
-            app:cursorColor="@color/black"
-            app:errorEnabled="true"
-            app:hintTextColor="@color/button_bg"
             android:layout_marginEnd="30dp"
             android:hint="Mobile Number"
+            android:textColorHint="@color/secondary_color"
             app:boxStrokeColor="@color/button_bg"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            app:cursorColor="@color/black"
+            app:errorEnabled="true"
+            app:hintTextColor="@color/button_bg">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/phone_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:textColor="@color/button_bg"
-                android:minHeight="48dp" />
-
+                android:layout_marginBottom="0dp"
+                android:inputType="number"
+                android:minHeight="48dp"
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Input the 10 digit number after '+63'"
+            android:textColor="@color/secondary_color"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="0dp"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/save_button"

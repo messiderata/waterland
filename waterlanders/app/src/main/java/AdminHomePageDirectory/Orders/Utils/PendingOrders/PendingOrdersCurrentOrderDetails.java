@@ -2,6 +2,7 @@ package AdminHomePageDirectory.Orders.Utils.PendingOrders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.waterlanders.R;
 import com.google.firebase.Timestamp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
@@ -58,6 +61,7 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
     private List<OrderedItemsConstructor> orderedItemsConstructorList;
     private PendingOrdersCurrentOrderDetailsAdapter pendingOrdersCurrentOrderDetailsAdapter;
     private FirebaseFirestore db;
+    private FirebaseDatabase rdb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +139,7 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
         recyclerViewHolder.setAdapter(pendingOrdersCurrentOrderDetailsAdapter);
 
         db = FirebaseFirestore.getInstance();
+        rdb = FirebaseDatabase.getInstance();
     }
 
     private void getIntentData(){
@@ -207,12 +212,7 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
                 .document(orderId)
                 .update("order_status", newStatus)
                 .addOnSuccessListener(aVoid -> {
-                    Intent showSucessScreenIntent = new Intent(this, SuccessScreen.class);
-                    showSucessScreenIntent.putExtra("success_message", "ORDER UPDATED\n" + "SUCCESSFULLY");
-                    showSucessScreenIntent.putExtra("success_description", "The order has been updated from the database");
-                    showSucessScreenIntent.putExtra("fragment", "pending_orders");
-                    startActivity(showSucessScreenIntent);
-                    finish();
+                    updateOrderStatusInRealtimeDatabase(newStatus);
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Failed to update status: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -242,22 +242,43 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
         // Get a reference to the pendingOrders and waitingForCourier collections
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("pendingOrders").document(orderId).delete()
-                .addOnSuccessListener(aVoid -> {
-                    db.collection("waitingForCourier").document(orderId).set(orderData)
-                            .addOnSuccessListener(aVoid1 -> {
-                                Intent showSucessScreenIntent = new Intent(this, SuccessScreen.class);
-                                showSucessScreenIntent.putExtra("success_message", "ORDER UPDATED\n" + "SUCCESSFULLY");
-                                showSucessScreenIntent.putExtra("success_description", "The order has been updated from the database");
-                                showSucessScreenIntent.putExtra("fragment", "pending_orders");
-                                startActivity(showSucessScreenIntent);
-                                finish();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(this, "Failed to move order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to delete order from pendingOrders: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+            .addOnSuccessListener(aVoid -> {
+                db.collection("waitingForCourier").document(orderId).set(orderData)
+                        .addOnSuccessListener(aVoid1 -> {
+                            updateOrderStatusInRealtimeDatabase("WAITING FOR COURIER");
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(this, "Failed to move order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+            })
+            .addOnFailureListener(e -> {
+                Toast.makeText(this, "Failed to delete order from pendingOrders: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+    }
+
+    private void updateOrderStatusInRealtimeDatabase(String orderStatus){
+        String orderId = pendingOrdersConstructor.getOrder_id();
+        String userId = pendingOrdersConstructor.getUser_id();
+        DatabaseReference myRef = rdb.getReference(userId).child("orders").child(orderId);
+
+        // Create a map with the updated status
+        Map<String, Object> updateData = new HashMap<>();
+        updateData.put("orderStatus", orderStatus);
+
+        // Update the order data
+        myRef.updateChildren(updateData)
+            .addOnSuccessListener(aVoid -> {
+                // Order updated successfully
+                Intent showSucessScreenIntent = new Intent(this, SuccessScreen.class);
+                showSucessScreenIntent.putExtra("success_message", "ORDER UPDATED\n" + "SUCCESSFULLY");
+                showSucessScreenIntent.putExtra("success_description", "The order has been updated from the database");
+                showSucessScreenIntent.putExtra("fragment", "pending_orders");
+                startActivity(showSucessScreenIntent);
+                finish();
+            })
+            .addOnFailureListener(e -> {
+                // Failed to update order
+                Log.e("Order", "Failed to update order", e);
+            });
     }
 }

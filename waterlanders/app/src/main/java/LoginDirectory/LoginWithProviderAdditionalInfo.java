@@ -42,6 +42,24 @@ public class LoginWithProviderAdditionalInfo extends AppCompatActivity {
     private static final String ITEM_ADDRESS = "NCR, Metro Manila, Marikina, Barangka";
     private static final String ITEM_POSTAL = "1803";
 
+    // whole flow
+    // since we already successfully sign in the user base on their
+    // facebook credentials or google credentials
+    // we ask for additional information that our app need
+    // such as address, contact number, and their own unique username
+    // these details are too sensitive to share with us by other parties
+    // so we ask the user manually
+    // the username and contact number must be unique, why?
+    // username can be use to login to our app so we want every user to
+    // have a unique username
+    // contact number is used in delivery details
+    // for our courier or admin to contact the customer
+    // if we have duplicate numbers we will have a huge problem
+    // if the phone number is not valid, admin and courier can just ignore the order
+    // and let the devs remove manually the order for safety purposes
+    // we cant just give access even to the admin to delete orders
+    // as well as to the couriers because it can lead to abuse
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

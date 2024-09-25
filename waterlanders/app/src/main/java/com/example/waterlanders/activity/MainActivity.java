@@ -1,19 +1,11 @@
 package com.example.waterlanders.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler; // Import Handler class
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import com.example.waterlanders.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,15 +31,15 @@ public class MainActivity extends AppCompatActivity {
         performFirebaseQuery();
     }
 
+    // Check if the user is already logged in
+    // If the user is logged in, redirect them based on their role
+    // If the user is not logged in, show the login screen
     private void performFirebaseQuery() {
-        // Check if the user is already logged in
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         runOnUiThread(() -> {
             if (firebaseUser != null) {
-                // If the user is logged in, redirect them based on their role
                 redirectUser(firebaseUser);
             } else {
-                // If the user is not logged in, show the login screen
                 Intent intent = new Intent(MainActivity.this, Login.class);
                 startActivity(intent);
                 finish();

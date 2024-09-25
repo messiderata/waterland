@@ -76,8 +76,10 @@ public class UserCompletedOrdersEditReview extends AppCompatActivity {
 
         // set the values
         orderStatus.setText(orderStatusIntent);
-        String[] actualFeedback = customerFeedback.split(">");
-        reviewText.setText(actualFeedback[1]);
+        if (!customerFeedback.isEmpty()){
+            String[] actualFeedback = customerFeedback.split(">");
+            reviewText.setText(actualFeedback[1]);
+        }
     }
 
     private void setUpOrderStatusSuggestions() {
@@ -121,7 +123,7 @@ public class UserCompletedOrdersEditReview extends AppCompatActivity {
         }
 
         if (isComplete){
-            String formattedFeedback = "Rating: " + ratingValue + "star\n" + "> " + reviewTextContent;
+            String formattedFeedback = "Rating: " + ratingValue + " star\n" + "> " + reviewTextContent;
             updateUserFeedback(formattedFeedback, orderStatusContent);
         }
     }
@@ -130,19 +132,19 @@ public class UserCompletedOrdersEditReview extends AppCompatActivity {
         // update the 'customer_feedback' and 'user_confirmation' fields
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("deliveredOrders").document(orderID)
-                .update(
-                        "customer_feedback", formattedFeedback,
-                        "user_confirmation", orderStatusContent
-                )
-                .addOnSuccessListener(aVoid -> {
-                    Intent gotoMainDashBoardIntent = new Intent(this, MainDashboardUser.class);
-                    gotoMainDashBoardIntent.putExtra("open_fragment", "history");
-                    startActivity(gotoMainDashBoardIntent);
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("WEQWEQWEQW", "Error: "+e.getMessage());
-                    Toast.makeText(this, "Failed to submit review.", Toast.LENGTH_SHORT).show();
-                });
+            .update(
+                    "customer_feedback", formattedFeedback,
+                    "user_confirmation", orderStatusContent
+            )
+            .addOnSuccessListener(aVoid -> {
+                Intent gotoMainDashBoardIntent = new Intent(this, MainDashboardUser.class);
+                gotoMainDashBoardIntent.putExtra("open_fragment", "history");
+                startActivity(gotoMainDashBoardIntent);
+                finish();
+            })
+            .addOnFailureListener(e -> {
+                Log.e("WEQWEQWEQW", "Error: "+e.getMessage());
+                Toast.makeText(this, "Failed to submit review.", Toast.LENGTH_SHORT).show();
+            });
     }
 }

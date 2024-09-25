@@ -78,11 +78,11 @@ public class ForgotPasswordEmail extends AppCompatActivity {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+    // check the 'users' collection
+    // if the 'email' field is the same as String email
+    // if same update that user's 'isResetPassTruEmail' field to 1
+    // then call sendPasswordResetEmail method
     private void isEmailExist(String email){
-        // check the 'users' collection
-        // if the 'email' field is the same as String email
-        // if same update that user's 'isResetPassTruEmail' field to 1
-        // then call sendPasswordResetEmail method
         db.collection("users")
             .get()
             .addOnCompleteListener(task -> {

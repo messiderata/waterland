@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.example.waterlanders.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
@@ -24,49 +26,84 @@ import LoginDirectory.Login;
 
 public class ProfileFragment extends Fragment {
 
-    TextView username;
-    CardView logOutButton;
-
+    private TextView username;
+    private TextView totalDeliveredOrders;
+    private TextView totalPendingOrders;
+    private CardView logOutButton;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        // Initialize your CardView buttons here
-        username = view.findViewById(R.id.user_username);
-        logOutButton = view.findViewById(R.id.logout_button_settings);
-
+        initializeObjects(view);
+        getDataFromFirebase();
         setLogOutButton();
-
-
-        // Retrieve and display user data
-        FireStoreHelper firestoreHelper = new FireStoreHelper();
-        firestoreHelper.getUserData(new FireStoreHelper.FirestoreCallback() {
-            @Override
-            public void onSuccess(DocumentSnapshot document) {
-                displayCurrentUser(document);
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                // Handle error case here, like showing a Toast or a Snackbar
-                // e.g., Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-            }
-        });
-
-
 
         return view;
     }
 
-    private void displayCurrentUser(DocumentSnapshot document) {
-        String userUserName = document.getString("username");
-
-        username.setText(userUserName);
+    private void initializeObjects(View view){
+        username = view.findViewById(R.id.user_username);
+        totalDeliveredOrders = view.findViewById(R.id.total_delivered_orders);
+        totalPendingOrders = view.findViewById(R.id.total_pending_orders);
+        logOutButton = view.findViewById(R.id.logout_button_settings);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
+    private void getDataFromFirebase(){
+        String userID = mAuth.getCurrentUser().getUid();
+
+        // Set the 'username' based on the 'fullName' field
+        db.collection("users")
+            .document(userID)
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    String fullName = task.getResult().getString("fullName");
+                    if (fullName != null) {
+                        username.setText(fullName);
+                    }
+                } else {
+                    Log.e("Profile Fragment", task.toString());
+                }
+            });
+
+        // Get the total number of delivered orders for the current userId
+        db.collection("deliveredOrders")
+            .whereEqualTo("user_id", userID)
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    int deliveredOrderCount = task.getResult().size();
+                    totalDeliveredOrders.setText(String.valueOf(deliveredOrderCount));
+                } else {
+                    Log.e("Profile Fragment", task.toString());
+                }
+            });
+
+        // Get the total number of pending orders for the current userId
+        db.collection("pendingOrders")
+            .whereEqualTo("user_id", userID)
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    int pendingOrderCount = task.getResult().size();
+                    totalPendingOrders.setText(String.valueOf(pendingOrderCount));
+                } else {
+                    Log.e("Profile Fragment", task.toString());
+                }
+            });
+    }
+
+    private void setLogOutButton() {
+        logOutButton.setOnClickListener(view -> {
+            showLogoutDialog();
+        });
+    }
 
     private void showLogoutDialog() {
         Dialog dialog = new Dialog(requireActivity());
@@ -86,11 +123,5 @@ public class ProfileFragment extends Fragment {
         });
 
         dialog.show();
-    }
-
-    private void setLogOutButton() {
-        logOutButton.setOnClickListener(view -> {
-            showLogoutDialog();
-        });
     }
 }
