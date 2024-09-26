@@ -101,11 +101,13 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
                 if (value != null) {
                     List<GetItems> newItemsList = new ArrayList<>();
                     for (DocumentSnapshot snapshot : value.getDocuments()) {
-                        GetItems items = snapshot.toObject(GetItems.class);
-                        if (items != null) {
-                            items.setItem_id(snapshot.getId());
-                            Log.d(TAG, "--> items: " + items);
-                            newItemsList.add(items);
+                        if (!snapshot.getId().equals("test_id")){
+                            GetItems items = snapshot.toObject(GetItems.class);
+                            if (items != null) {
+                                items.setItem_id(snapshot.getId());
+                                Log.d(TAG, "--> items: " + items);
+                                newItemsList.add(items);
+                            }
                         }
                     }
                     itemsList.clear();
