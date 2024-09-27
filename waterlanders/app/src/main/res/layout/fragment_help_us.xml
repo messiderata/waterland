@@ -1,14 +1,280 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context="UserHomePageDirectory.FragmentsDirectory.HelpUsFragment"
     android:background="@color/home_bg_color"
-    tools:context="UserHomePageDirectory.FragmentsDirectory.HelpUsFragment">
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="FAQ"
+        android:textColor="@color/button_bg"
+        android:textSize="42dp"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"/>
 
-</FrameLayout>
+    <!-- address -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:cardElevation="10dp"
+        app:contentPadding="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:backgroundTint="@color/white">
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+
+            <!-- FAQ Question -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Where is the store located?"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <!-- FAQ Answer (details), initially hidden -->
+            <TextView
+                android:id="@+id/details"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Barangka, Marikina City"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- owner -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:cardElevation="10dp"
+        app:contentPadding="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:backgroundTint="@color/white">
+
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+
+            <!-- FAQ Question -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Who is the owner?"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <!-- FAQ Answer (details), initially hidden -->
+            <TextView
+                android:id="@+id/details1"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loren Ipsum"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- delivery fee -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:cardElevation="10dp"
+        app:contentPadding="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:backgroundTint="@color/white">
+
+        <LinearLayout
+            android:id="@+id/layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+
+            <!-- FAQ Question -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How much is the delivery fee?"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <!-- FAQ Answer (details), initially hidden -->
+            <TextView
+                android:id="@+id/details2"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loren Ipsum"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- water -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:cardElevation="10dp"
+        app:contentPadding="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:backgroundTint="@color/white">
+
+        <LinearLayout
+            android:id="@+id/layout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+
+            <!-- FAQ Question -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="What is your water?"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <!-- FAQ Answer (details), initially hidden -->
+            <TextView
+                android:id="@+id/details3"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loren Ipsum"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- contacts -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:cardElevation="10dp"
+        app:contentPadding="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:backgroundTint="@color/white">
+
+        <LinearLayout
+            android:id="@+id/layout4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+
+            <!-- FAQ Question -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="What are your contacts?"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <!-- FAQ Answer (details), initially hidden -->
+            <TextView
+                android:id="@+id/details4"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loren Ipsum"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- bulk -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:cardElevation="10dp"
+        app:contentPadding="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:backgroundTint="@color/white">
+
+        <LinearLayout
+            android:id="@+id/layout5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+
+            <!-- FAQ Question -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Do you accept bulk order?"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <!-- FAQ Answer (details), initially hidden -->
+            <TextView
+                android:id="@+id/details5"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loren Ipsum"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="© 2024 Aly in Waterland. All rights reserved."
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textColor="@color/cardview_dark_background"
+        android:padding="10dp" />
+
+
+</LinearLayout>
