@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.waterlanders.R;
+import com.google.firebase.Timestamp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -34,6 +36,9 @@ public class PendingOrdersAdapter extends RecyclerView.Adapter<PendingOrdersAdap
         TextView orderID;
         TextView userID;
         TextView orderPrice;
+        TextView searchTerm;
+        TextView dateOrdered;
+        TextView dateDelivery;
 
         public pendingOrdersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -41,13 +46,17 @@ public class PendingOrdersAdapter extends RecyclerView.Adapter<PendingOrdersAdap
             orderID = itemView.findViewById(R.id.order_id);
             userID = itemView.findViewById(R.id.user_id);
             orderPrice = itemView.findViewById(R.id.order_price);
+            searchTerm = itemView.findViewById(R.id.search_term);
+            dateOrdered = itemView.findViewById(R.id.date_ordered);
+            dateDelivery = itemView.findViewById(R.id.date_delivery);
         }
     }
 
     @NonNull
     @Override
     public PendingOrdersAdapter.pendingOrdersAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_pending_orders_card, parent, false);
+        // View view = LayoutInflater.from(context).inflate(R.layout.layout_pending_orders_card, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_admin_pending_orders_card, parent, false);
         return new PendingOrdersAdapter.pendingOrdersAdapterViewHolder(view);
     }
 
@@ -75,6 +84,11 @@ public class PendingOrdersAdapter extends RecyclerView.Adapter<PendingOrdersAdap
         holder.orderID.setText(String.format("ORDER ID: " + orderCard.getOrder_id()));
         holder.userID.setText(String.format("USER ID: " + orderCard.getUser_id()));
         holder.orderPrice.setText(String.format("₱" + orderCard.getTotal_amount()));
+
+        holder.searchTerm.setText(String.format("SEARCH TERM: " + orderCard.getSearch_term()));
+
+        holder.dateOrdered.setText(String.valueOf(orderCard.getFormattedDateOrdered()));
+        holder.dateDelivery.setText(String.valueOf(orderCard.getDate_delivery()));
 
         holder.itemView.setOnClickListener(v -> {
             Intent showCurrentOrderDetailsIntent = new Intent(context, PendingOrdersCurrentOrderDetails.class);

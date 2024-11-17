@@ -169,6 +169,7 @@ public class OrderConfirmation extends AppCompatActivity {
                 if (GCashButton.isChecked() || cashOnDelivery.isChecked()) {
                     // get the additional message
                     String additionalMessage = String.valueOf(messageInput.getText());
+                    String selectedDateValue = String.valueOf(selectedDate.getText());
 
                     Intent proceedIntent;
                     if (isGCashSelected) {
@@ -177,12 +178,14 @@ public class OrderConfirmation extends AppCompatActivity {
                         proceedIntent.putExtra("addedItems", addedItems);
                         proceedIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
                         proceedIntent.putExtra("additionalMessage", additionalMessage);
+                        proceedIntent.putExtra("selectedDateValue", selectedDateValue);
                     } else {
                         // Navigate to the Cash on Delivery confirmation screen
                         proceedIntent = new Intent(OrderConfirmation.this, OrderReceipt.class);
                         proceedIntent.putExtra("addedItems", addedItems);
                         proceedIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
                         proceedIntent.putExtra("additionalMessage", additionalMessage);
+                        proceedIntent.putExtra("selectedDateValue", selectedDateValue);
                         proceedIntent.putExtra("modeOfPayment", "Cash on Delivery");
                     }
                     startActivity(proceedIntent);

@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ public class OrderReceipt extends AppCompatActivity {
     private AddedItems addedItems;
     private Map<String, Object> currentDefaultAddress;
     private Map<String, Object> GCashPaymentDetails;
-    private String modeOfPayment, additionalMessage;
+    private String modeOfPayment, additionalMessage, selectedDateValue;
     private CardView button_btn;
 
     @Override
@@ -67,6 +69,7 @@ public class OrderReceipt extends AppCompatActivity {
         currentDefaultAddress = (Map<String, Object>) intent.getSerializableExtra("deliveryAddress");
         modeOfPayment = (String) intent.getSerializableExtra("modeOfPayment");
         additionalMessage = (String) intent.getSerializableExtra("additionalMessage");
+        selectedDateValue = (String) intent.getSerializableExtra("selectedDateValue");
 
         if (modeOfPayment.equals("GCash")){
             GCashPaymentDetails = (Map<String, Object>) intent.getSerializableExtra("GCashPaymentDetails");
@@ -160,15 +163,43 @@ public class OrderReceipt extends AppCompatActivity {
             orderData.put("gcash_payment_details", GCashPaymentDetails);
         }
 
-        db.collection("pendingOrders")
-            .document(documentId)
-            .set(orderData)
-            .addOnSuccessListener(aVoid -> {
-                saveOrderInRealtimeDatabase(documentId);
-            })
-            .addOnFailureListener(e -> {
-                Toast.makeText(OrderReceipt.this, "Failed to save order", Toast.LENGTH_SHORT).show();
-            });
+        // Retrieve the current user's 'fullName' and save it to search term
+        String userId = mAuth.getCurrentUser().getUid();
+        db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String fullName = documentSnapshot.getString("fullName");
+                String[] nameParts = fullName.split(" ");
+                if (nameParts.length >= 2) {
+                    orderData.put("search_term", nameParts[1]);
+                } else if (nameParts.length == 1) {
+                    orderData.put("search_term", nameParts[0]);
+                } else {
+                    orderData.put("search_term", "User no surname");
+                }
+
+                // Delivery date
+                selectedDateValue = selectedDateValue.replace("Selected Date: ", "");
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+                DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yy");
+                LocalDate date = LocalDate.parse(selectedDateValue, inputFormatter);
+                String formattedDate = date.format(outputFormatter);
+                orderData.put("date_delivery", formattedDate);
+
+                db.collection("pendingOrders")
+                        .document(documentId)
+                        .set(orderData)
+                        .addOnSuccessListener(aVoid -> {
+                            saveOrderInRealtimeDatabase(documentId);
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(OrderReceipt.this, "Failed to save order", Toast.LENGTH_SHORT).show();
+                        });
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(OrderReceipt.this, "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
+        });
+
+
     }
 
     // if user order something then
