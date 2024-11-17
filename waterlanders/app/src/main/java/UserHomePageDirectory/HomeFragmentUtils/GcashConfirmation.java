@@ -41,6 +41,7 @@ public class GcashConfirmation extends AppCompatActivity {
     private AddedItems addedItems;
     private Map<String, Object> currentDefaultAddress;
     private String additionalMessage;
+    private String selectedDateValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,7 @@ public class GcashConfirmation extends AppCompatActivity {
         addedItems = (AddedItems) receiveIntent.getSerializableExtra("addedItems");
         currentDefaultAddress = (Map<String, Object>) receiveIntent.getSerializableExtra("deliveryAddress");
         additionalMessage = (String) receiveIntent.getSerializableExtra("additionalMessage");
+        selectedDateValue = (String) receiveIntent.getSerializableExtra("selectedDateValue");
     }
 
     private void handleImageSelection() {
@@ -167,6 +169,7 @@ public class GcashConfirmation extends AppCompatActivity {
                     orderReceiptIntent.putExtra("addedItems", addedItems);
                     orderReceiptIntent.putExtra("deliveryAddress", (Serializable) currentDefaultAddress);
                     orderReceiptIntent.putExtra("additionalMessage", additionalMessage);
+                    orderReceiptIntent.putExtra("selectedDateValue", selectedDateValue);
                     orderReceiptIntent.putExtra("modeOfPayment", "GCash");
                     orderReceiptIntent.putExtra("GCashPaymentDetails", (Serializable) GcashPaymentDetailsMap);
                     startActivity(orderReceiptIntent);
