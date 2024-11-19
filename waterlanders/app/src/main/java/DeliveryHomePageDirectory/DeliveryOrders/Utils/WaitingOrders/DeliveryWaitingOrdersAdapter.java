@@ -36,6 +36,9 @@ public class DeliveryWaitingOrdersAdapter extends RecyclerView.Adapter<DeliveryW
         TextView orderID;
         TextView userID;
         TextView orderPrice;
+        TextView searchTerm;
+        TextView dateOrdered;
+        TextView dateDelivery;
 
         public DeliveryWaitingOrdersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -43,13 +46,17 @@ public class DeliveryWaitingOrdersAdapter extends RecyclerView.Adapter<DeliveryW
             orderID = itemView.findViewById(R.id.order_id);
             userID = itemView.findViewById(R.id.user_id);
             orderPrice = itemView.findViewById(R.id.order_price);
+            searchTerm = itemView.findViewById(R.id.search_term);
+            dateOrdered = itemView.findViewById(R.id.date_ordered);
+            dateDelivery = itemView.findViewById(R.id.date_delivery);
         }
     }
 
     @NonNull
     @Override
     public DeliveryWaitingOrdersAdapter.DeliveryWaitingOrdersAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_pending_orders_card, parent, false);
+        // View view = LayoutInflater.from(context).inflate(R.layout.layout_pending_orders_card, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_admin_pending_orders_card, parent, false);
         return new DeliveryWaitingOrdersAdapter.DeliveryWaitingOrdersAdapterViewHolder(view);
     }
 
@@ -77,6 +84,11 @@ public class DeliveryWaitingOrdersAdapter extends RecyclerView.Adapter<DeliveryW
         holder.orderID.setText(String.format("ORDER ID: " + orderCard.getOrder_id()));
         holder.userID.setText(String.format("USER ID: " + orderCard.getUser_id()));
         holder.orderPrice.setText(String.format("₱" + orderCard.getTotal_amount()));
+
+        holder.searchTerm.setText(String.format("SEARCH TERM: " + orderCard.getSearch_term()));
+
+        holder.dateOrdered.setText(String.valueOf(orderCard.getFormattedDateOrdered()));
+        holder.dateDelivery.setText(String.valueOf(orderCard.getDate_delivery()));
 
         holder.itemView.setOnClickListener(v -> {
             Intent showCurrentOrderDetailsIntent = new Intent(context, DeliveryWaitingOrdersCurrentOrderDetails.class);

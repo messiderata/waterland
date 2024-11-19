@@ -15,6 +15,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
 
     private String additional_message;
     private String customer_feedback;
+    private String date_delivery;
     private Timestamp date_delivered;
     private Timestamp date_ordered;
     private Map<String, Object> delivery_address;
@@ -26,16 +27,19 @@ public class DeliveredOrdersConstructor implements Parcelable {
     private List<Map<String, Object>> order_items;
     private String order_status;
     private String proof_of_delivery;
+    private String search_term;
     private int total_amount;
     private String user_confirmation;
     private String user_id;
+    private String formattedDateOrdered;
 
     public DeliveredOrdersConstructor() {
     }
 
-    public DeliveredOrdersConstructor(String additional_message, String customer_feedback, Timestamp date_delivered, Timestamp date_ordered, Map<String, Object> delivery_address, String delivery_id, Map<String, Object> gcash_payment_details, String mode_of_payment, String order_icon, String order_id, List<Map<String, Object>> order_items, String order_status, String proof_of_delivery, int total_amount, String user_confirmation, String user_id) {
+    public DeliveredOrdersConstructor(String additional_message, String date_delivery, String customer_feedback, Timestamp date_delivered, Timestamp date_ordered, Map<String, Object> delivery_address, String delivery_id, Map<String, Object> gcash_payment_details, String mode_of_payment, String order_icon, String order_id, List<Map<String, Object>> order_items, String order_status, String proof_of_delivery, String search_term, int total_amount, String user_confirmation, String user_id) {
         this.additional_message = additional_message;
         this.customer_feedback = customer_feedback;
+        this.date_delivery = date_delivery;
         this.date_delivered = date_delivered;
         this.date_ordered = date_ordered;
         this.delivery_address = delivery_address;
@@ -47,6 +51,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
         this.order_items = order_items;
         this.order_status = order_status;
         this.proof_of_delivery = proof_of_delivery;
+        this.search_term = search_term;
         this.total_amount = total_amount;
         this.user_confirmation = user_confirmation;
         this.user_id = user_id;
@@ -56,6 +61,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
     protected DeliveredOrdersConstructor(Parcel in) {
         additional_message = in.readString();
         customer_feedback = in.readString();
+        date_delivery = in.readString();
         date_delivered = in.readParcelable(Timestamp.class.getClassLoader());
         date_ordered = in.readParcelable(Timestamp.class.getClassLoader());
         delivery_address = (Map<String, Object>) in.readSerializable();
@@ -67,6 +73,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
         order_items = (List<Map<String, Object>>) in.readSerializable();
         order_status = in.readString();
         proof_of_delivery = in.readString();
+        search_term = in.readString();
         total_amount = in.readInt();
         user_confirmation = in.readString();
         user_id = in.readString();
@@ -76,6 +83,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(additional_message);
         dest.writeString(customer_feedback);
+        dest.writeString(date_delivery);
         dest.writeParcelable(date_delivered, flags);
         dest.writeParcelable(date_ordered, flags);
         dest.writeSerializable((Serializable) delivery_address);
@@ -87,6 +95,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
         dest.writeSerializable((Serializable) order_items);
         dest.writeString(order_status);
         dest.writeString(proof_of_delivery);
+        dest.writeString(search_term);
         dest.writeInt(total_amount);
         dest.writeString(user_confirmation);
         dest.writeString(user_id);
@@ -115,6 +124,22 @@ public class DeliveredOrdersConstructor implements Parcelable {
 
     public void setAdditional_message(String additional_message) {
         this.additional_message = additional_message;
+    }
+
+    public String getDate_delivery() {
+        return date_delivery;
+    }
+
+    public void setDate_delivery(String date_delivery) {
+        this.date_delivery = date_delivery;
+    }
+
+    public String getSearch_term() {
+        return search_term;
+    }
+
+    public void setSearch_term(String search_term) {
+        this.search_term = search_term;
     }
 
     public String getCustomer_feedback() {
@@ -235,5 +260,14 @@ public class DeliveredOrdersConstructor implements Parcelable {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    // New getter and setter for formatted date
+    public String getFormattedDateOrdered() {
+        return formattedDateOrdered;
+    }
+
+    public void setFormattedDateOrdered(String formattedDateOrdered) {
+        this.formattedDateOrdered = formattedDateOrdered;
     }
 }

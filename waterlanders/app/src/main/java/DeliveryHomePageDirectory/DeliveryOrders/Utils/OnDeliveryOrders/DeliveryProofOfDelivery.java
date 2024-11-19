@@ -215,6 +215,7 @@ public class DeliveryProofOfDelivery extends AppCompatActivity {
         orderData.put("additional_message", onDeliveryOrdersConstructor.getAdditional_message());
         orderData.put("customer_feedback", "");
         orderData.put("date_delivered", Timestamp.now());
+        orderData.put("date_delivery", onDeliveryOrdersConstructor.getDate_delivery());
         orderData.put("date_ordered", onDeliveryOrdersConstructor.getDate_ordered());
         orderData.put("delivery_address", onDeliveryOrdersConstructor.getDelivery_address());
         orderData.put("delivery_id", onDeliveryOrdersConstructor.getDelivery_id());
@@ -224,6 +225,7 @@ public class DeliveryProofOfDelivery extends AppCompatActivity {
         orderData.put("order_items", onDeliveryOrdersConstructor.getOrder_items());
         orderData.put("order_status", "DELIVERED");
         orderData.put("proof_of_delivery", storageLocation);
+        orderData.put("search_term", onDeliveryOrdersConstructor.getSearch_term());
         orderData.put("total_amount", onDeliveryOrdersConstructor.getTotal_amount());
         orderData.put("user_confirmation", "PENDING");
         orderData.put("user_id", onDeliveryOrdersConstructor.getUser_id());
