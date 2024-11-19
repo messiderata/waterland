@@ -226,12 +226,14 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
         Map<String, Object> orderData = new HashMap<>();
         orderData.put("additional_message", pendingOrdersConstructor.getAdditional_message());
         orderData.put("date_ordered", pendingOrdersConstructor.getDate_ordered());
+        orderData.put("date_delivery", pendingOrdersConstructor.getDate_delivery());
         orderData.put("delivery_address", pendingOrdersConstructor.getDelivery_address());
         orderData.put("mode_of_payment", pendingOrdersConstructor.getMode_of_payment());
         orderData.put("order_icon", pendingOrdersConstructor.getOrder_icon());
         orderData.put("order_id", pendingOrdersConstructor.getOrder_id());
         orderData.put("order_items", pendingOrdersConstructor.getOrder_items());
         orderData.put("order_status", "WAITING FOR COURIER");
+        orderData.put("search_term", pendingOrdersConstructor.getSearch_term());
         orderData.put("total_amount", pendingOrdersConstructor.getTotal_amount());
         orderData.put("user_id", pendingOrdersConstructor.getUser_id());
 

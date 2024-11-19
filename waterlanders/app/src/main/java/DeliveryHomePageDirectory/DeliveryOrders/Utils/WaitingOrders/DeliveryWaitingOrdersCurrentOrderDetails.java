@@ -215,6 +215,7 @@ public class DeliveryWaitingOrdersCurrentOrderDetails extends AppCompatActivity 
         // Create a map with the current order data
         Map<String, Object> orderData = new HashMap<>();
         orderData.put("additional_message", pendingOrdersConstructor.getAdditional_message());
+        orderData.put("date_delivery", pendingOrdersConstructor.getDate_delivery());
         orderData.put("date_ordered", pendingOrdersConstructor.getDate_ordered());
         orderData.put("delivery_address", pendingOrdersConstructor.getDelivery_address());
         orderData.put("delivery_id", deliveryId);
@@ -223,6 +224,7 @@ public class DeliveryWaitingOrdersCurrentOrderDetails extends AppCompatActivity 
         orderData.put("order_id", pendingOrdersConstructor.getOrder_id());
         orderData.put("order_items", pendingOrdersConstructor.getOrder_items());
         orderData.put("order_status", "ON DELIVERY");
+        orderData.put("search_term", pendingOrdersConstructor.getSearch_term());
         orderData.put("total_amount", pendingOrdersConstructor.getTotal_amount());
         orderData.put("user_id", pendingOrdersConstructor.getUser_id());
 

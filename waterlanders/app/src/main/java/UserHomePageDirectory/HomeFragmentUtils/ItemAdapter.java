@@ -165,7 +165,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         holder.itemQuantityPrice.setText(priceWithCurrency);
 
         String currItemID = items.getItem_id();
-        if (currItemID.equals("Pp4FPWv56jS2cJcWOLlE")){
+        if (currItemID.equals("Iu8LNnyv7Mq6S1Xz5hTd") || currItemID.equals("Pp4FPWv56jS2cJcWOLlE")){
             int totalDiscount = (quantity / 3) * 5;
             totalPrice -= totalDiscount;
             priceWithCurrency = "₱" + totalPrice;
