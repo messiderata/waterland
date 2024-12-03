@@ -1,12 +1,15 @@
 package UserHomePageDirectory.OrderTrackingUtils.PendingOrders;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.waterlanders.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
@@ -25,11 +30,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import AdminHomePageDirectory.Orders.Utils.GCashPaymentDetails;
 import AdminHomePageDirectory.Orders.Utils.OrderedItemsConstructor;
 import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersConstructor;
 import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersCurrentOrderDetailsAdapter;
+import LoginDirectory.Login;
+import UserHomePageDirectory.HomeFragmentUtils.OrderReceipt;
+import UserHomePageDirectory.MainDashboardUser;
 
 public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
@@ -54,6 +63,7 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private TextView additionalMessage;
 
+    private Button cancelOrderButton;
     private Button backButton2;
 
     private PendingOrdersConstructor pendingOrdersConstructor;
@@ -85,6 +95,10 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
             });
         }
 
+        cancelOrderButton.setOnClickListener(v ->{
+            showCancelOrderDialog();
+        });
+
         backButton2.setOnClickListener(v -> {
             finish();
         });
@@ -112,6 +126,7 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
         additionalMessage = findViewById(R.id.additional_message);
 
         backButton2 = findViewById(R.id.back_button_2);
+        cancelOrderButton = findViewById(R.id.cancel_order_button);
 
         // for populating the recycler view item list
         recyclerViewHolder.setLayoutManager(new LinearLayoutManager(this));
@@ -184,5 +199,34 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
             orderedItemsConstructorList.add(orderedItem);
         }
         pendingOrdersCurrentOrderDetailsAdapter.notifyDataSetChanged();
+    }
+
+    private void showCancelOrderDialog(){
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_cancel_order);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_bg);
+
+        MaterialButton btnCancel = dialog.findViewById(R.id.button_cancel);
+        MaterialButton btnOk = dialog.findViewById(R.id.button_ok);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnOk.setOnClickListener(v -> {
+            db.collection("pendingOrders")
+                .document(pendingOrdersConstructor.getOrder_id())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Intent intent = new Intent(this, MainDashboardUser.class);
+                    intent.putExtra("open_fragment", "history");
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "An error occurred cancelling order.", Toast.LENGTH_SHORT).show();
+                    Log.d("delete pending order", e.toString());
+                });
+        });
+
+        dialog.show();
     }
 }

@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import AdminHomePageDirectory.AdminFragments.AccountFragment;
+import AdminHomePageDirectory.AdminFragments.ChatFragment;
 import AdminHomePageDirectory.AdminFragments.DashboardFragment;
 import AdminHomePageDirectory.AdminFragments.OrdersFragment;
 import AdminHomePageDirectory.AdminFragments.ProductsFragment;
@@ -34,6 +35,7 @@ public class AdminHomePage extends AppCompatActivity {
     private final String DASHBOARD_TITLE = "DASHBOARD";
     private final String PRODUCTS_TITLE = "PRODUCTS";
     private final String ORDERS_TITLE = "ORDERS";
+    private final String CHATS_TITLE = "CUSTOMER CHAT";
     private final String ACCOUNT_TITLE = "ACCOUNT";
 
     private static final int SMS_PERMISSION_REQUEST_CODE = 1;
@@ -65,7 +67,10 @@ public class AdminHomePage extends AppCompatActivity {
             } else if (itemId == R.id.orders) {
                 selectedFragment = new OrdersFragment();
                 titleTextTop.setText(ORDERS_TITLE);
-            } else if (itemId == R.id.account) {
+            } else if (itemId == R.id.nav_chat) {
+                selectedFragment = new ChatFragment();
+                titleTextTop.setText(CHATS_TITLE);
+            }  else if (itemId == R.id.account) {
                 selectedFragment = new AccountFragment();
                 titleTextTop.setText(ACCOUNT_TITLE);
             }

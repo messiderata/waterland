@@ -10,6 +10,9 @@
     <item android:title="Orders"
         android:icon="@drawable/admin_orders_icon"
         android:id="@+id/orders" />
+    <item android:icon="@drawable/chat_icon1"
+        android:title="Chat"
+        android:id="@+id/nav_chat"/>
     <item android:title="Account"
         android:icon="@drawable/admin_account_icon"
         android:id="@+id/account" />

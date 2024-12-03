@@ -424,7 +424,20 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:orientation="horizontal"
+        android:gravity="center"
         android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/cancel_order_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CANCEL ORDER"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/red"/>
 
         <Button
             android:id="@+id/back_button_2"
