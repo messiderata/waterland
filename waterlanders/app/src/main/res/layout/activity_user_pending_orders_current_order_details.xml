@@ -239,13 +239,21 @@
                         android:src="@drawable/admin_orders_order_list_icon"/>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="Order List"
                         android:textSize="12sp"
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:layout_gravity="bottom"/>
+
+                    <ImageView
+                        android:id="@+id/edit_order"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/admin_product_edit_button"/>
 
                 </LinearLayout>
 

@@ -1,5 +1,6 @@
 package UserHomePageDirectory.FragmentsDirectory;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.waterlanders.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,6 +32,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import UserHomePageDirectory.MainDashboardUser;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -57,6 +62,10 @@ public class ChatActivity extends AppCompatActivity {
         getIntentData();
         setOnclickListeners();
         loadMessages();
+
+        if (receiverID.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2")){
+            showChatNotification();
+        }
     }
 
     private void initializeObjects(){
@@ -176,6 +185,16 @@ public class ChatActivity extends AppCompatActivity {
             // Add the inflated view to the chat layout
             chatLayout.addView(messageView);
         }
+    }
+
+    private void showChatNotification(){
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_chat_notification);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_bg);
+
+        MaterialButton btnOk = dialog.findViewById(R.id.button_ok);
+        btnOk.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
 }

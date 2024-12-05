@@ -1,5 +1,6 @@
 package UserHomePageDirectory.OrderTrackingUtils.PendingOrders;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,9 +24,13 @@ import com.example.waterlanders.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,6 +60,7 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private RecyclerView recyclerViewHolder;
     private TextView totalOrderAmount;
+    private ImageView editOrder;
 
     private LinearLayout modeOfPaymentContainer;
     private TextView modeOfPayment;
@@ -77,11 +83,14 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
         setContentView(R.layout.activity_user_pending_orders_current_order_details);
         initializeObjects();
         getIntentData();
-        setTextValues();
-        populateOrderList();
+//        setTextValues();
+//        populateOrderList();
 
         // other buttons
         backButton.setOnClickListener(v -> {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("refreshNeeded", true);
+            setResult(Activity.RESULT_OK, resultIntent);
             finish();
         });
 
@@ -100,7 +109,16 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
         });
 
         backButton2.setOnClickListener(v -> {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("refreshNeeded", true);
+            setResult(Activity.RESULT_OK, resultIntent);
             finish();
+        });
+
+        editOrder.setOnClickListener(v -> {
+            Intent editOrdersIntent = new Intent(this, UserEditPendingOrders.class);
+            editOrdersIntent.putExtra("order_id", pendingOrdersConstructor.getOrder_id());
+            startActivityForResult(editOrdersIntent, 1);
         });
     }
 
@@ -117,6 +135,7 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
         recyclerViewHolder = findViewById(R.id.recycle_view_holder);
         totalOrderAmount = findViewById(R.id.total_order_amount);
+        editOrder = findViewById(R.id.edit_order);
 
         modeOfPaymentContainer = findViewById(R.id.mode_of_payment_container);
         modeOfPayment = findViewById(R.id.mode_of_payment);
@@ -139,7 +158,32 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private void getIntentData(){
         Intent intent = getIntent();
-        pendingOrdersConstructor = intent.getParcelableExtra("current_order");
+        //pendingOrdersConstructor = intent.getParcelableExtra("current_order");
+        String documentReference = intent.getStringExtra("document_id");
+
+        if (documentReference != null) {
+            db.collection("pendingOrders")
+                    .document(documentReference)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot.exists()) {
+                                // Successfully retrieved the document
+                                pendingOrdersConstructor = documentSnapshot.toObject(PendingOrdersConstructor.class);
+                                // Do something with pendingOrdersConstructor
+                                setTextValues();
+                                populateOrderList();
+                            } else {
+                                Toast.makeText(this, "Document does not exist", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(this, "Failed to retrieve items data", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(this, "Document reference is null", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setTextValues(){
@@ -228,5 +272,55 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            boolean refreshNeeded = data.getBooleanExtra("refreshNeeded", false);
+            if (refreshNeeded) {
+                // Refresh logic here
+                initializeObjects();
+                getIntentData();
+
+                // other buttons
+                backButton.setOnClickListener(v -> {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("refreshNeeded", true);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                });
+
+                // to check the payment details
+                if (String.valueOf(modeOfPayment.getText()).equals("GCash")){
+                    modeOfPaymentContainer.setOnClickListener(view -> {
+                        Map<String, Object> gcash_payment_details = pendingOrdersConstructor.getGcash_payment_details();
+                        Intent showGCashPaymentIntent = new Intent(this, GCashPaymentDetails.class);
+                        showGCashPaymentIntent.putExtra("gcash_payment_details", (Serializable) gcash_payment_details);
+                        startActivity(showGCashPaymentIntent);
+                    });
+                }
+
+                cancelOrderButton.setOnClickListener(v ->{
+                    showCancelOrderDialog();
+                });
+
+                backButton2.setOnClickListener(v -> {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("refreshNeeded", true);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                    finish();
+                });
+
+                editOrder.setOnClickListener(v -> {
+                    Intent editOrdersIntent = new Intent(this, UserEditPendingOrders.class);
+                    editOrdersIntent.putExtra("order_id", pendingOrdersConstructor.getOrder_id());
+                    startActivityForResult(editOrdersIntent, 1);
+                });
+            }
+        }
     }
 }

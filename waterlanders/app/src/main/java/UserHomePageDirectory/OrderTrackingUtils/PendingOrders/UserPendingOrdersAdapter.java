@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,10 +28,12 @@ import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersCurrentOrd
 public class UserPendingOrdersAdapter extends RecyclerView.Adapter<UserPendingOrdersAdapter.UserPendingOrdersAdapterViewHolder> {
     Context context;
     List<PendingOrdersConstructor> pendingOrdersConstructorList;
+    ActivityResultLauncher<Intent> activityResultLauncher;
 
-    public UserPendingOrdersAdapter(Context context, List<PendingOrdersConstructor> pendingOrdersConstructorList) {
+    public UserPendingOrdersAdapter(Context context, List<PendingOrdersConstructor> pendingOrdersConstructorList, ActivityResultLauncher<Intent> activityResultLauncher) {
         this.context = context;
         this.pendingOrdersConstructorList = pendingOrdersConstructorList;
+        this.activityResultLauncher = activityResultLauncher;
     }
 
     public static class UserPendingOrdersAdapterViewHolder extends RecyclerView.ViewHolder {
@@ -77,13 +80,15 @@ public class UserPendingOrdersAdapter extends RecyclerView.Adapter<UserPendingOr
 
         // set text values.
         holder.orderID.setText(String.format("ORDER ID: " + orderCard.getOrder_id()));
-        holder.userID.setText(String.format("USER ID: " + orderCard.getUser_id()));
+//        holder.userID.setText(String.format("USER ID: " + orderCard.getUser_id()));
+        holder.userID.setText(String.format("USERNAME: " + orderCard.getSearch_term()));
         holder.orderPrice.setText(String.format("₱" + orderCard.getTotal_amount()));
 
         holder.itemView.setOnClickListener(v -> {
             Intent showCurrentOrderDetailsIntent = new Intent(context, UserPendingOrdersCurrentOrderDetails.class);
-            showCurrentOrderDetailsIntent.putExtra("current_order", orderCard);
-            context.startActivity(showCurrentOrderDetailsIntent);
+            //showCurrentOrderDetailsIntent.putExtra("current_order", orderCard);
+            showCurrentOrderDetailsIntent.putExtra("document_id", orderCard.getOrder_id());
+            activityResultLauncher.launch(showCurrentOrderDetailsIntent);
         });
     }
 }

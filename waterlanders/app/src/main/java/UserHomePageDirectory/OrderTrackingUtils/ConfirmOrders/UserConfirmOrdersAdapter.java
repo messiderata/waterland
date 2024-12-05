@@ -76,8 +76,9 @@ public class UserConfirmOrdersAdapter  extends RecyclerView.Adapter<UserConfirmO
 
         // set text values.
         holder.orderID.setText(String.format("ORDER ID: " + orderCard.getOrder_id()));
-        holder.userID.setText(String.format("USER ID: " + orderCard.getUser_id()));
+//        holder.userID.setText(String.format("USER ID: " + orderCard.getUser_id()));
         holder.orderPrice.setText(String.format("₱" + orderCard.getTotal_amount()));
+        holder.userID.setText(String.format("USERNAME: " + orderCard.getSearch_term()));
 
         holder.itemView.setOnClickListener(v -> {
             Intent showCurrentOrderDetailsIntent = new Intent(context, WaitingOrdersCurrentOrderDetails.class);
