@@ -15,10 +15,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import UserHomePageDirectory.FragmentsDirectory.HistoryFragment;
@@ -84,64 +92,91 @@ public class OrderReceipt extends AppCompatActivity {
     // this way as well we can track the order properly without being confused because of changing the id
     // then if the ids are existed then generate again
     // else save the order details to the firebase firestore
+
+    // flow
+    // first it generate id according to the date with the format 'YYYYXXXX' example '20240001'
+    // the number will assign on the 'XXXX' is base on the number of items under
+    // 'waitingForCourier', 'onDelivery', 'deliveredOrders' collections
+    // base on the 'date_ordered' field in each document in each collections
+    // the 'date_ordered' field look like this 'November 24, 2024 at 7:24:29PM UTC+8'
+    // base on the number of items that is ordered within the current year will be counted
+    // then the assigned id will +1 of the total counted items
+    // example the total items under 2024 is 13 then the new id is 14 resulting in this format '20240014'
     private void generateUniqueDocumentId() {
         String documentId = db.collection("pendingOrders").document().getId();
-        checkDocumentInWaitingOrdersCollection(documentId);
+
+        // Get the Current Year
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        String yearPrefix = String.valueOf(currentYear);
+
+        // Count Documents for the Current Year
+        String yearStart = "01/01/" + yearPrefix;
+        String yearEnd = "12/31/" + yearPrefix;
+
+
+        db.collection("pendingOrders")
+                .whereGreaterThanOrEqualTo("date_delivery", yearStart)
+                .whereLessThanOrEqualTo("date_delivery", yearEnd)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        int pendingOrdersCount = task.getResult().size();
+                        checkDocumentInWaitingOrdersCollection(pendingOrdersCount, yearStart, yearEnd, yearPrefix);
+                    } else {
+                        // Handle errors
+                    }
+                });
     }
 
-    private void checkDocumentInWaitingOrdersCollection(String documentId) {
+    private void checkDocumentInWaitingOrdersCollection(int totalCount, String yearStart, String yearEnd, String yearPrefix) {
         db.collection("waitingForCourier")
-            .document(documentId)
-            .get()
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    if (task.getResult().exists()) {
-                        // Document ID already exists in 'waitingForCourier', generate a new one
-                        generateUniqueDocumentId();
+                .whereGreaterThanOrEqualTo("date_delivery", yearStart)
+                .whereLessThanOrEqualTo("date_delivery", yearEnd)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        int waitingForCourierCount = task.getResult().size();
+                        int updatedCount = totalCount + waitingForCourierCount;
+                        checkDocumentInOnDelivery(updatedCount, yearStart, yearEnd, yearPrefix);
                     } else {
-                        // Proceed to check the next collection
-                        checkDocumentInOnDelivery(documentId);
+                        // Handle errors
                     }
-                } else {
-                    Toast.makeText(OrderReceipt.this, "Failed to check waitingForCourier collection.", Toast.LENGTH_SHORT).show();
-                }
-            });
+                });
     }
 
-    private void checkDocumentInOnDelivery(String documentId) {
-        db.collection("onDelivery")
-            .document(documentId)
-            .get()
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    if (task.getResult().exists()) {
-                        // Document ID already exists in 'onDelivery', generate a new one
-                        generateUniqueDocumentId();
+    private void checkDocumentInOnDelivery(int totalCount, String yearStart, String yearEnd, String yearPrefix) {
+          db.collection("onDelivery")
+                .whereGreaterThanOrEqualTo("date_delivery", yearStart)
+                .whereLessThanOrEqualTo("date_delivery", yearEnd)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        int onDeliveryCount = task.getResult().size();
+                        int updatedCount = totalCount + onDeliveryCount;
+                        checkDocumentInDeliveredOrders(updatedCount, yearStart, yearEnd, yearPrefix);
                     } else {
-                        // Proceed to check the next collection
-                        checkDocumentInDeliveredOrders(documentId);
+                        // Handle errors
                     }
-                } else {
-                    Toast.makeText(OrderReceipt.this, "Failed to check onDelivery collection.", Toast.LENGTH_SHORT).show();
-                }
-            });
+                });
     }
 
-    private void checkDocumentInDeliveredOrders(String documentId) {
+    private void checkDocumentInDeliveredOrders(int totalCount, String yearStart, String yearEnd, String yearPrefix) {
         db.collection("deliveredOrders")
-            .document(documentId)
+            .whereGreaterThanOrEqualTo("date_delivery", yearStart)
+            .whereLessThanOrEqualTo("date_delivery", yearEnd)
             .get()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful() && task.getResult() != null) {
-                    if (task.getResult().exists()) {
-                        // Document ID already exists in 'deliveredOrders', generate a new one
-                        generateUniqueDocumentId();
-                    } else {
-                        // Document ID is unique across all collections
-                        saveOrderWithUniqueDocumentId(documentId);
-                    }
+                    int deliveredOrdersCount = task.getResult().size();
+                    int finalCount = totalCount + deliveredOrdersCount;
+
+                    // Generate the unique ID
+                    String uniqueDocumentId = yearPrefix + String.format("0" + finalCount);
+
+                    // Save the document
+                    saveOrderWithUniqueDocumentId(uniqueDocumentId);
                 } else {
-                    Toast.makeText(OrderReceipt.this, "Failed to check deliveredOrders collection.", Toast.LENGTH_SHORT).show();
+                    // Handle errors
                 }
             });
     }
@@ -205,7 +240,7 @@ public class OrderReceipt extends AppCompatActivity {
     // if user order something then
     // save the orderID and order status to 'userUID'
     // if userUID is already exist just append the new data
-    private void saveOrderInRealtimeDatabase(String documentId){
+    public void saveOrderInRealtimeDatabase(String documentId){
         String userUID = mAuth.getCurrentUser().getUid();
         DatabaseReference myRef = rdb.getReference(userUID);
 

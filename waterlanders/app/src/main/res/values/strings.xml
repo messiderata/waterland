@@ -81,8 +81,8 @@
 
     <string name="client_id">636704588651-tg0qt3valnsghtksvgh59fnc2mjc9e4t.apps.googleusercontent.com</string>
 
-<!--    <string name="facebook_app_id">1255795338940588</string>-->
-<!--    <string name="facebook_client_token">09bd628df4120847f7b371941fb7e214</string>-->
+    <!--    <string name="facebook_app_id">1255795338940588</string>-->
+    <!--    <string name="facebook_client_token">09bd628df4120847f7b371941fb7e214</string>-->
 
     <string name="facebook_app_id">498518973096997</string>
     <string name="facebook_client_token">cd4eb7e8c13ef3fe7acf902b3867f3a9</string>

@@ -1,11 +1,16 @@
 package UserHomePageDirectory.OrderTrackingFragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +22,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import AdminHomePageDirectory.Orders.Utils.GCashPaymentDetails;
 import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersAdapter;
 import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersConstructor;
+import UserHomePageDirectory.OrderTrackingUtils.PendingOrders.UserEditPendingOrders;
 import UserHomePageDirectory.OrderTrackingUtils.PendingOrders.UserPendingOrdersAdapter;
 
 public class UserPendingOrdersFragment extends Fragment {
@@ -37,6 +46,8 @@ public class UserPendingOrdersFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
 
+    private ActivityResultLauncher<Intent> activityResultLauncher;
+
     public UserPendingOrdersFragment() {
         // Required empty public constructor
     }
@@ -45,9 +56,24 @@ public class UserPendingOrdersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_pending_orders, container, false);
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            boolean refreshNeeded = data.getBooleanExtra("refreshNeeded", false);
+                            if (refreshNeeded) {
+                                initializeObjects(view);
+                                populatePendingOrdersList();
+                            }
+                        }
+                    }
+                }
+        );
+
         initializeObjects(view);
         populatePendingOrdersList();
-
         return view;
     }
 
@@ -56,7 +82,7 @@ public class UserPendingOrdersFragment extends Fragment {
         recyclerViewHolder.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         pendingOrdersConstructorList = new ArrayList<>();
-        userPendingOrdersAdapter = new UserPendingOrdersAdapter(getActivity(), pendingOrdersConstructorList);
+        userPendingOrdersAdapter = new UserPendingOrdersAdapter(getActivity(), pendingOrdersConstructorList, activityResultLauncher);
         recyclerViewHolder.setAdapter(userPendingOrdersAdapter);
 
         db = FirebaseFirestore.getInstance();
@@ -72,6 +98,9 @@ public class UserPendingOrdersFragment extends Fragment {
                 DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
 
                 for (DocumentSnapshot document : pendingOrdersList){
+                    Log.d("Pending order fragment", "document.getString(\"user_id\"): "+document.getString("user_id"));
+                    Log.d("Pending order fragment", "currentUserId: "+currentUserId);
+                    Log.d("Pending order fragment", "document: "+document.getData());
                     if (!document.getId().equals("test_id") && document.getString("user_id").equals(currentUserId)) {
                         PendingOrdersConstructor currentPendingOrder = document.toObject(PendingOrdersConstructor.class);
                         if (currentPendingOrder != null){

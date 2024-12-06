@@ -87,6 +87,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(gsUrl);
             storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
                 Log.d("GLIDE", "Download URL: " + uri.toString());
+                Glide.with(context).clear(holder.itemIMG);
                 Glide.with(context)
                         .load(uri.toString())
                         .override(60, 60)

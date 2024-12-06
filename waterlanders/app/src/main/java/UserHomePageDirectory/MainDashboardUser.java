@@ -33,6 +33,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import Handler.StatusBarUtil;
 import LoginDirectory.Login;
 import UserHomePageDirectory.FragmentsDirectory.AboutUsFragment;
+import UserHomePageDirectory.FragmentsDirectory.ChatActivity;
 import UserHomePageDirectory.FragmentsDirectory.HelpUsFragment;
 import UserHomePageDirectory.FragmentsDirectory.HistoryFragment;
 import UserHomePageDirectory.FragmentsDirectory.HomeFragment;
@@ -135,6 +136,10 @@ public class MainDashboardUser extends AppCompatActivity {
             } else if (itemId == R.id.nav_history) {
                 editText.setText(TitleTextHome);
                 selectedFragment = new HistoryFragment();
+            } else if (itemId == R.id.nav_chat) {
+                Intent chatIntent = new Intent(this, ChatActivity.class);
+                chatIntent.putExtra("receiver_id", "NVWcwGTdD1VdMcnUg86IBAUuE3i2");
+                startActivity(chatIntent);
             } else if (itemId == R.id.nav_profile) {
                 editText.setText(TitleTextHome);
                 selectedFragment = new ProfileFragment();

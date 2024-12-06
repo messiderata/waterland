@@ -84,6 +84,7 @@
             app:itemTextColor="@drawable/selector_nav_icon_text"
             style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
             app:menu="@menu/bottom_nav_menu"
+            app:labelVisibilityMode="labeled"
             tools:ignore="VisualLintBottomNav" />
 
     </LinearLayout>
