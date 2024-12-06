@@ -37,7 +37,8 @@
             android:exported="false" />
         <activity
             android:name="UserHomePageDirectory.FragmentsDirectory.ChatActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="UserHomePageDirectory.FragmentsDirectory.user_help"
             android:exported="false" />

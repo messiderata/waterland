@@ -1,9 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="@color/home_bg_color"
     tools:context="UserHomePageDirectory.FragmentsDirectory.ChatActivity">
 
@@ -45,27 +46,23 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/header"
-        android:layout_above="@+id/buttons_container">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/chatLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-
-
         </LinearLayout>
 
     </ScrollView>
 
-    <!-- text chat container -->
+    <!-- Text Chat Container -->
     <LinearLayout
         android:id="@+id/buttons_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="#fff"
         android:padding="10dp"
         android:visibility="visible">
@@ -86,7 +83,6 @@
                 android:inputType="text"
                 android:textColor="@color/black"
                 android:textColorHint="@color/secondary_color"
-                tools:ignore="HardcodedText"
                 android:layout_marginEnd="10dp"/>
 
             <ImageButton
@@ -95,11 +91,10 @@
                 android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/ic_action_name"
-                android:contentDescription="sending_message"
-                tools:ignore="HardcodedText" />
+                android:contentDescription="sending_message" />
 
         </RelativeLayout>
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
