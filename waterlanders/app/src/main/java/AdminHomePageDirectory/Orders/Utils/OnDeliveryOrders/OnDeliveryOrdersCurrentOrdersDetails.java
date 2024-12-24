@@ -34,6 +34,7 @@ public class OnDeliveryOrdersCurrentOrdersDetails extends AppCompatActivity {
 
     private TextView customerName;
     private TextView customerContactNumber;
+    private TextView accountStatus;
     private TextView customerID;
     private TextView customerDeliveryAddress;
 
@@ -47,6 +48,7 @@ public class OnDeliveryOrdersCurrentOrdersDetails extends AppCompatActivity {
 
     private LinearLayout modeOfPaymentContainer;
     private TextView modeOfPayment;
+    private TextView isPaid;
 
     private TextView orderStatus;
 
@@ -95,6 +97,7 @@ public class OnDeliveryOrdersCurrentOrdersDetails extends AppCompatActivity {
         customerContactNumber = findViewById(R.id.customer_contact_number);
         customerID = findViewById(R.id.customer_id);
         customerDeliveryAddress = findViewById(R.id.customer_delivery_address);
+        accountStatus = findViewById(R.id.account_status);
 
         dateOrdered = findViewById(R.id.date_ordered);
         orderID = findViewById(R.id.order_id);
@@ -105,6 +108,7 @@ public class OnDeliveryOrdersCurrentOrdersDetails extends AppCompatActivity {
 
         modeOfPaymentContainer = findViewById(R.id.mode_of_payment_container);
         modeOfPayment = findViewById(R.id.mode_of_payment);
+        isPaid = findViewById(R.id.is_paid);
 
         orderStatus = findViewById(R.id.order_status);
 
@@ -132,6 +136,7 @@ public class OnDeliveryOrdersCurrentOrdersDetails extends AppCompatActivity {
         customerDeliveryAddress.setText(String.valueOf(deliveryAddress.get("deliveryAddress")));
 
         customerID.setText(String.valueOf(onDeliveryOrdersConstructor.getUser_id()));
+        accountStatus.setText(String.valueOf(onDeliveryOrdersConstructor.getAccountStatus()));
 
         // date ordered
         Timestamp timestamp = onDeliveryOrdersConstructor.getDate_ordered();
@@ -148,6 +153,7 @@ public class OnDeliveryOrdersCurrentOrdersDetails extends AppCompatActivity {
 
         // mode of payment
         modeOfPayment.setText(String.valueOf(onDeliveryOrdersConstructor.getMode_of_payment()));
+        isPaid.setText(String.valueOf(onDeliveryOrdersConstructor.getIsPaid()));
 
         // order status
         orderStatus.setText(String.valueOf(onDeliveryOrdersConstructor.getOrder_status()));

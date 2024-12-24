@@ -97,46 +97,82 @@ public class ChatActivity extends AppCompatActivity {
         message.put("sender", senderID);
         message.put("receiver", receiverID);
 
-        final String modifiedSenderID = senderID.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2") ? receiverID : senderID;
+        db.collection("users")
+                .document(senderID)
+                .get()
+                .addOnSuccessListener(senderSnapshot -> {
+                    if (senderSnapshot.exists()) {
+                        String senderName = senderSnapshot.getString("fullName");
+                        message.put("senderName", senderName);
 
-        // Add the message to the user's chats array in Firestore
-        db.collection("messages")
-                .document(modifiedSenderID) // Sender's document
-                .get() // First, check if the document exists
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        // Document exists, update the "chats" array
-                        db.collection("messages")
-                                .document(modifiedSenderID)
-                                .update("chats", FieldValue.arrayUnion(message)) // Add message to the array
-                                .addOnSuccessListener(aVoid -> {
-                                    textMessage.setText(""); // Clear the input field
-                                    Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                        // Fetch receiver's fullName
+                        db.collection("users")
+                                .document(receiverID)
+                                .get()
+                                .addOnSuccessListener(receiverSnapshot -> {
+                                    if (receiverSnapshot.exists()) {
+                                        String receiverName = receiverSnapshot.getString("fullName");
+                                        message.put("receiverName", receiverName);
+
+                                        // Determine the document ID for messages
+                                        final String modifiedSenderID = senderID.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2") ? receiverID : senderID;
+
+                                        // Check if the document for messages exists
+                                        db.collection("messages")
+                                                .document(modifiedSenderID)
+                                                .get()
+                                                .addOnSuccessListener(messageSnapshot -> {
+                                                    if (messageSnapshot.exists()) {
+                                                        // If the document exists, update the chats array
+                                                        db.collection("messages")
+                                                                .document(modifiedSenderID)
+                                                                .update("chats", FieldValue.arrayUnion(message))
+                                                                .addOnSuccessListener(aVoid -> {
+                                                                    textMessage.setText(""); // Clear input field
+                                                                    Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                                                })
+                                                                .addOnFailureListener(e -> {
+                                                                    Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                                                                    Log.e("ChatActivity", "Error: " + e.getMessage());
+                                                                });
+                                                    } else {
+                                                        // If the document does not exist, create it with the first message
+                                                        Map<String, Object> newMessageData = new HashMap<>();
+                                                        newMessageData.put("chats", Arrays.asList(message));
+
+                                                        db.collection("messages")
+                                                                .document(modifiedSenderID)
+                                                                .set(newMessageData)
+                                                                .addOnSuccessListener(aVoid -> {
+                                                                    textMessage.setText(""); // Clear input field
+                                                                    Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                                                })
+                                                                .addOnFailureListener(e -> {
+                                                                    Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                                                                    Log.e("ChatActivity", "Error: " + e.getMessage());
+                                                                });
+                                                    }
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(ChatActivity.this, "Failed to check sender's document", Toast.LENGTH_SHORT).show();
+                                                    Log.e("ChatActivity", "Error: " + e.getMessage());
+                                                });
+                                    } else {
+                                        Log.e("ChatActivity", "Receiver document does not exist.");
+                                    }
                                 })
                                 .addOnFailureListener(e -> {
-                                    Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ChatActivity.this, "Error fetching receiver's name", Toast.LENGTH_SHORT).show();
+                                    Log.e("ChatActivity", "Error: " + e.getMessage());
                                 });
                     } else {
-                        // Document does not exist, create it with the message
-                        Map<String, Object> newMessageData = new HashMap<>();
-                        newMessageData.put("chats", Arrays.asList(message)); // Add the first message to the chats array
-
-                        db.collection("messages")
-                                .document(modifiedSenderID)
-                                .set(newMessageData) // Create the document and set the initial message
-                                .addOnSuccessListener(aVoid -> {
-                                    textMessage.setText(""); // Clear the input field
-                                    Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
-                                });
+                        Log.e("ChatActivity", "Sender document does not exist.");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(ChatActivity.this, "Failed to check sender's document", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChatActivity.this, "Error fetching sender's name", Toast.LENGTH_SHORT).show();
+                    Log.e("ChatActivity", "Error: " + e.getMessage());
                 });
-
     }
 
     private void loadMessages() {
@@ -164,17 +200,22 @@ public class ChatActivity extends AppCompatActivity {
         for (Map<String, Object> chat : chats) {
             String messageText = (String) chat.get("text");
             String senderID = (String) chat.get("sender");
+            String senderName = (String) chat.get("senderName");
 
             // Inflate the appropriate layout based on the sender
             View messageView;
             if (currentUserID.equals(senderID)) {
                 messageView = getLayoutInflater().inflate(R.layout.layout_messages_sender, chatLayout, false);
                 TextView senderText = messageView.findViewById(R.id.sender_text);
+                TextView senderNameText = messageView.findViewById(R.id.sender_name);
                 senderText.setText(messageText);
+                senderNameText.setText(senderName);
             } else {
                 messageView = getLayoutInflater().inflate(R.layout.layout_messages_receiver, chatLayout, false);
                 TextView receiverText = messageView.findViewById(R.id.receiver_text);
+                TextView receiverNameText = messageView.findViewById(R.id.receiver_name);
                 receiverText.setText(messageText);
+                receiverNameText.setText(senderName);
             }
 
             // Add the inflated view to the chat layout

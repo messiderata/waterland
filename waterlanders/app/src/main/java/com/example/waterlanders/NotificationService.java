@@ -19,12 +19,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import UserHomePageDirectory.MainDashboardUser;
 
 public class NotificationService extends Service {
     private String userId;
     private DataSnapshot previousSnapshot;
+    private List<Map<String, Object>> previousChats = null;
+
 
     @Override
     public void onCreate() {
@@ -94,6 +102,72 @@ public class NotificationService extends Service {
                 Log.e("Notification Service", "Error Code: " + errorCode + ", Message: " + errorMessage);
             }
         });
+
+        // Firebase firestore listener for chat and account status data changes
+        // 'messages' collection -> userId document id for chat
+        // 'users' collection -> userId document id -> 'accountStatus' field for account status
+        // if there are data changes then put notification
+        FirebaseFirestore fdb = FirebaseFirestore.getInstance();
+
+        // Listener for chat messages
+        fdb.collection("messages")
+                .document(userId)
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if (e != null) {
+                        Log.e("Firestore Listener", "Failed to listen for messages: " + e.getMessage());
+                        return;
+                    }
+
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        // Get the current array of chats
+                        List<Map<String, Object>> currentChats = (List<Map<String, Object>>) documentSnapshot.get("chats");
+
+                        if (previousChats != null) {
+                            for (Map<String, Object> chat : currentChats) {
+                                // Check if this chat already exists in previousChats
+                                if (!previousChats.contains(chat)) {
+                                    // New chat found
+                                    String senderID = (String) chat.get("sender");
+                                    String sender = (String) chat.get("senderName");
+                                    String message = (String) chat.get("text");
+
+                                    if (!senderID.equals(userId)){
+                                        sendNotification("Water Chat", "From " + sender + ": " + message);
+                                    }
+                                }
+                            }
+                        }
+
+                        // Update the previousChats to currentChats for future comparisons
+                        previousChats = currentChats;
+                    }
+                });
+
+
+        // Listener for account status
+        // Add a flag to track the first snapshot
+        AtomicBoolean isInitialSnapshot = new AtomicBoolean(true);
+
+        fdb.collection("users")
+                .document(userId)
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if (e != null) {
+                        Log.e("Firestore Listener", "Failed to listen for account status: " + e.getMessage());
+                        return;
+                    }
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        String accountStatus = documentSnapshot.getString("accountStatus");
+
+                        // Skip the notification for the initial snapshot
+                        if (isInitialSnapshot.get()) {
+                            isInitialSnapshot.set(false); // Mark the initial snapshot as processed
+                            return;
+                        }
+
+                        sendNotification("Waterland", "Your account status has changed to: " + accountStatus);
+                    }
+                });
+
 
         return START_STICKY; // Ensures the service restarts if terminated
     }

@@ -1,28 +1,33 @@
 package AdminHomePageDirectory.Chats;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class ChatUsersConstructor {
+public class ChatUsersConstructor implements Serializable {
+    private String accountStatus;
     private List<Map<String, Object>> deliveryDetails;
     private String email;
     private String fullName;
     private Long isResetPassTruEmail;
     private String password;
     private String role;
+    private String uploadedID;
     private String username;
     private String userID;
 
     public ChatUsersConstructor() {
     }
 
-    public ChatUsersConstructor(List<Map<String, Object>> deliveryDetails, String email, String fullName, Long isResetPassTruEmail, String password, String role, String username, String userID) {
+    public ChatUsersConstructor(String accountStatus, List<Map<String, Object>> deliveryDetails, String email, String fullName, Long isResetPassTruEmail, String password, String role, String uploadedID, String username, String userID) {
+        this.accountStatus = accountStatus;
         this.deliveryDetails = deliveryDetails;
         this.email = email;
         this.fullName = fullName;
         this.isResetPassTruEmail = isResetPassTruEmail;
         this.password = password;
         this.role = role;
+        this.uploadedID = uploadedID;
         this.username = username;
         this.userID = userID;
     }
@@ -89,5 +94,21 @@ public class ChatUsersConstructor {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
+    public String getUploadedID() {
+        return uploadedID;
+    }
+
+    public void setUploadedID(String uploadedID) {
+        this.uploadedID = uploadedID;
     }
 }

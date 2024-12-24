@@ -122,8 +122,6 @@ public class OrderReceipt extends AppCompatActivity {
                     if (task.isSuccessful() && task.getResult() != null) {
                         int pendingOrdersCount = task.getResult().size();
                         checkDocumentInWaitingOrdersCollection(pendingOrdersCount, yearStart, yearEnd, yearPrefix);
-                    } else {
-                        // Handle errors
                     }
                 });
     }
@@ -138,8 +136,6 @@ public class OrderReceipt extends AppCompatActivity {
                         int waitingForCourierCount = task.getResult().size();
                         int updatedCount = totalCount + waitingForCourierCount;
                         checkDocumentInOnDelivery(updatedCount, yearStart, yearEnd, yearPrefix);
-                    } else {
-                        // Handle errors
                     }
                 });
     }
@@ -154,8 +150,6 @@ public class OrderReceipt extends AppCompatActivity {
                         int onDeliveryCount = task.getResult().size();
                         int updatedCount = totalCount + onDeliveryCount;
                         checkDocumentInDeliveredOrders(updatedCount, yearStart, yearEnd, yearPrefix);
-                    } else {
-                        // Handle errors
                     }
                 });
     }
@@ -169,16 +163,28 @@ public class OrderReceipt extends AppCompatActivity {
                 if (task.isSuccessful() && task.getResult() != null) {
                     int deliveredOrdersCount = task.getResult().size();
                     int finalCount = totalCount + deliveredOrdersCount;
-
-                    // Generate the unique ID
-                    String uniqueDocumentId = yearPrefix + String.format("0" + finalCount);
-
-                    // Save the document
-                    saveOrderWithUniqueDocumentId(uniqueDocumentId);
-                } else {
-                    // Handle errors
+                    checkDocumentInCancelledOrders(finalCount, yearStart, yearEnd, yearPrefix);
                 }
             });
+    }
+
+    private void checkDocumentInCancelledOrders(int totalCount, String yearStart, String yearEnd, String yearPrefix) {
+        db.collection("cancelledOrders")
+                .whereGreaterThanOrEqualTo("date_delivery", yearStart)
+                .whereLessThanOrEqualTo("date_delivery", yearEnd)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        int deliveredOrdersCount = task.getResult().size();
+                        int finalCount = totalCount + deliveredOrdersCount;
+
+                        // Generate the unique ID
+                        String uniqueDocumentId = yearPrefix + String.format("0" + finalCount);
+
+                        // Save the document
+                        saveOrderWithUniqueDocumentId(uniqueDocumentId);
+                    }
+                });
     }
 
     private void saveOrderWithUniqueDocumentId(String documentId) {
@@ -196,6 +202,9 @@ public class OrderReceipt extends AppCompatActivity {
 
         if (modeOfPayment.equals("GCash")){
             orderData.put("gcash_payment_details", GCashPaymentDetails);
+            orderData.put("isPaid", "YES");
+        } else {
+            orderData.put("isPaid", "NO");
         }
 
         // Retrieve the current user's 'fullName' and save it to search term
@@ -211,6 +220,9 @@ public class OrderReceipt extends AppCompatActivity {
                 } else {
                     orderData.put("search_term", "User no surname");
                 }
+
+                String accountStatus = documentSnapshot.getString("accountStatus");
+                orderData.put("accountStatus", accountStatus);
 
                 // Delivery date
                 selectedDateValue = selectedDateValue.replace("Selected Date: ", "");
