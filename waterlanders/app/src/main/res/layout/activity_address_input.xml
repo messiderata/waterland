@@ -127,7 +127,7 @@
                 android:id="@+id/phone_number_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone number: Input 10 digit number after '+63'"
+                android:hint="Mobile number: Input 10 digit number after '+63'"
                 android:background="@color/white"
                 android:paddingStart="16dp"
                 android:paddingTop="14dp"

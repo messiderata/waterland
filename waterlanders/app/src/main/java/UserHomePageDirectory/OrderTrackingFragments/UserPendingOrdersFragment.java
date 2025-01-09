@@ -98,10 +98,12 @@ public class UserPendingOrdersFragment extends Fragment {
                 DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
 
                 for (DocumentSnapshot document : pendingOrdersList){
-                    Log.d("Pending order fragment", "document.getString(\"user_id\"): "+document.getString("user_id"));
-                    Log.d("Pending order fragment", "currentUserId: "+currentUserId);
-                    Log.d("Pending order fragment", "document: "+document.getData());
+                    Log.d("Pending order fragment", "document.getId(): "+document.getId());
                     if (!document.getId().equals("test_id") && document.getString("user_id").equals(currentUserId)) {
+                        Log.d("Pending order fragment", "document.getString(\"user_id\"): "+document.getString("user_id"));
+                        Log.d("Pending order fragment", "currentUserId: "+currentUserId);
+                        Log.d("Pending order fragment", "document: "+document.getData());
+
                         PendingOrdersConstructor currentPendingOrder = document.toObject(PendingOrdersConstructor.class);
                         if (currentPendingOrder != null){
                             // Convert date_ordered to the formatted string

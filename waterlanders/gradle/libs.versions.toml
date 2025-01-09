@@ -1,6 +1,7 @@
 [versions]
 #agp = "8.6.0"
 agp = "8.5.0"
+androidMail = "1.6.7"
 facebookAndroidSdk = "17.0.1"
 jbcrypt = "0.4"
 junit = "4.13.2"
@@ -28,6 +29,8 @@ startup = "1.1.1"
 firebaseMessaging = "24.0.1"
 
 [libraries]
+android-activation = { module = "com.sun.mail:android-activation", version.ref = "androidMail" }
+android-mail = { module = "com.sun.mail:android-mail", version.ref = "androidMail" }
 com-google-firebase-firebase-auth = { module = "com.google.firebase:firebase-auth" }
 facebook-android-sdk = { module = "com.facebook.android:facebook-android-sdk", version.ref = "facebookAndroidSdk" }
 jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }

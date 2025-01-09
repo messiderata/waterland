@@ -12,12 +12,14 @@ import java.util.Map;
 
 public class OnDeliveryOrdersConstructor implements Parcelable {
 
+    private String accountStatus;
     private String additional_message;
     private String date_delivery;
     private Timestamp date_ordered;
     private Map<String, Object> delivery_address;
     private String delivery_id;
     private Map<String, Object> gcash_payment_details;
+    private String isPaid;
     private String mode_of_payment;
     private String order_icon;
     private String order_id;
@@ -31,13 +33,15 @@ public class OnDeliveryOrdersConstructor implements Parcelable {
     public OnDeliveryOrdersConstructor() {
     }
 
-    public OnDeliveryOrdersConstructor(String additional_message, String date_delivery, Timestamp date_ordered, Map<String, Object> delivery_address, String delivery_id, Map<String, Object> gcash_payment_details, String mode_of_payment, String order_icon, String order_id, List<Map<String, Object>> order_items, String order_status, String search_term, int total_amount, String user_id) {
+    public OnDeliveryOrdersConstructor(String accountStatus, String additional_message, String date_delivery, Timestamp date_ordered, Map<String, Object> delivery_address, String delivery_id, Map<String, Object> gcash_payment_details, String isPaid, String mode_of_payment, String order_icon, String order_id, List<Map<String, Object>> order_items, String order_status, String search_term, int total_amount, String user_id) {
+        this.accountStatus = accountStatus;
         this.additional_message = additional_message;
         this.date_delivery = date_delivery;
         this.date_ordered = date_ordered;
         this.delivery_address = delivery_address;
         this.delivery_id = delivery_id;
         this.gcash_payment_details = gcash_payment_details;
+        this.isPaid = isPaid;
         this.mode_of_payment = mode_of_payment;
         this.order_icon = order_icon;
         this.order_id = order_id;
@@ -50,12 +54,14 @@ public class OnDeliveryOrdersConstructor implements Parcelable {
 
     // Parcelable implementation
     protected OnDeliveryOrdersConstructor(Parcel in) {
+        accountStatus = in.readString();
         additional_message = in.readString();
         date_delivery = in.readString();
         date_ordered = in.readParcelable(Timestamp.class.getClassLoader());
         delivery_address = (Map<String, Object>) in.readSerializable();
         delivery_id = in.readString();
         gcash_payment_details = (Map<String, Object>) in.readSerializable();
+        isPaid = in.readString();
         mode_of_payment = in.readString();
         order_icon = in.readString();
         order_id = in.readString();
@@ -68,12 +74,14 @@ public class OnDeliveryOrdersConstructor implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(accountStatus);
         dest.writeString(additional_message);
         dest.writeString(date_delivery);
         dest.writeParcelable(date_ordered, flags);
         dest.writeSerializable((Serializable) delivery_address);
         dest.writeString(delivery_id);
         dest.writeSerializable((Serializable) gcash_payment_details);
+        dest.writeString(isPaid);
         dest.writeString(mode_of_payment);
         dest.writeString(order_icon);
         dest.writeString(order_id);
@@ -220,5 +228,21 @@ public class OnDeliveryOrdersConstructor implements Parcelable {
 
     public void setFormattedDateOrdered(String formattedDateOrdered) {
         this.formattedDateOrdered = formattedDateOrdered;
+    }
+
+    public String getIsPaid() {
+        return isPaid;
+    }
+
+    public void setIsPaid(String isPaid) {
+        this.isPaid = isPaid;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
     }
 }

@@ -37,6 +37,7 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private TextView customerName;
     private TextView customerContactNumber;
+    private TextView accountStatus;
     private TextView customerID;
     private TextView customerDeliveryAddress;
 
@@ -49,6 +50,7 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private LinearLayout modeOfPaymentContainer;
     private TextView modeOfPayment;
+    private TextView isPaid;
 
     private RadioGroup statusRadioGroup;
 
@@ -115,6 +117,7 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
         customerContactNumber = findViewById(R.id.customer_contact_number);
         customerID = findViewById(R.id.customer_id);
         customerDeliveryAddress = findViewById(R.id.customer_delivery_address);
+        accountStatus = findViewById(R.id.account_status);
 
         dateOrdered = findViewById(R.id.date_ordered);
         orderID = findViewById(R.id.order_id);
@@ -124,6 +127,7 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
         modeOfPaymentContainer = findViewById(R.id.mode_of_payment_container);
         modeOfPayment = findViewById(R.id.mode_of_payment);
+        isPaid = findViewById(R.id.is_paid);
 
         statusRadioGroup = findViewById(R.id.status_radio_group);
 
@@ -155,6 +159,7 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
         customerDeliveryAddress.setText(String.valueOf(deliveryAddress.get("deliveryAddress")));
 
         customerID.setText(String.valueOf(pendingOrdersConstructor.getUser_id()));
+        accountStatus.setText(String.valueOf(pendingOrdersConstructor.getAccountStatus()));
 
         // date ordered
         Timestamp timestamp = pendingOrdersConstructor.getDate_ordered();
@@ -170,6 +175,7 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
         // mode of payment
         modeOfPayment.setText(String.valueOf(pendingOrdersConstructor.getMode_of_payment()));
+        isPaid.setText(String.valueOf(pendingOrdersConstructor.getIsPaid()));
 
         // additional message
         String customerMessage = String.valueOf(pendingOrdersConstructor.getAdditional_message());
@@ -224,10 +230,12 @@ public class PendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
         // Create a map with the current order data
         Map<String, Object> orderData = new HashMap<>();
+        orderData.put("accountStatus", pendingOrdersConstructor.getAccountStatus());
         orderData.put("additional_message", pendingOrdersConstructor.getAdditional_message());
         orderData.put("date_ordered", pendingOrdersConstructor.getDate_ordered());
         orderData.put("date_delivery", pendingOrdersConstructor.getDate_delivery());
         orderData.put("delivery_address", pendingOrdersConstructor.getDelivery_address());
+        orderData.put("isPaid", pendingOrdersConstructor.getIsPaid());
         orderData.put("mode_of_payment", pendingOrdersConstructor.getMode_of_payment());
         orderData.put("order_icon", pendingOrdersConstructor.getOrder_icon());
         orderData.put("order_id", pendingOrdersConstructor.getOrder_id());

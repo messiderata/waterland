@@ -13,6 +13,7 @@ import AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOrdersCons
 
 public class DeliveredOrdersConstructor implements Parcelable {
 
+    private String accountStatus;
     private String additional_message;
     private String customer_feedback;
     private String date_delivery;
@@ -21,6 +22,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
     private Map<String, Object> delivery_address;
     private String delivery_id;
     private Map<String, Object> gcash_payment_details;
+    private String isPaid;
     private String mode_of_payment;
     private String order_icon;
     private String order_id;
@@ -36,7 +38,8 @@ public class DeliveredOrdersConstructor implements Parcelable {
     public DeliveredOrdersConstructor() {
     }
 
-    public DeliveredOrdersConstructor(String additional_message, String date_delivery, String customer_feedback, Timestamp date_delivered, Timestamp date_ordered, Map<String, Object> delivery_address, String delivery_id, Map<String, Object> gcash_payment_details, String mode_of_payment, String order_icon, String order_id, List<Map<String, Object>> order_items, String order_status, String proof_of_delivery, String search_term, int total_amount, String user_confirmation, String user_id) {
+    public DeliveredOrdersConstructor(String accountStatus, String additional_message, String date_delivery, String customer_feedback, Timestamp date_delivered, Timestamp date_ordered, Map<String, Object> delivery_address, String delivery_id, Map<String, Object> gcash_payment_details, String isPaid, String mode_of_payment, String order_icon, String order_id, List<Map<String, Object>> order_items, String order_status, String proof_of_delivery, String search_term, int total_amount, String user_confirmation, String user_id) {
+        this.accountStatus = accountStatus;
         this.additional_message = additional_message;
         this.customer_feedback = customer_feedback;
         this.date_delivery = date_delivery;
@@ -45,6 +48,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
         this.delivery_address = delivery_address;
         this.delivery_id = delivery_id;
         this.gcash_payment_details = gcash_payment_details;
+        this.isPaid = isPaid;
         this.mode_of_payment = mode_of_payment;
         this.order_icon = order_icon;
         this.order_id = order_id;
@@ -59,6 +63,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
 
     // Parcelable implementation
     protected DeliveredOrdersConstructor(Parcel in) {
+        accountStatus = in.readString();
         additional_message = in.readString();
         customer_feedback = in.readString();
         date_delivery = in.readString();
@@ -67,6 +72,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
         delivery_address = (Map<String, Object>) in.readSerializable();
         delivery_id = in.readString();
         gcash_payment_details = (Map<String, Object>) in.readSerializable();
+        isPaid = in.readString();
         mode_of_payment = in.readString();
         order_icon = in.readString();
         order_id = in.readString();
@@ -81,6 +87,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(accountStatus);
         dest.writeString(additional_message);
         dest.writeString(customer_feedback);
         dest.writeString(date_delivery);
@@ -89,6 +96,7 @@ public class DeliveredOrdersConstructor implements Parcelable {
         dest.writeSerializable((Serializable) delivery_address);
         dest.writeString(delivery_id);
         dest.writeSerializable((Serializable) gcash_payment_details);
+        dest.writeString(isPaid);
         dest.writeString(mode_of_payment);
         dest.writeString(order_icon);
         dest.writeString(order_id);
@@ -269,5 +277,21 @@ public class DeliveredOrdersConstructor implements Parcelable {
 
     public void setFormattedDateOrdered(String formattedDateOrdered) {
         this.formattedDateOrdered = formattedDateOrdered;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
+    public String getIsPaid() {
+        return isPaid;
+    }
+
+    public void setIsPaid(String isPaid) {
+        this.isPaid = isPaid;
     }
 }

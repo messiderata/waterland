@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.waterlanders.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,10 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import AdminHomePageDirectory.Chats.ChatUsersConstructor;
+import LoginDirectory.Login;
 import UserHomePageDirectory.HomeFragmentUtils.AddedItems;
 import UserHomePageDirectory.HomeFragmentUtils.GetItems;
 import UserHomePageDirectory.HomeFragmentUtils.ItemAdapter;
 import UserHomePageDirectory.HomeFragmentUtils.OrderConfirmation;
+import UserHomePageDirectory.HomeFragmentUtils.OrderReceipt;
 
 public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountChangeListener {
 
@@ -41,6 +45,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
     private FirebaseFirestore db;
     private static final String TAG = "UserHomePage";
     private TextView textTotalAmount;
+    private FirebaseAuth auth;
 
     @Nullable
     @Override
@@ -54,17 +59,33 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
         // then pass all the items and total price
         // to the order confirmation to check if the items
         // and delivery address details as well as payment methods are correct
+        // if the user's email address is not verified, they cant order
         orderButton.setOnClickListener(v -> {
-            AddedItems addedItems = itemAdapter.getAddedItems();
-            addedItems.logCartItems();
+            checkVerifiedUser(auth, isVerified -> {
+                if (!isVerified) {
+                    Toast.makeText(getContext(), "Email is not verified. Please verify your email.", Toast.LENGTH_SHORT).show();
+                } else {
+                    updateAccountStatus();
+                    checkUserAccountStatus(isRejected -> {
+                        if (!isRejected){
+                            AddedItems addedItems = itemAdapter.getAddedItems();
+                            addedItems.logCartItems();
 
-            if (!addedItems.getCartItems().isEmpty()) {
-                Intent intent = new Intent(getContext(), OrderConfirmation.class);
-                intent.putExtra("addedItems", addedItems);
-                startActivity(intent);
-            } else {
-                Toast.makeText(getContext(), "Select an item first.", Toast.LENGTH_SHORT).show();
-            }
+                            if (!addedItems.getCartItems().isEmpty()) {
+                                Intent intent = new Intent(getContext(), OrderConfirmation.class);
+                                intent.putExtra("addedItems", addedItems);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getContext(), "Select an item first.", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Account status is rejected. Placing order is restricted.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+            });
+
         });
 
         return view;
@@ -88,6 +109,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
         textTotalAmount = view.findViewById(R.id.total_amount);
         orderButton = view.findViewById(R.id.placeOrderButton);
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -122,5 +144,58 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnTotalAmountC
     public void onTotalAmountChange(int totalAmount, AddedItems addedItems) {
         // Implement your logic to handle total amount change
         textTotalAmount.setText("₱" + totalAmount);
+    }
+
+    private void checkVerifiedUser(FirebaseAuth auth, OnEmailVerifiedCallback callback) {
+        FirebaseUser user = auth.getCurrentUser();
+
+        if (user != null) {
+            user.reload()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onEmailVerified(user.isEmailVerified());
+                    } else {
+                        Toast.makeText(getContext(), "Failed to check email verification status.", Toast.LENGTH_SHORT).show();
+                        callback.onEmailVerified(false);
+                    }
+                });
+        } else {
+            callback.onEmailVerified(false);
+        }
+    }
+
+    private void checkUserAccountStatus(OnEmailVerifiedCallback callback) {
+        String currentUserID = auth.getCurrentUser().getUid();
+        db.collection("users")
+            .document(currentUserID)
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()){
+                    String accountStatus = documentSnapshot.getString("accountStatus");
+                    callback.onEmailVerified(accountStatus.equals("REJECTED"));
+                }
+            }).addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
+                    callback.onEmailVerified(true);
+            });
+    }
+
+    interface OnEmailVerifiedCallback {
+        void onEmailVerified(boolean isVerified);
+    }
+
+    private void updateAccountStatus(){
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            db.collection("users")
+                .document(userId)
+                .update("verificationStatus", "VERIFIED")
+                .addOnSuccessListener(aVoid -> Log.d("Home Fragment", "Verification status updated to VERIFIED."))
+                .addOnFailureListener(e -> Log.d("Home Fragment", "Failed to update account verification: " + e.getMessage()));
+        } else {
+            Log.e("Home Fragment", "No user is logged in.");
+        }
     }
 }

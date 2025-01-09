@@ -12,6 +12,7 @@ import com.example.waterlanders.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import AdminHomePageDirectory.Orders.Fragments.AdminDeliveredFragment;
+import AdminHomePageDirectory.Orders.Fragments.AdminMoreOrderMenuFragment;
 import AdminHomePageDirectory.Orders.Fragments.AdminOnDeliveryFragment;
 import AdminHomePageDirectory.Orders.Fragments.AdminPendingOrdersFragment;
 import AdminHomePageDirectory.Orders.Fragments.AdminWaitingForCourierFragment;
@@ -44,6 +45,8 @@ public class OrdersFragment extends Fragment {
                 selectedFragment = new AdminOnDeliveryFragment();
             } else if (itemId == R.id.delivered) {
                 selectedFragment = new AdminDeliveredFragment();
+            } else if (itemId == R.id.more) {
+                selectedFragment = new AdminMoreOrderMenuFragment();
             }
             if (selectedFragment != null) {
                 getParentFragmentManager().beginTransaction()

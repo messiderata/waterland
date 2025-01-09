@@ -1,6 +1,7 @@
 package DeliveryHomePageDirectory.DeliveryOrders.Utils.OnDeliveryOrders;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -22,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.waterlanders.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,9 +33,11 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOrdersConstructor;
 import DeliveryHomePageDirectory.DeliveryOrders.Utils.DeliverySuccessScreen;
+import UserHomePageDirectory.MainDashboardUser;
 
 public class DeliveryProofOfDelivery extends AppCompatActivity {
 
@@ -75,7 +79,7 @@ public class DeliveryProofOfDelivery extends AppCompatActivity {
 
         saveButton.setOnClickListener(v -> {
             if (imageUri != null) {
-                uploadImageToFirebase(imageUri);
+                showPaymentDialog();
             } else {
                 Toast.makeText(this, "Please select an image first", Toast.LENGTH_SHORT).show();
             }
@@ -189,7 +193,7 @@ public class DeliveryProofOfDelivery extends AppCompatActivity {
     }
 
     private void uploadImageToFirebase(Uri uri) {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference("items");
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference("proof_of_delivery");
         String formattedItemName = String.valueOf(uploadText.getText()).replace(" ", "-");
         StorageReference fileRef = storageReference.child(formattedItemName + ".png");
 
@@ -212,6 +216,7 @@ public class DeliveryProofOfDelivery extends AppCompatActivity {
         String orderId = onDeliveryOrdersConstructor.getOrder_id();
 
         Map<String, Object> orderData = new HashMap<>();
+        orderData.put("accountStatus", onDeliveryOrdersConstructor.getAccountStatus());
         orderData.put("additional_message", onDeliveryOrdersConstructor.getAdditional_message());
         orderData.put("customer_feedback", "");
         orderData.put("date_delivered", Timestamp.now());
@@ -219,6 +224,7 @@ public class DeliveryProofOfDelivery extends AppCompatActivity {
         orderData.put("date_ordered", onDeliveryOrdersConstructor.getDate_ordered());
         orderData.put("delivery_address", onDeliveryOrdersConstructor.getDelivery_address());
         orderData.put("delivery_id", onDeliveryOrdersConstructor.getDelivery_id());
+        orderData.put("isPaid", onDeliveryOrdersConstructor.getIsPaid());
         orderData.put("mode_of_payment", onDeliveryOrdersConstructor.getMode_of_payment());
         orderData.put("order_icon", onDeliveryOrdersConstructor.getOrder_icon());
         orderData.put("order_id", onDeliveryOrdersConstructor.getOrder_id());
@@ -274,5 +280,52 @@ public class DeliveryProofOfDelivery extends AppCompatActivity {
                 // Failed to update order
                 Log.e("Order", "Failed to update order", e);
             });
+    }
+
+    private void showPaymentDialog(){
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_update_delivered_order_payment);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_bg);
+
+        TextView dialogTitle = dialog.findViewById(R.id.dialog_title);
+        TextView dialogDescription = dialog.findViewById(R.id.dialog_description);
+        MaterialButton btnCancel = dialog.findViewById(R.id.button_cancel);
+        MaterialButton btnNo = dialog.findViewById(R.id.button_no);
+        MaterialButton btnYes = dialog.findViewById(R.id.button_yes);
+
+        dialogTitle.setText("Payment Confirmation");
+        dialogDescription.setText("Was the payment transaction successful?");
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnYes.setOnClickListener(v -> {
+            db.collection("onDelivery")
+                    .document(onDeliveryOrdersConstructor.getOrder_id())
+                    .update("isPaid", "YES")
+                    .addOnSuccessListener(aVoid -> {
+                        onDeliveryOrdersConstructor.setIsPaid("YES");
+                        uploadImageToFirebase(imageUri);
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "An error occurred updating order.", Toast.LENGTH_SHORT).show();
+                        Log.d("delete pending order", e.toString());
+                    });
+        });
+
+        btnNo.setOnClickListener(v -> {
+            db.collection("onDelivery")
+                    .document(onDeliveryOrdersConstructor.getOrder_id())
+                    .update("isPaid", "NO")
+                    .addOnSuccessListener(aVoid -> {
+                        onDeliveryOrdersConstructor.setIsPaid("NO");
+                        uploadImageToFirebase(imageUri);
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "An error occurred updating order.", Toast.LENGTH_SHORT).show();
+                        Log.d("delete pending order", e.toString());
+                    });
+        });
+
+        dialog.show();
     }
 }
