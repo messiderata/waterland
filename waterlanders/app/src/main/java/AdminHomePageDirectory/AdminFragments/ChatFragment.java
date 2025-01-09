@@ -22,6 +22,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import AdminHomePageDirectory.Chats.ChatUsersAdapter;
@@ -68,7 +69,7 @@ public class ChatFragment extends Fragment {
 
                 for (DocumentSnapshot document : userList){
                     String currentUserID = auth.getCurrentUser().getUid();
-                    if (!document.getId().equals(currentUserID)) {
+                    if (!document.getId().equals(currentUserID) || !document.getId().equals("354PEdF63GdC4mPXRIzCgriDZIU2")) {
                         ChatUsersConstructor chatUsers = document.toObject(ChatUsersConstructor.class);
                         if (chatUsers != null){
                             chatUsers.setUserID(document.getId());
@@ -77,12 +78,6 @@ public class ChatFragment extends Fragment {
                         }
                     }
                 }
-
-                Log.d("ChatFragment", "chatUsersConstructors size: " + chatUsersConstructors.size());
-                for (ChatUsersConstructor user : chatUsersConstructors) {
-                    Log.d("ChatFragment", "User: " + user.getFullName()); // Replace with relevant field
-                }
-                Log.d("ChatFragment", "RecyclerView visibility: " + recyclerView.getVisibility());
 
                 chatUsersAdapter.notifyDataSetChanged();
             } else {

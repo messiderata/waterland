@@ -238,10 +238,10 @@
                     android:focusable="true"
                     android:paddingBottom="14dp"
                     android:singleLine="true"
-                    android:textColor="#757575"
+                    android:textColor="@color/black"
                     android:textColorHint="#757575"
                     android:textCursorDrawable="@null"
-                    android:text="+63"
+                    android:hint="Mobile Number: +63"
                     tools:ignore="TextContrastCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 

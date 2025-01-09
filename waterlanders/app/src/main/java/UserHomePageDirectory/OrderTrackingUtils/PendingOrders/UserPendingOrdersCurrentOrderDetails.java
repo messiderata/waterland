@@ -268,18 +268,45 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
         btnOk.setOnClickListener(v -> {
             db.collection("pendingOrders")
-                .document(pendingOrdersConstructor.getOrder_id())
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    Intent intent = new Intent(this, MainDashboardUser.class);
-                    intent.putExtra("open_fragment", "history");
-                    startActivity(intent);
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "An error occurred cancelling order.", Toast.LENGTH_SHORT).show();
-                    Log.d("delete pending order", e.toString());
-                });
+                    .document(pendingOrdersConstructor.getOrder_id())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // Get the order data
+                            Map<String, Object> orderData = documentSnapshot.getData();
+
+                            // Save it to the 'cancelledOrders' collection
+                            db.collection("cancelledOrders")
+                                    .document(pendingOrdersConstructor.getOrder_id())
+                                    .set(orderData)
+                                    .addOnSuccessListener(aVoid -> {
+                                        // After saving, delete it from 'pendingOrders'
+                                        db.collection("pendingOrders")
+                                                .document(pendingOrdersConstructor.getOrder_id())
+                                                .delete()
+                                                .addOnSuccessListener(deleteVoid -> {
+                                                    Intent intent = new Intent(this, MainDashboardUser.class);
+                                                    intent.putExtra("open_fragment", "history");
+                                                    startActivity(intent);
+                                                    finish();
+                                                })
+                                                .addOnFailureListener(deleteError -> {
+                                                    Toast.makeText(this, "An error occurred cancelling the order.", Toast.LENGTH_SHORT).show();
+                                                    Log.d("delete pending order", deleteError.toString());
+                                                });
+                                    })
+                                    .addOnFailureListener(saveError -> {
+                                        Toast.makeText(this, "Failed to save to cancelled orders.", Toast.LENGTH_SHORT).show();
+                                        Log.d("save cancelled order", saveError.toString());
+                                    });
+                        } else {
+                            Toast.makeText(this, "Order not found.", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(fetchError -> {
+                        Toast.makeText(this, "An error occurred retrieving the order.", Toast.LENGTH_SHORT).show();
+                        Log.d("fetch pending order", fetchError.toString());
+                    });
         });
 
         dialog.show();

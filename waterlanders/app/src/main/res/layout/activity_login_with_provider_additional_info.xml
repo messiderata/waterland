@@ -165,7 +165,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="15dp"
-                android:hint="Contact Number"
+                android:hint="Mobile Number: +63"
                 android:textColorHint="#757575"
                 android:padding="20dp"/>
 

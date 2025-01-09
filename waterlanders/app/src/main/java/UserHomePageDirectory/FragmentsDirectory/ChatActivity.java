@@ -28,12 +28,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
+import AdminHomePageDirectory.AdminHomePage;
 import UserHomePageDirectory.MainDashboardUser;
 
 public class ChatActivity extends AppCompatActivity {
@@ -80,7 +84,18 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setOnclickListeners(){
-        backButton.setOnClickListener(v -> finish());
+        backButton.setOnClickListener(v -> {
+            if (currentUserID.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2")){
+                Intent intent = new Intent(this, AdminHomePage.class);
+                intent.putExtra("open_fragment", "chats");
+                startActivity(intent);
+                finish();
+            } else {
+                Intent intent = new Intent(this, MainDashboardUser.class);
+                startActivity(intent);
+                finish();
+            }
+        });
         sendButton.setOnClickListener(v -> {
             String messageText = textMessage.getText().toString().trim();
             if (!messageText.isEmpty()) {
@@ -96,6 +111,8 @@ public class ChatActivity extends AppCompatActivity {
         message.put("text", messageText);
         message.put("sender", senderID);
         message.put("receiver", receiverID);
+        message.put("chatId", generateMessageId());
+        message.put("chatDate", generateMessageDate());
 
         db.collection("users")
                 .document(senderID)
@@ -173,6 +190,17 @@ public class ChatActivity extends AppCompatActivity {
                     Toast.makeText(ChatActivity.this, "Error fetching sender's name", Toast.LENGTH_SHORT).show();
                     Log.e("ChatActivity", "Error: " + e.getMessage());
                 });
+    }
+
+    private String generateMessageId() {
+        long timestamp = System.currentTimeMillis();
+        int randomInt = new Random().nextInt(100000);
+        return "MSG" + timestamp + randomInt;
+    }
+
+    private String generateMessageDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.now().format(formatter);
     }
 
     private void loadMessages() {
