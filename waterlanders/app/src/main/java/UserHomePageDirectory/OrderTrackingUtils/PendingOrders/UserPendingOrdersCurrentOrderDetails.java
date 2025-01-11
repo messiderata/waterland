@@ -51,6 +51,7 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private TextView customerName;
     private TextView customerContactNumber;
+    private TextView accountStatus;
     private TextView customerID;
     private TextView customerDeliveryAddress;
 
@@ -64,6 +65,7 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private LinearLayout modeOfPaymentContainer;
     private TextView modeOfPayment;
+    private TextView isPaid;
 
     private TextView orderStatus;
 
@@ -116,9 +118,14 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
         });
 
         editOrder.setOnClickListener(v -> {
-            Intent editOrdersIntent = new Intent(this, UserEditPendingOrders.class);
-            editOrdersIntent.putExtra("order_id", pendingOrdersConstructor.getOrder_id());
-            startActivityForResult(editOrdersIntent, 1);
+            if (pendingOrdersConstructor.getIsPaid().equals("NO")){
+                Intent editOrdersIntent = new Intent(this, UserEditPendingOrders.class);
+                editOrdersIntent.putExtra("order_id", pendingOrdersConstructor.getOrder_id());
+                startActivityForResult(editOrdersIntent, 1);
+            } else {
+                Toast.makeText(this, "Order is already paid. Edit is restricted. Please make new transaction instead.", Toast.LENGTH_LONG).show();
+            }
+
         });
     }
 
@@ -129,6 +136,7 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
         customerContactNumber = findViewById(R.id.customer_contact_number);
         customerID = findViewById(R.id.customer_id);
         customerDeliveryAddress = findViewById(R.id.customer_delivery_address);
+        accountStatus = findViewById(R.id.account_status);
 
         dateOrdered = findViewById(R.id.date_ordered);
         orderID = findViewById(R.id.order_id);
@@ -139,6 +147,7 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
         modeOfPaymentContainer = findViewById(R.id.mode_of_payment_container);
         modeOfPayment = findViewById(R.id.mode_of_payment);
+        isPaid = findViewById(R.id.is_paid);
 
         orderStatus = findViewById(R.id.order_status);
 
@@ -194,6 +203,7 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
         customerDeliveryAddress.setText(String.valueOf(deliveryAddress.get("deliveryAddress")));
 
         customerID.setText(String.valueOf(pendingOrdersConstructor.getUser_id()));
+        accountStatus.setText(String.valueOf(pendingOrdersConstructor.getAccountStatus()));
 
         // date ordered
         Timestamp timestamp = pendingOrdersConstructor.getDate_ordered();
@@ -209,6 +219,7 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
         // mode of payment
         modeOfPayment.setText(String.valueOf(pendingOrdersConstructor.getMode_of_payment()));
+        isPaid.setText(String.valueOf(pendingOrdersConstructor.getIsPaid()));
 
         // order status
         orderStatus.setText(String.valueOf(pendingOrdersConstructor.getOrder_status()));
@@ -257,18 +268,45 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
 
         btnOk.setOnClickListener(v -> {
             db.collection("pendingOrders")
-                .document(pendingOrdersConstructor.getOrder_id())
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    Intent intent = new Intent(this, MainDashboardUser.class);
-                    intent.putExtra("open_fragment", "history");
-                    startActivity(intent);
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "An error occurred cancelling order.", Toast.LENGTH_SHORT).show();
-                    Log.d("delete pending order", e.toString());
-                });
+                    .document(pendingOrdersConstructor.getOrder_id())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // Get the order data
+                            Map<String, Object> orderData = documentSnapshot.getData();
+
+                            // Save it to the 'cancelledOrders' collection
+                            db.collection("cancelledOrders")
+                                    .document(pendingOrdersConstructor.getOrder_id())
+                                    .set(orderData)
+                                    .addOnSuccessListener(aVoid -> {
+                                        // After saving, delete it from 'pendingOrders'
+                                        db.collection("pendingOrders")
+                                                .document(pendingOrdersConstructor.getOrder_id())
+                                                .delete()
+                                                .addOnSuccessListener(deleteVoid -> {
+                                                    Intent intent = new Intent(this, MainDashboardUser.class);
+                                                    intent.putExtra("open_fragment", "history");
+                                                    startActivity(intent);
+                                                    finish();
+                                                })
+                                                .addOnFailureListener(deleteError -> {
+                                                    Toast.makeText(this, "An error occurred cancelling the order.", Toast.LENGTH_SHORT).show();
+                                                    Log.d("delete pending order", deleteError.toString());
+                                                });
+                                    })
+                                    .addOnFailureListener(saveError -> {
+                                        Toast.makeText(this, "Failed to save to cancelled orders.", Toast.LENGTH_SHORT).show();
+                                        Log.d("save cancelled order", saveError.toString());
+                                    });
+                        } else {
+                            Toast.makeText(this, "Order not found.", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(fetchError -> {
+                        Toast.makeText(this, "An error occurred retrieving the order.", Toast.LENGTH_SHORT).show();
+                        Log.d("fetch pending order", fetchError.toString());
+                    });
         });
 
         dialog.show();

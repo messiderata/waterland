@@ -106,6 +106,29 @@ tools:context="AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOr
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Account Status: "
+                        android:textColor="@color/secondary_color"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/account_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ACCOUNT STATUS"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="12sp"/>
+
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/customer_id"
                     android:layout_width="wrap_content"
@@ -326,24 +349,64 @@ tools:context="AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOr
                     android:layout_marginEnd="5dp"
                     android:src="@drawable/admin_orders_mode_of_payment_icon"/>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mode of Payment:"
-                    android:textSize="12sp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="5dp"
-                    android:layout_gravity="center"/>
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/mode_of_payment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mode of Payment"
-                    android:textSize="12sp"
-                    android:textColor="@color/secondary_color"
-                    android:layout_gravity="center"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mode of Payment:"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="5dp"
+                            android:layout_gravity="center"/>
+
+                        <TextView
+                            android:id="@+id/mode_of_payment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mode of Payment"
+                            android:textSize="12sp"
+                            android:textColor="@color/secondary_color"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Paid:"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="5dp"
+                            android:layout_gravity="center"/>
+
+                        <TextView
+                            android:id="@+id/is_paid"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mode of Payment"
+                            android:textSize="12sp"
+                            android:textColor="@color/secondary_color"
+                            android:layout_gravity="center"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
 

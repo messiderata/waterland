@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="PENDING"
+    <item android:title="ORDER"
         android:icon="@drawable/admin_orders_pending_icon"
         android:id="@+id/pending_orders"/>
-    <item android:title="WAITING ORDERS"
+    <item android:title="CONFIRM"
         android:icon="@drawable/waiting_for_courier_icon"
         android:id="@+id/waiting_for_courier"/>
-    <item android:title="ON DELIVERY"
+    <item android:title="PICKUP"
         android:icon="@drawable/on_delivery_icon"
         android:id="@+id/on_delivery"/>
     <item android:title="DELIVERED"
         android:icon="@drawable/delivered_icon"
         android:id="@+id/delivered"/>
+    <item android:title="MORE"
+        android:icon="@drawable/more_icon"
+        android:id="@+id/more"/>
 </menu>

@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="YOUR ON-DELIVERY ORDERS"
+            android:text="YOUR PICK UP ORDERS"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="15sp"

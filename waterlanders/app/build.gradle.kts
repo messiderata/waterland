@@ -88,4 +88,7 @@ dependencies {
     androidTestImplementation(libs.startup)
     implementation (libs.jbcrypt)
 
+    implementation(files("libs/mail.jar"))
+    implementation(files("libs/activation.jar"))
+    implementation(files("libs/additionnal.jar"))
 }

@@ -1,10 +1,13 @@
 package AdminHomePageDirectory;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.waterlanders.NotificationService;
 import com.example.waterlanders.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +50,7 @@ public class AdminHomePage extends AppCompatActivity {
         setContentView(R.layout.activity_admin_home_page);
         StatusBarUtil.setStatusBarColor(this, R.color.button_bg);
         checkCurrentUserIfLogIn();
+        initializeNotificationService();
         checkIntentFragment(savedInstanceState);
         getPermission();
 
@@ -104,6 +109,10 @@ public class AdminHomePage extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new OrdersFragment())
                     .commit();
+        }  else if (fragmentToOpen != null && fragmentToOpen.equals("chats")) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ChatFragment())
+                    .commit();
         } else {
             initializeFirstFragment(savedInstanceState);
         }
@@ -143,5 +152,28 @@ public class AdminHomePage extends AppCompatActivity {
                 Toast.makeText(this, "SMS Permission denied. The app will not be able to send OTP.", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void initializeNotificationService(){
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Intent serviceIntent = new Intent(this, NotificationService.class);
+        serviceIntent.putExtra("userId", userId);
+
+        // Check if the service is already running
+        if (!isServiceRunning(NotificationService.class)) {
+            startService(serviceIntent);
+        } else {
+            Log.d("Service Status", "NotificationService is already running.");
+        }
+    }
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -12,4 +12,7 @@
     <item android:title="Completed"
         android:icon="@drawable/box_delivered_icon"
         android:id="@+id/completed" />
+    <item android:title="MORE"
+        android:icon="@drawable/more_icon"
+        android:id="@+id/more"/>
 </menu>

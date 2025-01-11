@@ -165,7 +165,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="15dp"
-                android:hint="Contact Number"
+                android:hint="Mobile Number: +63"
                 android:textColorHint="#757575"
                 android:padding="20dp"/>
 
@@ -175,6 +175,52 @@
                 android:text="Input 10 digit number after '+63'"
                 android:textColor="@color/white"
                 android:layout_marginStart="20dp"/>
+
+            <!-- upload id container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/text_input_bg_oblong">
+
+                <LinearLayout
+                    android:id="@+id/upload_image_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/dashed_border">
+
+                    <!-- Upload Icon -->
+                    <ImageView
+                        android:id="@+id/upload_icon"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/upload_file_img"
+                        android:layout_gravity="center" />
+
+                    <!-- Drop your file here, or Browse -->
+                    <TextView
+                        android:id="@+id/upload_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Click to upload ID for verification"
+                        android:textColor="@color/secondary_color"
+                        android:textSize="16sp"
+                        android:textAlignment="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -18,6 +18,7 @@ import AdminHomePageDirectory.Orders.Fragments.AdminWaitingForCourierFragment;
 import UserHomePageDirectory.OrderTrackingFragments.UserCompletedOrdersFragment;
 import UserHomePageDirectory.OrderTrackingFragments.UserConfirmOrdersFragment;
 import UserHomePageDirectory.OrderTrackingFragments.UserDeliveryOrdersFragment;
+import UserHomePageDirectory.OrderTrackingFragments.UserMoreOrderMenuFragment;
 import UserHomePageDirectory.OrderTrackingFragments.UserPendingOrdersFragment;
 
 
@@ -45,6 +46,8 @@ public class HistoryFragment extends Fragment {
                 selectedFragment = new UserDeliveryOrdersFragment();
             } else if (itemId == R.id.completed) {
                 selectedFragment = new UserCompletedOrdersFragment();
+            } else if (itemId == R.id.more) {
+                selectedFragment = new UserMoreOrderMenuFragment();
             }
             if (selectedFragment != null) {
                 getParentFragmentManager().beginTransaction()
