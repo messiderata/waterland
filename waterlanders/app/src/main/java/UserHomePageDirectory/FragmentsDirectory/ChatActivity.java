@@ -85,17 +85,38 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setOnclickListeners(){
         backButton.setOnClickListener(v -> {
+            String modifiedSenderID = currentUserID.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2") ? receiverID : currentUserID;
+
             if (currentUserID.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2")){
-                Intent intent = new Intent(this, AdminHomePage.class);
-                intent.putExtra("open_fragment", "chats");
-                startActivity(intent);
-                finish();
+                db.collection("users")
+                        .document(modifiedSenderID)
+                        .update("unreadMessagesFromUserToAdmin", 0)
+                        .addOnSuccessListener(aVoid2 -> {
+                            Intent intent = new Intent(this, AdminHomePage.class);
+                            intent.putExtra("open_fragment", "chats");
+                            startActivity(intent);
+                            finish();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                            Log.e("ChatActivity", "Error: " + e.getMessage());
+                        });
             } else {
-                Intent intent = new Intent(this, MainDashboardUser.class);
-                startActivity(intent);
-                finish();
+                db.collection("users")
+                        .document(modifiedSenderID)
+                        .update("unreadMessagesFromAdminToUser", 0)
+                        .addOnSuccessListener(aVoid2 -> {
+                            Intent intent = new Intent(this, MainDashboardUser.class);
+                            startActivity(intent);
+                            finish();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                            Log.e("ChatActivity", "Error: " + e.getMessage());
+                        });
             }
         });
+
         sendButton.setOnClickListener(v -> {
             String messageText = textMessage.getText().toString().trim();
             if (!messageText.isEmpty()) {
@@ -145,8 +166,44 @@ public class ChatActivity extends AppCompatActivity {
                                                                 .document(modifiedSenderID)
                                                                 .update("chats", FieldValue.arrayUnion(message))
                                                                 .addOnSuccessListener(aVoid -> {
-                                                                    textMessage.setText(""); // Clear input field
-                                                                    Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+
+                                                                    // update the 'user' collection message fields
+                                                                    db.collection("users")
+                                                                            .document(modifiedSenderID)
+                                                                            .get()
+                                                                            .addOnSuccessListener(receiverSnapshot2 -> {
+                                                                                Map<String, Object> dataa = receiverSnapshot2.getData();
+                                                                                Log.d("ReceiverSnapshot", "Document data: " + dataa);
+
+                                                                                Long unreadMessagesFromAdminToUser = receiverSnapshot2.getLong("unreadMessagesFromAdminToUser");
+                                                                                Long unreadMessagesFromUserToAdmin = receiverSnapshot2.getLong("unreadMessagesFromUserToAdmin");
+
+                                                                                if (currentUserID.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2")){
+                                                                                    db.collection("users")
+                                                                                            .document(modifiedSenderID)
+                                                                                            .update("unreadMessagesDate", message.get("chatDate"),
+                                                                                                    "unreadMessagesFromAdminToUser", unreadMessagesFromAdminToUser+1)
+                                                                                            .addOnSuccessListener(aVoid2 -> {
+                                                                                                textMessage.setText("");
+                                                                                            })
+                                                                                            .addOnFailureListener(e -> {
+                                                                                                Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                                                                                                Log.e("ChatActivity", "Error: " + e.getMessage());
+                                                                                            });
+                                                                                } else {
+                                                                                    db.collection("users")
+                                                                                            .document(modifiedSenderID)
+                                                                                            .update("unreadMessagesDate", message.get("chatDate"),
+                                                                                                    "unreadMessagesFromUserToAdmin", unreadMessagesFromUserToAdmin+1)
+                                                                                            .addOnSuccessListener(aVoid2 -> {
+                                                                                                textMessage.setText("");
+                                                                                            })
+                                                                                            .addOnFailureListener(e -> {
+                                                                                                Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                                                                                                Log.e("ChatActivity", "Error: " + e.getMessage());
+                                                                                            });
+                                                                                }
+                                                                            });
                                                                 })
                                                                 .addOnFailureListener(e -> {
                                                                     Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
@@ -161,8 +218,43 @@ public class ChatActivity extends AppCompatActivity {
                                                                 .document(modifiedSenderID)
                                                                 .set(newMessageData)
                                                                 .addOnSuccessListener(aVoid -> {
-                                                                    textMessage.setText(""); // Clear input field
-                                                                    Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                                                    // update the 'user' collection message fields
+                                                                    db.collection("users")
+                                                                            .document(modifiedSenderID)
+                                                                            .get()
+                                                                            .addOnSuccessListener(receiverSnapshot2 -> {
+                                                                                Map<String, Object> dataa = receiverSnapshot2.getData();
+                                                                                Log.d("ReceiverSnapshot", "Document data: " + dataa);
+
+                                                                                Long unreadMessagesFromAdminToUser = receiverSnapshot2.getLong("unreadMessagesFromAdminToUser");
+                                                                                Long unreadMessagesFromUserToAdmin = receiverSnapshot2.getLong("unreadMessagesFromUserToAdmin");
+
+                                                                                if (currentUserID.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2")){
+                                                                                    db.collection("users")
+                                                                                            .document(modifiedSenderID)
+                                                                                            .update("unreadMessagesDate", message.get("chatDate"),
+                                                                                                    "unreadMessagesFromAdminToUser", unreadMessagesFromAdminToUser+1)
+                                                                                            .addOnSuccessListener(aVoid2 -> {
+                                                                                                textMessage.setText("");
+                                                                                            })
+                                                                                            .addOnFailureListener(e -> {
+                                                                                                Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                                                                                                Log.e("ChatActivity", "Error: " + e.getMessage());
+                                                                                            });
+                                                                                } else {
+                                                                                    db.collection("users")
+                                                                                            .document(modifiedSenderID)
+                                                                                            .update("unreadMessagesDate", message.get("chatDate"),
+                                                                                                    "unreadMessagesFromUserToAdmin", unreadMessagesFromUserToAdmin+1)
+                                                                                            .addOnSuccessListener(aVoid2 -> {
+                                                                                                textMessage.setText("");
+                                                                                            })
+                                                                                            .addOnFailureListener(e -> {
+                                                                                                Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                                                                                                Log.e("ChatActivity", "Error: " + e.getMessage());
+                                                                                            });
+                                                                                }
+                                                                            });
                                                                 })
                                                                 .addOnFailureListener(e -> {
                                                                     Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
