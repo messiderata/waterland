@@ -1,6 +1,6 @@
 [versions]
-#agp = "8.6.0"
 agp = "8.5.0"
+coreKtx = "1.9.0"
 facebookAndroidSdk = "17.0.1"
 jbcrypt = "0.4"
 junit = "4.13.2"
@@ -26,9 +26,12 @@ okhttp = "4.9.3"
 playServicesAuth = "21.2.0"
 startup = "1.1.1"
 firebaseMessaging = "24.0.1"
+androidPdfViewer = "3.2.0-beta.1"
 
 [libraries]
-com-google-firebase-firebase-auth = { module = "com.google.firebase:firebase-auth" }
+com-google-firebase-firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
+android-pdf-viewer = { module = "com.github.mhiew:android-pdf-viewer", version.ref = "androidPdfViewer" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 facebook-android-sdk = { module = "com.facebook.android:facebook-android-sdk", version.ref = "facebookAndroidSdk" }
 jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -57,4 +60,3 @@ firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
-

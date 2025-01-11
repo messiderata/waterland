@@ -40,8 +40,9 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name="UserHomePageDirectory.FragmentsDirectory.user_help"
-            android:exported="false" />
+            android:name="UserHomePageDirectory.FragmentsDirectory.HelpUsFragment"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
 
         <service
             android:name=".NotificationService"

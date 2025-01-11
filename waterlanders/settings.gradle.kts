@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage", "DEPRECATION")
+
 pluginManagement {
     repositories {
         google {
@@ -8,7 +10,10 @@ pluginManagement {
             }
         }
         mavenCentral()
+
         gradlePluginPortal()
+
+
     }
 }
 dependencyResolutionManagement {
@@ -16,9 +21,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+//        maven {
+//            url = uri("https://jitpack.io")
+//        }
     }
 }
-
 rootProject.name = "waterlanders"
 include(":app")
  
