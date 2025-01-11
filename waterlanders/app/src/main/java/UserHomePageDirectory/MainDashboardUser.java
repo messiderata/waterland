@@ -24,12 +24,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.waterlanders.NotificationService;
 import com.example.waterlanders.R;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import Handler.StatusBarUtil;
 import LoginDirectory.Login;
@@ -127,6 +129,7 @@ public class MainDashboardUser extends AppCompatActivity {
         });
 
         // Set up BottomNavigationView item selection
+        setBadgeToChat(bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
@@ -196,6 +199,35 @@ public class MainDashboardUser extends AppCompatActivity {
                 bottomNavigationView.setSelectedItemId(R.id.nav_home);
             }
         }
+    }
+
+    private void setBadgeToChat(BottomNavigationView bottomNav){
+        FirebaseFirestore fdb = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String currentUserID = auth.getCurrentUser().getUid();
+        BadgeDrawable badgeDrawable = bottomNav.getOrCreateBadge(R.id.nav_chat);
+
+        fdb.collection("users")
+                .document(currentUserID)
+                .addSnapshotListener((querySnapshot, e) -> {
+                    if (e != null) {
+                        Log.e("Firestore Listener", "Failed to listen for messages: " + e.getMessage());
+                        return;
+                    }
+
+                    if (querySnapshot != null && querySnapshot.exists()){
+                        Long unreadMessagesFromAdminToUser = querySnapshot.getLong("unreadMessagesFromAdminToUser");
+                        if (unreadMessagesFromAdminToUser == null) unreadMessagesFromAdminToUser = 0L;
+
+                        if (unreadMessagesFromAdminToUser > 0){
+                            badgeDrawable.setNumber(unreadMessagesFromAdminToUser.intValue());
+                            badgeDrawable.setVisible(true);
+                        } else {
+                            badgeDrawable.clearNumber();
+                            badgeDrawable.setVisible(false);
+                        }
+                    }
+                });
     }
 
     private void getPermission(){

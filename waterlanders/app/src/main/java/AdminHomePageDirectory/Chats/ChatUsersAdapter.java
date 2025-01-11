@@ -33,6 +33,7 @@ public class ChatUsersAdapter extends RecyclerView.Adapter<ChatUsersAdapter.Chat
         TextView userFullName;
         TextView username;
         TextView userID;
+        TextView chatCount;
 
         public ChatUsersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -40,6 +41,7 @@ public class ChatUsersAdapter extends RecyclerView.Adapter<ChatUsersAdapter.Chat
             userFullName = itemView.findViewById(R.id.user_fullname);
             username = itemView.findViewById(R.id.username);
             userID = itemView.findViewById(R.id.user_id);
+            chatCount = itemView.findViewById(R.id.chat_count);
         }
     }
 
@@ -58,14 +60,21 @@ public class ChatUsersAdapter extends RecyclerView.Adapter<ChatUsersAdapter.Chat
     @Override
     public void onBindViewHolder(@NonNull ChatUsersAdapter.ChatUsersAdapterViewHolder holder, int position) {
         ChatUsersConstructor usersConstructor = chatUsersConstructors.get(position);
+        Log.d("ChatUsersAdapter", "Binding user: " + usersConstructor.getFullName());
 
         // set text values
         holder.userFullName.setText(usersConstructor.getFullName());
         holder.username.setText(usersConstructor.getUsername());
         holder.userID.setText(usersConstructor.getUserID());
 
-        Log.d("ChatUsersAdapter", "Binding user: " + usersConstructor.getFullName());
-
+        // check if has unread message
+        Long unreadMessagesFromUserToAdmin = usersConstructor.getUnreadMessagesFromUserToAdmin();
+        if (unreadMessagesFromUserToAdmin > 0){
+            holder.chatCount.setText(String.valueOf(unreadMessagesFromUserToAdmin));
+            holder.chatCount.setVisibility(View.VISIBLE);
+        } else {
+            holder.chatCount.setVisibility(View.GONE);
+        }
 
         holder.itemView.setOnClickListener(v -> {
             Intent chatIntent = new Intent(context, ChatActivity.class);

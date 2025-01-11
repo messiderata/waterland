@@ -21,10 +21,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import UserHomePageDirectory.FragmentsDirectory.ChatActivity;
@@ -33,8 +36,9 @@ import UserHomePageDirectory.MainDashboardUser;
 public class NotificationService extends Service {
     private String userId;
     private DataSnapshot previousSnapshot;
+    private String previousUserAccountStatus;
     private List<Map<String, Object>> previousChats = null;
-    private List<Map<String, Object>> previousChatsAdmin = new ArrayList<>();;
+    private Set<Map<String, Object>> previousChatsAdmin = new HashSet<>();
 
 
     @Override
@@ -67,11 +71,25 @@ public class NotificationService extends Service {
 
         if (userId.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2")){
             FirebaseFirestore fdb = FirebaseFirestore.getInstance();
+            boolean[] isInitialLoad = {true};
             Log.d("Notification service admin", "admin notif this is initialize");
 
             // Listener for chat messages
-            fdb.collection("messages")
-                    .addSnapshotListener((querySnapshot, e) -> {
+            fdb.collection("messages").get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Map<String, Object> data = document.getData();
+
+                        // Get the array of chats
+                        List<Map<String, Object>> currentChats = (List<Map<String, Object>>) data.get("chats");
+                        if (currentChats != null) {
+                            previousChatsAdmin.addAll(currentChats);
+                        }
+                    }
+                    Log.d("Notification service admin", "previousChatsAdmin1: "+previousChatsAdmin);
+
+                    // After fetching initial data, set up the snapshot listener
+                    fdb.collection("messages").addSnapshotListener((querySnapshot, e) -> {
                         if (e != null) {
                             Log.e("Firestore Listener", "Failed to listen for messages: " + e.getMessage());
                             return;
@@ -79,15 +97,16 @@ public class NotificationService extends Service {
 
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
                             for (DocumentChange docChange : querySnapshot.getDocumentChanges()) {
-                                if (docChange.getType() == DocumentChange.Type.MODIFIED) {
-                                    Map<String, Object> data = docChange.getDocument().getData();
+                                Map<String, Object> data = docChange.getDocument().getData();
+                                List<Map<String, Object>> currentChats = (List<Map<String, Object>>) data.get("chats");
 
-                                    // Get the array of chats
-                                    List<Map<String, Object>> currentChats = (List<Map<String, Object>>) data.get("chats");
+                                if (currentChats != null) {
+                                    Log.d("Notification service admin", "previousChatsAdmin2: "+previousChatsAdmin);
+                                    for (Map<String, Object> chat : currentChats) {
+                                        boolean isNewChat = !previousChatsAdmin.contains(chat);
+                                        Log.d("Notification service admin", "chat: "+chat);
 
-                                    if (previousChatsAdmin.isEmpty()) {
-                                        // Treat all chats as new for the first event
-                                        for (Map<String, Object> chat : currentChats) {
+                                        if (!isInitialLoad[0] && (docChange.getType() == DocumentChange.Type.ADDED || isNewChat)) {
                                             String senderID = (String) chat.get("sender");
                                             String sender = (String) chat.get("senderName");
                                             String message = (String) chat.get("text");
@@ -96,28 +115,21 @@ public class NotificationService extends Service {
                                                 sendNotificationAdmin("Water Chat", "From " + sender + ": " + message, senderID);
                                             }
                                         }
-                                    } else {
-                                        // Handle subsequent events
-                                        for (Map<String, Object> chat : currentChats) {
-                                            if (!previousChatsAdmin.contains(chat)) {
-                                                // New chat found
-                                                String senderID = (String) chat.get("sender");
-                                                String sender = (String) chat.get("senderName");
-                                                String message = (String) chat.get("text");
-
-                                                if (!senderID.equals(userId)) {
-                                                    sendNotificationAdmin("Water Chat", "From " + sender + ": " + message, senderID);
-                                                }
-                                            }
-                                        }
+                                        previousChatsAdmin.add(chat);
                                     }
 
                                     // Update the previousChatsAdmin for this document
-                                    previousChatsAdmin = currentChats;
+                                    //previousChatsAdmin = new ArrayList<>(currentChats);
                                 }
                             }
                         }
+                        isInitialLoad[0] = false;
                     });
+                    Log.d("Notification service admin", "previousChatsAdmin3: "+previousChatsAdmin);
+                } else {
+                    Log.e("Firestore Fetch", "Error fetching initial data: ", task.getException());
+                }
+            });
         } else {
             // Firebase Database listener for data changes
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(userId).child("orders");
@@ -188,8 +200,8 @@ public class NotificationService extends Service {
                                         String sender = (String) chat.get("senderName");
                                         String message = (String) chat.get("text");
 
-                                        if (!senderID.equals(userId)){
-                                            sendNotificationUser("Water Chat", "From " + sender + ": " + message, senderID);
+                                        if (!senderID.equals(userId)) {
+                                            sendNotificationAdmin("Water Chat", "From " + sender + ": " + message, senderID);
                                         }
                                     }
                                 }
@@ -217,11 +229,15 @@ public class NotificationService extends Service {
 
                             // Skip the notification for the initial snapshot
                             if (isInitialSnapshot.get()) {
+                                previousUserAccountStatus = accountStatus;
                                 isInitialSnapshot.set(false); // Mark the initial snapshot as processed
                                 return;
                             }
 
-                            sendNotification("Waterland", "Your account status has changed to: " + accountStatus);
+                            if (!accountStatus.equals(previousUserAccountStatus)){
+                                previousUserAccountStatus = accountStatus;
+                                sendNotification("Waterland", "Your account status has changed to: " + accountStatus);
+                            }
                         }
                     });
         }

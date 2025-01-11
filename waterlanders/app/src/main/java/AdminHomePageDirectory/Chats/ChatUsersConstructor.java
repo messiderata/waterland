@@ -15,11 +15,14 @@ public class ChatUsersConstructor implements Serializable {
     private String uploadedID;
     private String username;
     private String userID;
+    private Long unreadMessagesFromAdminToUser;
+    private Long unreadMessagesFromUserToAdmin;
+    private String unreadMessagesDate;
 
     public ChatUsersConstructor() {
     }
 
-    public ChatUsersConstructor(String accountStatus, List<Map<String, Object>> deliveryDetails, String email, String fullName, Long isResetPassTruEmail, String password, String role, String uploadedID, String username, String userID) {
+    public ChatUsersConstructor(String accountStatus, List<Map<String, Object>> deliveryDetails, String email, String fullName, Long isResetPassTruEmail, String password, String role, String uploadedID, String username, String userID, Long unreadMessagesFromAdminToUser, Long unreadMessagesFromUserToAdmin, String unreadMessagesDate) {
         this.accountStatus = accountStatus;
         this.deliveryDetails = deliveryDetails;
         this.email = email;
@@ -30,6 +33,9 @@ public class ChatUsersConstructor implements Serializable {
         this.uploadedID = uploadedID;
         this.username = username;
         this.userID = userID;
+        this.unreadMessagesFromAdminToUser = unreadMessagesFromAdminToUser;
+        this.unreadMessagesFromUserToAdmin = unreadMessagesFromUserToAdmin;
+        this.unreadMessagesDate = unreadMessagesDate;
     }
 
     public List<Map<String, Object>> getDeliveryDetails() {
@@ -110,5 +116,29 @@ public class ChatUsersConstructor implements Serializable {
 
     public void setUploadedID(String uploadedID) {
         this.uploadedID = uploadedID;
+    }
+
+    public Long getUnreadMessagesFromAdminToUser() {
+        return unreadMessagesFromAdminToUser;
+    }
+
+    public void setUnreadMessagesFromAdminToUser(Long unreadMessagesFromAdminToUser) {
+        this.unreadMessagesFromAdminToUser = unreadMessagesFromAdminToUser;
+    }
+
+    public Long getUnreadMessagesFromUserToAdmin() {
+        return unreadMessagesFromUserToAdmin;
+    }
+
+    public void setUnreadMessagesFromUserToAdmin(Long unreadMessagesFromUserToAdmin) {
+        this.unreadMessagesFromUserToAdmin = unreadMessagesFromUserToAdmin;
+    }
+
+    public String getUnreadMessagesDate() {
+        return unreadMessagesDate;
+    }
+
+    public void setUnreadMessagesDate(String unreadMessagesDate) {
+        this.unreadMessagesDate = unreadMessagesDate;
     }
 }

@@ -304,6 +304,9 @@ public class UserSignUpAdditionalInfo extends AppCompatActivity {
         newUser.put("accountStatus", "PENDING");
         newUser.put("verificationStatus", "PENDING");
         newUser.put("uploadedID", uploadedImgID);
+        newUser.put("unreadMessagesFromAdminToUser", 0);
+        newUser.put("unreadMessagesFromUserToAdmin", 0);
+        newUser.put("unreadMessagesDate", "");
 
         List<Map<String, Object>> deliveryDetailsList = new ArrayList<>();
 
