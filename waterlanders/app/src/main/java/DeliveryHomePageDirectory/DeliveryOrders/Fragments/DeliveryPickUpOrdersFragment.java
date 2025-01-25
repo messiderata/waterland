@@ -1,4 +1,4 @@
-package AdminHomePageDirectory.Orders.Fragments;
+package DeliveryHomePageDirectory.DeliveryOrders.Fragments;
 
 import android.os.Bundle;
 
@@ -22,30 +22,29 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import AdminHomePageDirectory.Orders.Utils.CancelOrders.CancelOrdersAdapter;
-import AdminHomePageDirectory.Orders.Utils.CancelOrders.CancelledOrdersConstructor;
-import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersConstructor;
-import AdminHomePageDirectory.Orders.Utils.WaitingOrders.WaitingOrdersAdapter;
+import AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOrdersConstructor;
+import DeliveryHomePageDirectory.DeliveryOrders.Utils.OnDeliveryOrders.DeliveryOnDeliveryOrdersAdapter;
+import DeliveryHomePageDirectory.DeliveryOrders.Utils.PickupOrders.DeliveryPickupOrdersAdapter;
 
-public class AdminCancelledOrdersFragment extends Fragment {
+public class DeliveryPickUpOrdersFragment extends Fragment {
 
     private RecyclerView recyclerViewHolder;
 
-    private List<CancelledOrdersConstructor> pendingOrdersConstructorList;
-    private CancelOrdersAdapter cancelOrdersAdapter;
+    private List<OnDeliveryOrdersConstructor> onDeliveryOrdersConstructorList;
+    private DeliveryPickupOrdersAdapter deliveryOnDeliveryOrdersAdapter;
 
     private FirebaseFirestore db;
 
-    public AdminCancelledOrdersFragment() {
+    public DeliveryPickUpOrdersFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_admin_cancelled_orders, container, false);
+        View view = inflater.inflate(R.layout.fragment_delivery_pick_up_orders, container, false);
         initializeObjects(view);
-        populatePendingOrdersList();
+        populateOnDeliveryOrdersList();
         return view;
     }
 
@@ -53,23 +52,23 @@ public class AdminCancelledOrdersFragment extends Fragment {
         recyclerViewHolder = view.findViewById(R.id.recycle_view_holder);
         recyclerViewHolder.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        pendingOrdersConstructorList = new ArrayList<>();
-        cancelOrdersAdapter = new CancelOrdersAdapter(getActivity(), pendingOrdersConstructorList);
-        recyclerViewHolder.setAdapter(cancelOrdersAdapter);
+        onDeliveryOrdersConstructorList = new ArrayList<>();
+        deliveryOnDeliveryOrdersAdapter = new DeliveryPickupOrdersAdapter(getActivity(), onDeliveryOrdersConstructorList);
+        recyclerViewHolder.setAdapter(deliveryOnDeliveryOrdersAdapter);
 
         db = FirebaseFirestore.getInstance();
     }
 
-    private void populatePendingOrdersList(){
-        db.collection("cancelledOrders").get().addOnCompleteListener(task -> {
+    private void populateOnDeliveryOrdersList(){
+        db.collection("pickupOrders").get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null){
-                List<DocumentSnapshot> pendingOrdersList = task.getResult().getDocuments();
+                List<DocumentSnapshot> OrdersList = task.getResult().getDocuments();
 
                 DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
 
-                for (DocumentSnapshot document : pendingOrdersList){
+                for (DocumentSnapshot document : OrdersList){
                     if (!document.getId().equals("test_id")){
-                        CancelledOrdersConstructor currentPendingOrder = document.toObject(CancelledOrdersConstructor.class);
+                        OnDeliveryOrdersConstructor currentPendingOrder = document.toObject(OnDeliveryOrdersConstructor.class);
                         if (currentPendingOrder != null){
                             // Convert date_ordered to the formatted string
                             Timestamp dateOrdered = currentPendingOrder.getDate_ordered();  // Assuming this is a Timestamp
@@ -79,12 +78,12 @@ public class AdminCancelledOrdersFragment extends Fragment {
                                 String formattedDate = zonedDateTime.format(outputFormatter);
                                 currentPendingOrder.setFormattedDateOrdered(formattedDate);  // Assuming you have a setter for this
                             }
-                            pendingOrdersConstructorList.add(currentPendingOrder);
+                            onDeliveryOrdersConstructorList.add(currentPendingOrder);
                         }
                     }
                 }
                 // Sort the list based on 'date_delivery' in ascending order
-                pendingOrdersConstructorList.sort((o1, o2) -> {
+                onDeliveryOrdersConstructorList.sort((o1, o2) -> {
                     String date1 = o1.getDate_delivery();
                     String date2 = o2.getDate_delivery();
 
@@ -96,7 +95,7 @@ public class AdminCancelledOrdersFragment extends Fragment {
                     // Compare non-null dates lexicographically
                     return date1.compareTo(date2);
                 });
-                cancelOrdersAdapter.notifyDataSetChanged();
+                deliveryOnDeliveryOrdersAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(getActivity(), "Failed to retrieve items data", Toast.LENGTH_SHORT).show();
             }

@@ -13,6 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import DeliveryHomePageDirectory.DeliveryOrders.Fragments.DeliveryDeliveredOrdersFragment;
 import DeliveryHomePageDirectory.DeliveryOrders.Fragments.DeliveryOnDeliveryOrdersFragment;
+import DeliveryHomePageDirectory.DeliveryOrders.Fragments.DeliveryPickUpOrdersFragment;
 import DeliveryHomePageDirectory.DeliveryOrders.Fragments.DeliveryWaitingOrdersFragment;
 
 public class DeliveryOrdersFragment extends Fragment {
@@ -39,6 +40,8 @@ public class DeliveryOrdersFragment extends Fragment {
                 selectedFragment = new DeliveryWaitingOrdersFragment();
             } else if (itemId == R.id.on_delivery) {
                 selectedFragment = new DeliveryOnDeliveryOrdersFragment();
+            } else if (itemId == R.id.pick_up) {
+                selectedFragment = new DeliveryPickUpOrdersFragment();
             } else if (itemId == R.id.delivered) {
                 selectedFragment = new DeliveryDeliveredOrdersFragment();
             }

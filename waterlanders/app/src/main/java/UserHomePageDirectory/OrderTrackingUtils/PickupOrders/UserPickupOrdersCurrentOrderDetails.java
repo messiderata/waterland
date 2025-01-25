@@ -1,4 +1,4 @@
-package AdminHomePageDirectory.Orders.Utils.CancelOrders;
+package UserHomePageDirectory.OrderTrackingUtils.PickupOrders;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,11 +25,11 @@ import java.util.List;
 import java.util.Map;
 
 import AdminHomePageDirectory.Orders.Utils.GCashPaymentDetails;
+import AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOrdersConstructor;
 import AdminHomePageDirectory.Orders.Utils.OrderedItemsConstructor;
-import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersConstructor;
 import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersCurrentOrderDetailsAdapter;
 
-public class CancelOrdersCurrentOrderDetails extends AppCompatActivity {
+public class UserPickupOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private ImageView backButton;
 
@@ -42,6 +42,7 @@ public class CancelOrdersCurrentOrderDetails extends AppCompatActivity {
     private TextView dateOrdered;
 
     private TextView orderID;
+    private TextView deliveryID;
 
     private RecyclerView recyclerViewHolder;
     private TextView totalOrderAmount;
@@ -56,7 +57,7 @@ public class CancelOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private Button backButton2;
 
-    private CancelledOrdersConstructor pendingOrdersConstructor;
+    private OnDeliveryOrdersConstructor onDeliveryOrdersConstructor;
     private List<OrderedItemsConstructor> orderedItemsConstructorList;
     private PendingOrdersCurrentOrderDetailsAdapter pendingOrdersCurrentOrderDetailsAdapter;
 
@@ -64,7 +65,7 @@ public class CancelOrdersCurrentOrderDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_admin_cancel_orders_current_order_details);
+        setContentView(R.layout.activity_user_pickup_orders_current_order_details);
         initializeObjects();
         getIntentData();
         setTextValues();
@@ -74,7 +75,7 @@ public class CancelOrdersCurrentOrderDetails extends AppCompatActivity {
         // to check the payment details
         if (String.valueOf(modeOfPayment.getText()).equals("GCash")){
             modeOfPaymentContainer.setOnClickListener(view -> {
-                Map<String, Object> gcash_payment_details = pendingOrdersConstructor.getGcash_payment_details();
+                Map<String, Object> gcash_payment_details = onDeliveryOrdersConstructor.getGcash_payment_details();
                 Intent showGCashPaymentIntent = new Intent(this, GCashPaymentDetails.class);
                 showGCashPaymentIntent.putExtra("gcash_payment_details", (Serializable) gcash_payment_details);
                 startActivity(showGCashPaymentIntent);
@@ -102,6 +103,7 @@ public class CancelOrdersCurrentOrderDetails extends AppCompatActivity {
 
         dateOrdered = findViewById(R.id.date_ordered);
         orderID = findViewById(R.id.order_id);
+        deliveryID = findViewById(R.id.delivery_id);
 
         recyclerViewHolder = findViewById(R.id.recycle_view_holder);
         totalOrderAmount = findViewById(R.id.total_order_amount);
@@ -125,40 +127,41 @@ public class CancelOrdersCurrentOrderDetails extends AppCompatActivity {
 
     private void getIntentData(){
         Intent intent = getIntent();
-        pendingOrdersConstructor = intent.getParcelableExtra("current_order");
+        onDeliveryOrdersConstructor = intent.getParcelableExtra("current_order");
     }
 
     private void setTextValues(){
         // address
-        Map<String, Object> deliveryAddress = pendingOrdersConstructor.getDelivery_address();
+        Map<String, Object> deliveryAddress = onDeliveryOrdersConstructor.getDelivery_address();
         customerName.setText(String.valueOf(deliveryAddress.get("fullName")));
         customerContactNumber.setText(String.valueOf(deliveryAddress.get("phoneNumber")));
         customerDeliveryAddress.setText(String.valueOf(deliveryAddress.get("deliveryAddress")));
 
-        customerID.setText(String.valueOf(pendingOrdersConstructor.getUser_id()));
-        accountStatus.setText(String.valueOf(pendingOrdersConstructor.getAccountStatus()));
+        customerID.setText(String.valueOf(onDeliveryOrdersConstructor.getUser_id()));
+        accountStatus.setText(String.valueOf(onDeliveryOrdersConstructor.getAccountStatus()));
 
         // date ordered
-        Timestamp timestamp = pendingOrdersConstructor.getDate_ordered();
+        Timestamp timestamp = onDeliveryOrdersConstructor.getDate_ordered();
         long dateOrderedMillis = timestamp.toDate().getTime();
         Date formatedDateOrdered = new Date(dateOrderedMillis);
         dateOrdered.setText(String.valueOf(formatedDateOrdered));
 
         // order id
-        orderID.setText(String.valueOf(pendingOrdersConstructor.getOrder_id()));
+        orderID.setText(String.valueOf(onDeliveryOrdersConstructor.getOrder_id()));
+        deliveryID.setText(String.valueOf(onDeliveryOrdersConstructor.getDelivery_id()));
 
         // total amount
-        totalOrderAmount.setText(String.format("Total Amount: ₱" + pendingOrdersConstructor.getTotal_amount()));
+        totalOrderAmount.setText(String.format("Total Amount: ₱" + onDeliveryOrdersConstructor.getTotal_amount()));
 
         // mode of payment
-        modeOfPayment.setText(String.valueOf(pendingOrdersConstructor.getMode_of_payment()));
-        isPaid.setText(String.valueOf(pendingOrdersConstructor.getIsPaid()));
+        modeOfPayment.setText(String.valueOf(onDeliveryOrdersConstructor.getMode_of_payment()));
+        isPaid.setText(String.valueOf(onDeliveryOrdersConstructor.getIsPaid()));
 
         // order status
-        orderStatus.setText(String.valueOf(pendingOrdersConstructor.getOrder_status()));
+        orderStatus.setText(String.valueOf(onDeliveryOrdersConstructor.getOrder_status()));
 
         // additional message
-        String customerMessage = String.valueOf(pendingOrdersConstructor.getAdditional_message());
+        String customerMessage = String.valueOf(onDeliveryOrdersConstructor.getAdditional_message());
         if (customerMessage.isEmpty()){
             additionalMessage.setText(String.format("NONE"));
         } else {
@@ -167,7 +170,7 @@ public class CancelOrdersCurrentOrderDetails extends AppCompatActivity {
     }
 
     private void populateOrderList(){
-        List<Map<String, Object>> orderItems = pendingOrdersConstructor.getOrder_items();
+        List<Map<String, Object>> orderItems = onDeliveryOrdersConstructor.getOrder_items();
         for (Map<String, Object> item : orderItems){
             // Extract the item details from the map
             String itemId = (String) item.get("item_id");

@@ -15,6 +15,7 @@ import AdminHomePageDirectory.Orders.Fragments.AdminDeliveredFragment;
 import AdminHomePageDirectory.Orders.Fragments.AdminMoreOrderMenuFragment;
 import AdminHomePageDirectory.Orders.Fragments.AdminOnDeliveryFragment;
 import AdminHomePageDirectory.Orders.Fragments.AdminPendingOrdersFragment;
+import AdminHomePageDirectory.Orders.Fragments.AdminPickupFragment;
 import AdminHomePageDirectory.Orders.Fragments.AdminWaitingForCourierFragment;
 
 public class OrdersFragment extends Fragment {
@@ -41,10 +42,10 @@ public class OrdersFragment extends Fragment {
                 selectedFragment = new AdminPendingOrdersFragment();
             } else if (itemId == R.id.waiting_for_courier) {
                 selectedFragment = new AdminWaitingForCourierFragment();
+            } else if (itemId == R.id.pickup) {
+                selectedFragment = new AdminPickupFragment();
             } else if (itemId == R.id.on_delivery) {
                 selectedFragment = new AdminOnDeliveryFragment();
-            } else if (itemId == R.id.delivered) {
-                selectedFragment = new AdminDeliveredFragment();
             } else if (itemId == R.id.more) {
                 selectedFragment = new AdminMoreOrderMenuFragment();
             }

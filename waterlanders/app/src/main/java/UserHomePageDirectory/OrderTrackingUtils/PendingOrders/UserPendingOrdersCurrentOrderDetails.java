@@ -5,10 +5,14 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -264,49 +268,75 @@ public class UserPendingOrdersCurrentOrderDetails extends AppCompatActivity {
         MaterialButton btnCancel = dialog.findViewById(R.id.button_cancel);
         MaterialButton btnOk = dialog.findViewById(R.id.button_ok);
 
+
+        // spinner
+        Spinner spinner = dialog.findViewById(R.id.spinner_cancel_reason);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.cancel_reasons, R.layout.dropdown_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        final String[] currentReason = {""};
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentReason[0] = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         btnOk.setOnClickListener(v -> {
-            db.collection("pendingOrders")
-                    .document(pendingOrdersConstructor.getOrder_id())
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            // Get the order data
-                            Map<String, Object> orderData = documentSnapshot.getData();
+            if (currentReason[0].isEmpty()) {
+                Toast.makeText(this, "Invalid Reason.", Toast.LENGTH_SHORT).show();
+                Log.d("delete pending order", "Invalid Reason: " + currentReason[0]);
+            } else {
+                db.collection("pendingOrders")
+                        .document(pendingOrdersConstructor.getOrder_id())
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot.exists()) {
+                                // Get the order data
+                                Map<String, Object> orderData = documentSnapshot.getData();
+                                String reason = "CANCELLED: "+ currentReason[0];
+                                orderData.put("order_status", reason);
 
-                            // Save it to the 'cancelledOrders' collection
-                            db.collection("cancelledOrders")
-                                    .document(pendingOrdersConstructor.getOrder_id())
-                                    .set(orderData)
-                                    .addOnSuccessListener(aVoid -> {
-                                        // After saving, delete it from 'pendingOrders'
-                                        db.collection("pendingOrders")
-                                                .document(pendingOrdersConstructor.getOrder_id())
-                                                .delete()
-                                                .addOnSuccessListener(deleteVoid -> {
-                                                    Intent intent = new Intent(this, MainDashboardUser.class);
-                                                    intent.putExtra("open_fragment", "history");
-                                                    startActivity(intent);
-                                                    finish();
-                                                })
-                                                .addOnFailureListener(deleteError -> {
-                                                    Toast.makeText(this, "An error occurred cancelling the order.", Toast.LENGTH_SHORT).show();
-                                                    Log.d("delete pending order", deleteError.toString());
-                                                });
-                                    })
-                                    .addOnFailureListener(saveError -> {
-                                        Toast.makeText(this, "Failed to save to cancelled orders.", Toast.LENGTH_SHORT).show();
-                                        Log.d("save cancelled order", saveError.toString());
-                                    });
-                        } else {
-                            Toast.makeText(this, "Order not found.", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(fetchError -> {
-                        Toast.makeText(this, "An error occurred retrieving the order.", Toast.LENGTH_SHORT).show();
-                        Log.d("fetch pending order", fetchError.toString());
-                    });
+                                // Save it to the 'cancelledOrders' collection
+                                db.collection("cancelledOrders")
+                                        .document(pendingOrdersConstructor.getOrder_id())
+                                        .set(orderData)
+                                        .addOnSuccessListener(aVoid -> {
+                                            // After saving, delete it from 'pendingOrders'
+                                            db.collection("pendingOrders")
+                                                    .document(pendingOrdersConstructor.getOrder_id())
+                                                    .delete()
+                                                    .addOnSuccessListener(deleteVoid -> {
+                                                        Intent intent = new Intent(this, MainDashboardUser.class);
+                                                        intent.putExtra("open_fragment", "history");
+                                                        startActivity(intent);
+                                                        finish();
+                                                    })
+                                                    .addOnFailureListener(deleteError -> {
+                                                        Toast.makeText(this, "An error occurred cancelling the order.", Toast.LENGTH_SHORT).show();
+                                                        Log.d("delete pending order", deleteError.toString());
+                                                    });
+                                        })
+                                        .addOnFailureListener(saveError -> {
+                                            Toast.makeText(this, "Failed to save to cancelled orders.", Toast.LENGTH_SHORT).show();
+                                            Log.d("save cancelled order", saveError.toString());
+                                        });
+                            } else {
+                                Toast.makeText(this, "Order not found.", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(fetchError -> {
+                            Toast.makeText(this, "An error occurred retrieving the order.", Toast.LENGTH_SHORT).show();
+                            Log.d("fetch pending order", fetchError.toString());
+                        });
+            }
         });
 
         dialog.show();

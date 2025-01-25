@@ -126,6 +126,42 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        String modifiedSenderID = currentUserID.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2") ? receiverID : currentUserID;
+
+        if (currentUserID.equals("NVWcwGTdD1VdMcnUg86IBAUuE3i2")) {
+            db.collection("users")
+                    .document(modifiedSenderID)
+                    .update("unreadMessagesFromUserToAdmin", 0)
+                    .addOnSuccessListener(aVoid2 -> {
+                        Intent intent = new Intent(this, AdminHomePage.class);
+                        intent.putExtra("open_fragment", "chats");
+                        startActivity(intent);
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                        Log.e("ChatActivity", "Error: " + e.getMessage());
+                    });
+        } else {
+            db.collection("users")
+                    .document(modifiedSenderID)
+                    .update("unreadMessagesFromAdminToUser", 0)
+                    .addOnSuccessListener(aVoid2 -> {
+                        Intent intent = new Intent(this, MainDashboardUser.class);
+                        startActivity(intent);
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                        Log.e("ChatActivity", "Error: " + e.getMessage());
+                    });
+        }
+    }
+
+
     private void sendMessage(String senderID, String receiverID, String messageText) {
         // Create a new message map
         Map<String, Object> message = new HashMap<>();

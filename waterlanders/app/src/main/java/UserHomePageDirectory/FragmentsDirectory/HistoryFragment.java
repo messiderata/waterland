@@ -20,6 +20,7 @@ import UserHomePageDirectory.OrderTrackingFragments.UserConfirmOrdersFragment;
 import UserHomePageDirectory.OrderTrackingFragments.UserDeliveryOrdersFragment;
 import UserHomePageDirectory.OrderTrackingFragments.UserMoreOrderMenuFragment;
 import UserHomePageDirectory.OrderTrackingFragments.UserPendingOrdersFragment;
+import UserHomePageDirectory.OrderTrackingFragments.UserPickupOrdersFragment;
 
 
 public class HistoryFragment extends Fragment {
@@ -44,8 +45,8 @@ public class HistoryFragment extends Fragment {
                 selectedFragment = new UserConfirmOrdersFragment();
             } else if (itemId == R.id.delivery) {
                 selectedFragment = new UserDeliveryOrdersFragment();
-            } else if (itemId == R.id.completed) {
-                selectedFragment = new UserCompletedOrdersFragment();
+            } else if (itemId == R.id.pickup) {
+                selectedFragment = new UserPickupOrdersFragment();
             } else if (itemId == R.id.more) {
                 selectedFragment = new UserMoreOrderMenuFragment();
             }

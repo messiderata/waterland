@@ -127,6 +127,10 @@ public class DashboardSalesReport extends AppCompatActivity {
                     String itemName = itemDoc.getString("item_name");
                     String itemImgUrl = itemDoc.getString("item_img");
 
+                    if (itemId.equals("test_id")) {
+                        continue;
+                    }
+
                     int finalI = i;
                     calculateTotalSoldAndSales(itemId, (totalSold, totalItemPrice) -> {
                         TableRow row = new TableRow(this);

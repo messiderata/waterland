@@ -6,12 +6,12 @@
     <item android:title="Confirm"
         android:icon="@drawable/user_confirmed_orders_icon"
         android:id="@+id/confirm" />
+    <item android:title="PICK UP"
+        android:icon="@drawable/box_delivered_icon"
+        android:id="@+id/pickup" />
     <item android:title="Delivery"
         android:icon="@drawable/on_delivery_icon"
         android:id="@+id/delivery" />
-    <item android:title="Completed"
-        android:icon="@drawable/box_delivered_icon"
-        android:id="@+id/completed" />
     <item android:title="MORE"
         android:icon="@drawable/more_icon"
         android:id="@+id/more"/>

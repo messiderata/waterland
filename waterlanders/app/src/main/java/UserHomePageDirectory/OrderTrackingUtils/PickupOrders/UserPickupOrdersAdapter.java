@@ -1,4 +1,4 @@
-package AdminHomePageDirectory.Orders.Utils.CancelOrders;
+package UserHomePageDirectory.OrderTrackingUtils.PickupOrders;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,26 +19,26 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersConstructor;
-import AdminHomePageDirectory.Orders.Utils.WaitingOrders.WaitingOrdersAdapter;
-import AdminHomePageDirectory.Orders.Utils.WaitingOrders.WaitingOrdersCurrentOrderDetails;
+import AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOrdersConstructor;
+import UserHomePageDirectory.OrderTrackingUtils.DeliveryOrders.UserDeliveryOrdersAdapter;
+import UserHomePageDirectory.OrderTrackingUtils.DeliveryOrders.UserDeliveryOrdersCurrentOrderDetails;
 
-public class CancelOrdersAdapter extends RecyclerView.Adapter<CancelOrdersAdapter.CancelOrdersAdapterViewHolder> {
+public class UserPickupOrdersAdapter extends RecyclerView.Adapter<UserPickupOrdersAdapter.UserPickupOrdersAdapterViewHolder> {
     Context context;
-    List<CancelledOrdersConstructor> pendingOrdersConstructorList;
+    List<OnDeliveryOrdersConstructor> onDeliveryOrdersConstructorList;
 
-    public CancelOrdersAdapter(Context context, List<CancelledOrdersConstructor> pendingOrdersConstructorList) {
+    public UserPickupOrdersAdapter(Context context, List<OnDeliveryOrdersConstructor> onDeliveryOrdersConstructorList) {
         this.context = context;
-        this.pendingOrdersConstructorList = pendingOrdersConstructorList;
+        this.onDeliveryOrdersConstructorList = onDeliveryOrdersConstructorList;
     }
 
-    public static class CancelOrdersAdapterViewHolder extends RecyclerView.ViewHolder {
+    public static class UserPickupOrdersAdapterViewHolder extends RecyclerView.ViewHolder {
         ImageView orderIMG;
         TextView orderID;
         TextView userID;
         TextView orderPrice;
 
-        public CancelOrdersAdapterViewHolder(@NonNull View itemView) {
+        public UserPickupOrdersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             orderIMG = itemView.findViewById(R.id.order_img);
             orderID = itemView.findViewById(R.id.order_id);
@@ -49,19 +49,19 @@ public class CancelOrdersAdapter extends RecyclerView.Adapter<CancelOrdersAdapte
 
     @NonNull
     @Override
-    public CancelOrdersAdapter.CancelOrdersAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UserPickupOrdersAdapter.UserPickupOrdersAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_pending_orders_card, parent, false);
-        return new CancelOrdersAdapter.CancelOrdersAdapterViewHolder(view);
+        return new UserPickupOrdersAdapter.UserPickupOrdersAdapterViewHolder(view);
     }
 
     @Override
     public int getItemCount() {
-        return pendingOrdersConstructorList.size();
+        return onDeliveryOrdersConstructorList.size();
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CancelOrdersAdapter.CancelOrdersAdapterViewHolder holder, int position) {
-        CancelledOrdersConstructor orderCard = pendingOrdersConstructorList.get(position);
+    public void onBindViewHolder(@NonNull UserPickupOrdersAdapter.UserPickupOrdersAdapterViewHolder holder, int position) {
+        OnDeliveryOrdersConstructor orderCard = onDeliveryOrdersConstructorList.get(position);
 
         // display the icon
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -76,11 +76,12 @@ public class CancelOrdersAdapter extends RecyclerView.Adapter<CancelOrdersAdapte
 
         // set text values.
         holder.orderID.setText(String.format("ORDER ID: " + orderCard.getOrder_id()));
-        holder.userID.setText(String.format("USER ID: " + orderCard.getUser_id()));
+//        holder.userID.setText(String.format("USER ID: " + orderCard.getUser_id()));
         holder.orderPrice.setText(String.format("₱" + orderCard.getTotal_amount()));
+        holder.userID.setText(String.format("USERNAME: " + orderCard.getSearch_term()));
 
         holder.itemView.setOnClickListener(v -> {
-            Intent showCurrentOrderDetailsIntent = new Intent(context, CancelOrdersCurrentOrderDetails.class);
+            Intent showCurrentOrderDetailsIntent = new Intent(context, UserPickupOrdersCurrentOrderDetails.class);
             showCurrentOrderDetailsIntent.putExtra("current_order", orderCard);
             context.startActivity(showCurrentOrderDetailsIntent);
         });

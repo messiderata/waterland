@@ -11,7 +11,7 @@
     <LinearLayout
 
         android:layout_width="280dp"
-        android:layout_height="190dp"
+        android:layout_height="220dp"
         android:orientation="vertical"
         tools:ignore="TextSizeCheck"> <!-- Optional padding -->
 
@@ -22,7 +22,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/robotoregular"
-            android:text="Confirm Cancel Order"
+            android:text="Reason for cancellation"
             android:textColor="@color/button_bg"
             android:textSize="17sp"
             android:textStyle="bold"
@@ -39,10 +39,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
+            android:layout_marginBottom="5dp"
             android:fontFamily="@font/robotoregular"
-            android:text="Are you sure you want to cancel this order?"
+            android:text="Click to select reason"
             android:textColor="@color/button_bg"
+            android:textSize="15sp"
             tools:ignore="HardcodedText" />
+
+<!--        add drop down here with the possible reason for cancellation of orders and an 'others' option-->
+
+        <Spinner
+            android:id="@+id/spinner_cancel_reason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/edittext_bg"
+            android:backgroundTint="@color/screen_bg"
+            android:padding="10dp"
+            android:spinnerMode="dropdown"/>
 
         <LinearLayout
             android:layout_width="match_parent"

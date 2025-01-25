@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -298,6 +299,7 @@ public class OrderReceipt extends AppCompatActivity {
     }
 
     private void sendInvoiceEmail(Map<String, Object> orderData, String fullName, String recipientEmail){
+        Log.d("invoiceEmail", "send invoice email method is initiated");
         PdfDocument document = new PdfDocument();
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
         PdfDocument.Page page = document.startPage(pageInfo);
@@ -369,18 +371,19 @@ public class OrderReceipt extends AppCompatActivity {
         document.finishPage(page);
 
         // Save the document to the Downloads folder
-        File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        String fileName = "AlyInvoice.pdf";
-        File file = new File(downloadsDir, fileName);
+        File pdfFile;
+        // For Android 10+ (Scoped Storage)
+        pdfFile = new File(this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "AlyInvoice.pdf");
+
 
         try {
-            FileOutputStream fos = new FileOutputStream(file);
+            FileOutputStream fos = new FileOutputStream(pdfFile);
             document.writeTo(fos);
             document.close();
             fos.close();
             Log.d("invoiceEmail", "PDF saved to Downloads folder");
 
-            JavaMailAPI javaMailAPI = new JavaMailAPI(this, recipientEmail, mSubject, file);
+            JavaMailAPI javaMailAPI = new JavaMailAPI(this, recipientEmail, mSubject, pdfFile);
             javaMailAPI.execute();
         } catch (IOException e) {
             e.printStackTrace();
