@@ -9,10 +9,10 @@
         android:id="@+id/waiting_for_courier"/>
     <item android:title="PICKUP"
         android:icon="@drawable/on_delivery_icon"
+        android:id="@+id/pickup"/>
+    <item android:title="ON DELIVERY"
+        android:icon="@drawable/on_delivery_icon"
         android:id="@+id/on_delivery"/>
-    <item android:title="DELIVERED"
-        android:icon="@drawable/delivered_icon"
-        android:id="@+id/delivered"/>
     <item android:title="MORE"
         android:icon="@drawable/more_icon"
         android:id="@+id/more"/>

@@ -131,5 +131,12 @@
     <string name="onesignal">959da477-983c-4850-bc7a-16cea82d218e</string>
     <string name="sEmail">alywaterland@gmail.com</string>
     <string name="sPass">qybg tijb vntd xudn</string>
+    <string name="about_us_description"> Aly in Waterland Waterstation is an independent water refilling business founded on 2018 by Alilie Francisco. The business is thriving on its tagline: “SAFE WATER, SAFE LIFE.” Its mission is to provide clean and affordable water to Brgy Barangka, Marikina and to its nearby barangays.</string>
+    <string-array name="cancel_reasons">
+        <item>Item not needed</item>
+        <item>Ordered by mistake</item>
+        <item>Better price available</item>
+        <item>Others</item>
+    </string-array>
 
 </resources>

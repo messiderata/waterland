@@ -242,6 +242,16 @@ public class MainDashboardUser extends AppCompatActivity {
             }
         }
 
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) { // API 28 and below
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        1001);
+            }
+        }
+
+
     }
 
     @Override
@@ -254,6 +264,16 @@ public class MainDashboardUser extends AppCompatActivity {
             } else {
                 // Permission denied
                 Toast.makeText(this, "SMS Permission denied. The app will not be able to send OTP.", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        if (requestCode == 1001) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed with file operations
+                Log.d("invoiceEmail", "Storage permission granted!");
+            } else {
+                // Permission denied, show a message to the user
+                Log.d("invoiceEmail", "Storage permission denied!");
             }
         }
     }

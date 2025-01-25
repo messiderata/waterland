@@ -22,6 +22,9 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+
 
     <application
         android:allowBackup="true"
@@ -33,6 +36,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Waterlanders"
         tools:targetApi="31">
+        <activity
+            android:name="UserHomePageDirectory.OrderTrackingUtils.PickupOrders.UserPickupOrdersCurrentOrderDetails"
+            android:exported="false" />
+        <activity
+            android:name="AdminHomePageDirectory.Orders.Utils.PickupOrders.PickupOrdersCurrentOrdersDetails"
+            android:exported="false" />
+        <activity
+            android:name="DeliveryHomePageDirectory.DeliveryOrders.Utils.PickupOrders.DeliveryPickUpOrdersCurrentOrderDetails"
+            android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.waterlanders.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
+
         <activity
             android:name="AdminHomePageDirectory.Orders.Utils.CancelOrders.CancelOrdersCurrentOrderDetails"
             android:exported="false" />

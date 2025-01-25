@@ -13,9 +13,8 @@
         android:padding="16dp">
 
         <TextView
-            android:layout_width="310dp"
+            android:layout_width="match_parent"
             android:layout_height="38dp"
-            android:layout_marginLeft="32dp"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="16dp"
             android:text="@string/Aly"
@@ -24,18 +23,26 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:layout_width="372dp"
+            android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginBottom="16dp"
-            android:scaleType="centerCrop" />
+            android:layout_marginBottom="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/waterland_logo"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/bg1"
+            android:padding="20dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="357dp"
             android:lineSpacingExtra="4dp"
-            android:text="@string/loren"
+            android:text="@string/about_us_description"
             android:textColor="@color/button_bg"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/secondary_color_white"
+            android:padding="20dp"/>
 
     </LinearLayout>
 </FrameLayout>

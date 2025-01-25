@@ -39,6 +39,8 @@ public class UserMoreOrderMenuFragment extends Fragment {
                 selectedFragment = new UserPaidOrdersFragment();
             } else if (itemId == R.id.cancelled) {
                 selectedFragment = new UserCancelledOrdersFragment();
+            } else if (itemId == R.id.delivered) {
+                selectedFragment = new UserCompletedOrdersFragment();
             }
             if (selectedFragment != null) {
                 getParentFragmentManager().beginTransaction()
@@ -58,7 +60,7 @@ public class UserMoreOrderMenuFragment extends Fragment {
     private void initializeFirstFragment(Bundle savedInstanceState){
         if (savedInstanceState == null) {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.user_orders_fragment2_container, new UserPaidOrdersFragment())
+                    .replace(R.id.user_orders_fragment2_container, new UserCompletedOrdersFragment())
                     .commit();
         }
     }

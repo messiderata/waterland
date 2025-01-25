@@ -24,13 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import AdminHomePageDirectory.Orders.Utils.CancelOrders.CancelOrdersAdapter;
+import AdminHomePageDirectory.Orders.Utils.CancelOrders.CancelledOrdersConstructor;
 import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersConstructor;
 
 public class UserCancelledOrdersFragment extends Fragment {
 
     private RecyclerView recyclerViewHolder;
 
-    private List<PendingOrdersConstructor> pendingOrdersConstructorList;
+    private List<CancelledOrdersConstructor> pendingOrdersConstructorList;
     private CancelOrdersAdapter cancelOrdersAdapter;
 
     private FirebaseFirestore db;
@@ -72,7 +73,7 @@ public class UserCancelledOrdersFragment extends Fragment {
 
                 for (DocumentSnapshot document : pendingOrdersList){
                     if (!document.getId().equals("test_id")){
-                        PendingOrdersConstructor currentPendingOrder = document.toObject(PendingOrdersConstructor.class);
+                        CancelledOrdersConstructor currentPendingOrder = document.toObject(CancelledOrdersConstructor.class);
                         if (currentPendingOrder != null && currentPendingOrder.getUser_id().equals(userId)){
                             // Convert date_ordered to the formatted string
                             Timestamp dateOrdered = currentPendingOrder.getDate_ordered();  // Assuming this is a Timestamp

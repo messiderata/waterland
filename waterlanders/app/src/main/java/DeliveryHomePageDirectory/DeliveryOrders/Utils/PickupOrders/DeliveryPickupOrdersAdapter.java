@@ -1,4 +1,4 @@
-package AdminHomePageDirectory.Orders.Utils.CancelOrders;
+package DeliveryHomePageDirectory.DeliveryOrders.Utils.PickupOrders;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,26 +19,26 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-import AdminHomePageDirectory.Orders.Utils.PendingOrders.PendingOrdersConstructor;
-import AdminHomePageDirectory.Orders.Utils.WaitingOrders.WaitingOrdersAdapter;
-import AdminHomePageDirectory.Orders.Utils.WaitingOrders.WaitingOrdersCurrentOrderDetails;
+import AdminHomePageDirectory.Orders.Utils.OnDeliveryOrders.OnDeliveryOrdersConstructor;
+import DeliveryHomePageDirectory.DeliveryOrders.Utils.OnDeliveryOrders.DeliveryOnDeliveryOrdersAdapter;
+import DeliveryHomePageDirectory.DeliveryOrders.Utils.OnDeliveryOrders.DeliveryOnDeliveryOrdersCurrentOrderDetails;
 
-public class CancelOrdersAdapter extends RecyclerView.Adapter<CancelOrdersAdapter.CancelOrdersAdapterViewHolder> {
+public class DeliveryPickupOrdersAdapter extends RecyclerView.Adapter<DeliveryPickupOrdersAdapter.DeliveryPickupOrdersAdapterViewHolder> {
     Context context;
-    List<CancelledOrdersConstructor> pendingOrdersConstructorList;
+    List<OnDeliveryOrdersConstructor> onDeliveryOrdersConstructorList;
 
-    public CancelOrdersAdapter(Context context, List<CancelledOrdersConstructor> pendingOrdersConstructorList) {
+    public DeliveryPickupOrdersAdapter(Context context, List<OnDeliveryOrdersConstructor> onDeliveryOrdersConstructorList) {
         this.context = context;
-        this.pendingOrdersConstructorList = pendingOrdersConstructorList;
+        this.onDeliveryOrdersConstructorList = onDeliveryOrdersConstructorList;
     }
 
-    public static class CancelOrdersAdapterViewHolder extends RecyclerView.ViewHolder {
+    public static class DeliveryPickupOrdersAdapterViewHolder extends RecyclerView.ViewHolder{
         ImageView orderIMG;
         TextView orderID;
         TextView userID;
         TextView orderPrice;
 
-        public CancelOrdersAdapterViewHolder(@NonNull View itemView) {
+        public DeliveryPickupOrdersAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             orderIMG = itemView.findViewById(R.id.order_img);
             orderID = itemView.findViewById(R.id.order_id);
@@ -49,19 +49,19 @@ public class CancelOrdersAdapter extends RecyclerView.Adapter<CancelOrdersAdapte
 
     @NonNull
     @Override
-    public CancelOrdersAdapter.CancelOrdersAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DeliveryPickupOrdersAdapter.DeliveryPickupOrdersAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_pending_orders_card, parent, false);
-        return new CancelOrdersAdapter.CancelOrdersAdapterViewHolder(view);
+        return new DeliveryPickupOrdersAdapter.DeliveryPickupOrdersAdapterViewHolder(view);
     }
 
     @Override
     public int getItemCount() {
-        return pendingOrdersConstructorList.size();
+        return onDeliveryOrdersConstructorList.size();
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CancelOrdersAdapter.CancelOrdersAdapterViewHolder holder, int position) {
-        CancelledOrdersConstructor orderCard = pendingOrdersConstructorList.get(position);
+    public void onBindViewHolder(@NonNull DeliveryPickupOrdersAdapter.DeliveryPickupOrdersAdapterViewHolder holder, int position) {
+        OnDeliveryOrdersConstructor orderCard = onDeliveryOrdersConstructorList.get(position);
 
         // display the icon
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -80,7 +80,7 @@ public class CancelOrdersAdapter extends RecyclerView.Adapter<CancelOrdersAdapte
         holder.orderPrice.setText(String.format("₱" + orderCard.getTotal_amount()));
 
         holder.itemView.setOnClickListener(v -> {
-            Intent showCurrentOrderDetailsIntent = new Intent(context, CancelOrdersCurrentOrderDetails.class);
+            Intent showCurrentOrderDetailsIntent = new Intent(context, DeliveryPickUpOrdersCurrentOrderDetails.class);
             showCurrentOrderDetailsIntent.putExtra("current_order", orderCard);
             context.startActivity(showCurrentOrderDetailsIntent);
         });

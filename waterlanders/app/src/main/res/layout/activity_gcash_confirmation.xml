@@ -64,7 +64,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/gcash_qr"
+                android:src="@drawable/gcash_qr_main1"
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/image"/>
 

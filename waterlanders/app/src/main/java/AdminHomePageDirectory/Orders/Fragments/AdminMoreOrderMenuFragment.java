@@ -31,7 +31,9 @@ public class AdminMoreOrderMenuFragment extends Fragment {
         topNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
-            if (itemId == R.id.paid) {
+            if (itemId == R.id.delivered) {
+                selectedFragment = new AdminDeliveredFragment();
+            } else if (itemId == R.id.paid) {
                 selectedFragment = new AdminPaidOrdersFragment();
             } else if (itemId == R.id.cancelled) {
                 selectedFragment = new AdminCancelledOrdersFragment();
@@ -54,7 +56,7 @@ public class AdminMoreOrderMenuFragment extends Fragment {
     private void initializeFirstFragment(Bundle savedInstanceState){
         if (savedInstanceState == null) {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.admin_orders_fragment2_container, new AdminPaidOrdersFragment())
+                    .replace(R.id.admin_orders_fragment2_container, new AdminDeliveredFragment())
                     .commit();
         }
     }
